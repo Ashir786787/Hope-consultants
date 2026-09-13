@@ -1,0 +1,201 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 8px);
+  --radius-3xl: calc(var(--radius) + 12px);
+  --radius-4xl: calc(var(--radius) + 16px);
+  --radius-5xl: calc(var(--radius) + 24px);
+  --font-sans: var(--font-inter);
+  --font-display: var(--font-fraunces);
+  --font-heading: var(--font-fraunces);
+}
+
+:root {
+  /* ——— Hope palette ———
+     Ink (deep navy)  : stability, trust, the "guide"
+     Gold (amber)      : optimism, the "Hope"
+     Cream (warm ivory): clean, calm surfaces
+     One warm neutral ramp, one accent ramp. No rainbow flags in chrome. */
+
+  --cream-50: #faf9f4;
+  --cream-100: #f4f1e9;
+  --cream-200: #e9e4d7;
+  --cream-300: #d9d2c1;
+  --cream-400: #bdb2a0;
+
+  --ink-50: #f3f5fa;
+  --ink-100: #e6eaf4;
+  --ink-200: #c9d1e2;
+  --ink-300: #a6b2cc;
+  --ink-400: #8290b2;
+  --ink-500: #64729a;
+  --ink-600: #4b5880;
+  --ink-700: #384467;
+  --ink-800: #25304f;
+  --ink-900: #171f38;
+  --ink-950: #0b1220;
+
+  --gold-50: #fdf8ec;
+  --gold-100: #faeed2;
+  --gold-200: #f4dc9f;
+  --gold-300: #edc568;
+  --gold-400: #e5aa3a;
+  --gold-500: #d6902b;
+  --gold-600: #b06e24;
+  --gold-700: #8a521d;
+
+  --background: var(--cream-50);
+  --foreground: var(--ink-950);
+  --card: #ffffff;
+  --card-foreground: var(--ink-950);
+  --popover: #ffffff;
+  --popover-foreground: var(--ink-950);
+  --primary: var(--ink-950);
+  --primary-foreground: var(--gold-300);
+  --secondary: var(--gold-500);
+  --secondary-foreground: var(--ink-950);
+  --muted: var(--cream-100);
+  --muted-foreground: var(--ink-600);
+  --accent: var(--gold-100);
+  --accent-foreground: var(--ink-900);
+  --destructive: #c4453e;
+  --success: #2e7d4f;
+  --border: var(--cream-200);
+  --input: var(--cream-300);
+  --ring: var(--gold-400);
+  --chart-1: var(--gold-400);
+  --chart-2: var(--ink-700);
+  --chart-3: var(--ink-400);
+  --chart-4: var(--gold-200);
+  --chart-5: var(--ink-200);
+
+  --sidebar: var(--ink-950);
+  --sidebar-foreground: var(--cream-50);
+  --sidebar-primary: var(--gold-400);
+  --sidebar-primary-foreground: var(--ink-950);
+  --sidebar-accent: var(--ink-800);
+  --sidebar-accent-foreground: var(--gold-100);
+  --sidebar-border: var(--ink-800);
+  --sidebar-ring: var(--gold-500);
+
+  --radius: 0.625rem;
+
+  /* Soft layered shadows (warm-tinted, premium not harsh) */
+  --shadow-sm: 0 1px 2px rgb(11 18 32 / 0.05);
+  --shadow-card: 0 1px 2px rgb(11 18 32 / 0.04), 0 8px 24px rgb(11 18 32 / 0.07);
+  --shadow-lifted:
+    0 2px 4px rgb(11 18 32 / 0.05), 0 16px 40px -12px rgb(11 18 32 / 0.18);
+  --shadow-ambient: 0 32px 80px -24px rgb(11 18 32 / 0.3);
+
+  /* Hope glow — gold CTA halos */
+  --glow-gold: 0 0 0 1px rgb(229 170 58 / 0.18), 0 8px 24px -8px rgb(214 144 43 / 0.55);
+}
+
+.dark {
+  --background: var(--ink-950);
+  --foreground: var(--cream-50);
+  --card: var(--ink-900);
+  --card-foreground: var(--cream-50);
+  --popover: var(--ink-900);
+  --popover-foreground: var(--cream-50);
+  --primary: var(--gold-400);
+  --primary-foreground: var(--ink-950);
+  --secondary: var(--gold-500);
+  --secondary-foreground: var(--ink-950);
+  --muted: var(--ink-800);
+  --muted-foreground: var(--cream-300);
+  --accent: var(--ink-800);
+  --accent-foreground: var(--gold-100);
+  --destructive: #e07067;
+  --success: #4dbb75;
+  --border: var(--ink-700);
+  --input: var(--ink-700);
+  --ring: var(--gold-500);
+  --chart-1: var(--gold-400);
+  --chart-2: var(--gold-200);
+  --chart-3: var(--ink-400);
+  --chart-4: var(--ink-200);
+  --chart-5: var(--ink-600);
+  --sidebar: var(--ink-900);
+  --sidebar-foreground: var(--cream-50);
+  --sidebar-primary: var(--gold-400);
+  --sidebar-primary-foreground: var(--ink-950);
+  --sidebar-accent: var(--ink-800);
+  --sidebar-accent-foreground: var(--gold-100);
+  --sidebar-border: var(--ink-700);
+  --sidebar-ring: var(--gold-400);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  ::selection {
+    background: var(--gold-200);
+    color: var(--ink-950);
+  }
+}
+
+/* Lenis suggestions */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
