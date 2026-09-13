@@ -6,7 +6,6 @@ import { services } from "@/lib/data/services";
 import { processSteps } from "@/lib/data/process";
 import { scholarships } from "@/lib/data/scholarships";
 import { testimonials } from "@/lib/data/testimonials";
-import { Separator } from "@/components/ui/separator";
 import type { CostBand } from "@/lib/data/types";
 
 const costBandLabel: Record<CostBand, string> = {
@@ -271,8 +270,8 @@ export default function Home() {
             Book your free consultation. Bring your questions — and your honesty.
           </h2>
           <p className="max-w-xl text-base leading-7 text-primary-foreground/80">
-            No pressure, no fake assurances, no fee for the first conversation. If we can't
-            help you reach a genuinely good outcome, we'll say so.
+            No pressure, no fake assurances, no fee for the first conversation. If we can&apos;t
+            help you reach a genuinely good outcome, we&apos;ll say so.
           </p>
           <div className="flex flex-wrap items-center gap-3">
             <Button render={<a href="mailto:hello@hopeconsultants.example" />} size="lg" variant="secondary">
