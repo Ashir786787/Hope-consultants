@@ -71,7 +71,7 @@ export default function ScholarshipsPage() {
             which of these routes are realistic for you - and which are not.
           </p>
           <div className="flex flex-wrap items-center gap-3 pt-2">
-            <Button size="lg" render={<a href="/contact" />}>
+            <Button size="lg" nativeButton={false} render={<a href="/contact" />}>
               Talk to us about funding
             </Button>
             <Link className={buttonVariants({ variant: "outline", size: "lg" })} href="/services/scholarships">

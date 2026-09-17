@@ -68,7 +68,7 @@ export default async function ServicePage({ params }: ServicePageProps) {
           <aside className="flex flex-col gap-6">
             <Separator />
             <div className="flex flex-col gap-3">
-              <Button render={<a href="/contact" />} size="lg">
+              <Button nativeButton={false} render={<a href="/contact" />} size="lg">
                 Book a free consultation
               </Button>
               <Link className={buttonVariants({ variant: "outline", size: "lg" })} href="/services">

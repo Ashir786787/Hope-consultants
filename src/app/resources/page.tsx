@@ -47,7 +47,7 @@ export default function ResourcesPage() {
             <Button
               className="w-fit"
               size="sm"
-              render={<a href="/contact" />}
+              nativeButton={false} render={<a href="/contact" />}
               variant="outline"
             >
               Ask us about this
@@ -66,7 +66,7 @@ export default function ResourcesPage() {
             students, we will write about it honestly.
           </p>
           <div className="pt-2">
-            <Button render={<a href="/contact" />} size="lg">
+            <Button nativeButton={false} render={<a href="/contact" />} size="lg">
               Suggest a resource
             </Button>
           </div>

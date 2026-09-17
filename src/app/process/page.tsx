@@ -64,7 +64,7 @@ export default function ProcessPage() {
             genuinely good outcome, we will say so early.
           </p>
           <div className="flex flex-wrap items-center gap-3 pt-2">
-            <Button size="lg" render={<a href="/contact" />}>
+            <Button size="lg" nativeButton={false} render={<a href="/contact" />}>
               Book a free consultation
             </Button>
             <Link

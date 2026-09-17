@@ -147,7 +147,7 @@ export default async function CountryPage({ params }: CountryPageProps) {
             </div>
             <Separator />
             <div className="flex flex-col gap-3">
-              <Button render={<a href={`/contact?country=${country.slug}`} />} size="lg">
+              <Button nativeButton={false} render={<a href={`/contact?country=${country.slug}`} />} size="lg">
                 Ask about {country.name}
               </Button>
               <Link className={buttonVariants({ variant: "outline", size: "lg" })} href="/countries">

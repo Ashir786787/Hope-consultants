@@ -139,7 +139,7 @@ export default function CountryFilter() {
                     : "No tuition at public universities"}{" "}
                   · {country.englishFriendly ? "English-friendly" : "IELTS may be needed"}
                 </p>
-                <Button render={<a href={`/countries/${country.slug}`} />} size="sm" variant="outline">
+                <Button nativeButton={false} render={<a href={`/countries/${country.slug}`} />} size="sm" variant="outline">
                   View {country.name}
                 </Button>
               </article>

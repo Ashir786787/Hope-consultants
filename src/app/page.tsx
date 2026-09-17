@@ -66,7 +66,7 @@ export default function Home() {
               Funding
             </a>
           </nav>
-            <Button render={<a href="#contact" />} size="sm">
+            <Button nativeButton={false} render={<a href="#contact" />} size="sm">
               Free consultation
             </Button>
         </div>
@@ -90,10 +90,10 @@ export default function Home() {
             </p>
           </div>
           <div className="flex flex-wrap items-center gap-3">
-            <Button render={<a href="#countries" />} size="lg">
+            <Button nativeButton={false} render={<a href="#countries" />} size="lg">
               Explore {countries.length} countries
             </Button>
-            <Button render={<a href="#contact" />} size="lg" variant="outline">
+            <Button nativeButton={false} render={<a href="#contact" />} size="lg" variant="outline">
               Book a free consultation
             </Button>
           </div>
@@ -274,11 +274,11 @@ export default function Home() {
             help you reach a genuinely good outcome, we&apos;ll say so.
           </p>
           <div className="flex flex-wrap items-center gap-3">
-            <Button render={<a href="mailto:hello@hopeconsultants.example" />} size="lg" variant="secondary">
+            <Button nativeButton={false} render={<a href="mailto:hello@hopeconsultants.example" />} size="lg" variant="secondary">
               Email us
             </Button>
             <Button
-              render={<a href="tel:+920000000000" />}
+              nativeButton={false} render={<a href="tel:+920000000000" />}
               size="lg"
               variant="outline"
               className="border-primary-foreground/40 text-primary-foreground hover:bg-primary-foreground/10 hover:text-primary-foreground"
