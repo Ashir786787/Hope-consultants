@@ -5,7 +5,8 @@ import { buttonVariants } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { PageHero } from "@/components/page-hero";
 import { Reveal } from "@/components/motion/reveal";
-import { processSteps } from "@/lib/data/process";
+import { getCollection } from "@/lib/store";
+import type { ProcessStep } from "@/lib/data/process";
 
 export const metadata: Metadata = {
   title: "Our Process | Hope Consultants",
@@ -13,7 +14,8 @@ export const metadata: Metadata = {
     "How we work with Pakistani students in six honest, step-by-step phases — from your first free conversation to settling in.",
 };
 
-export default function ProcessPage() {
+export default async function ProcessPage() {
+  const processSteps = await getCollection<ProcessStep[]>("process");
   return (
     <main className="w-full">
       <PageHero

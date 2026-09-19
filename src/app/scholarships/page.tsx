@@ -6,7 +6,8 @@ import { buttonVariants } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { PageHero } from "@/components/page-hero";
 import { Reveal } from "@/components/motion/reveal";
-import { scholarships } from "@/lib/data/scholarships";
+import { getCollection } from "@/lib/store";
+import type { ScholarshipProgram } from "@/lib/data/scholarships";
 
 export const metadata: Metadata = {
   title: "Scholarships & Funding | Hope Consultants",
@@ -14,7 +15,8 @@ export const metadata: Metadata = {
     "Honest, current, plain-language guidance on the scholarships and funding routes we actually help with - and the conditions that come with them.",
 };
 
-export default function ScholarshipsPage() {
+export default async function ScholarshipsPage() {
+  const scholarships = await getCollection<ScholarshipProgram[]>("scholarships");
   return (
     <main className="w-full">
       <PageHero

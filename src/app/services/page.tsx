@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Badge } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { services } from "@/lib/data/services";
+import { getCollection } from "@/lib/store";
 import type { Service } from "@/lib/data/services";
 import { PageHero } from "@/components/page-hero";
 import { Reveal } from "@/components/motion/reveal";
@@ -51,7 +51,8 @@ function ServiceCard({ service }: { service: Service }) {
   );
 }
 
-export default function ServicesPage() {
+export default async function ServicesPage() {
+  const services = await getCollection<Service[]>("services");
   return (
     <main className="w-full">
       <PageHero

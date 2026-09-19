@@ -5,12 +5,16 @@ import { Reveal } from "@/components/motion/reveal";
 import { Magnetic } from "@/components/motion/magnetic";
 import { CountUp } from "@/components/motion/count-up";
 import { Marquee } from "@/components/motion/marquee";
-import { countries } from "@/lib/data/countries";
-import { services } from "@/lib/data/services";
-import { processSteps } from "@/lib/data/process";
-import { scholarships } from "@/lib/data/scholarships";
-import { testimonials } from "@/lib/data/testimonials";
-import type { CostBand } from "@/lib/data/types";
+import { getSite } from "@/lib/site";
+import { getCollection } from "@/lib/store";
+import type {
+  CostBand,
+  CountryDestination,
+} from "@/lib/data/types";
+import type { Service } from "@/lib/data/services";
+import type { ProcessStep } from "@/lib/data/process";
+import type { ScholarshipProgram } from "@/lib/data/scholarships";
+import type { Testimonial } from "@/lib/data/testimonials";
 
 const costBandLabel: Record<CostBand, string> = {
   low: "Low cost",
@@ -46,7 +50,16 @@ function SectionHeading({
   );
 }
 
-export default function Home() {
+export default async function Home() {
+  const [countries, services, processSteps, scholarships, testimonials] = await Promise.all([
+    getCollection<CountryDestination[]>("countries"),
+    getCollection<Service[]>("services"),
+    getCollection<ProcessStep[]>("process"),
+    getCollection<ScholarshipProgram[]>("scholarships"),
+    getCollection<Testimonial[]>("testimonials"),
+  ]);
+  const site = await getSite();
+
   return (
     <main className="min-h-screen bg-background text-foreground">
       <section id="top" className="relative overflow-hidden border-b border-border">
@@ -295,18 +308,18 @@ export default function Home() {
           </p>
           <div className="flex flex-wrap items-center gap-3">
             <Magnetic>
-              <Button nativeButton={false} render={<a href="mailto:hello@hopeconsultants.example" />} size="lg" variant="secondary">
+              <Button nativeButton={false} render={<a href={`mailto:${site.email}`} />} size="lg" variant="secondary">
                 Email us
               </Button>
             </Magnetic>
             <Magnetic>
               <Button
-                nativeButton={false} render={<a href="tel:+920000000000" />}
+                nativeButton={false} render={<a href={`tel:${site.phoneHref}`} />}
                 size="lg"
                 variant="outline"
                 className="border-primary-foreground/40 text-primary-foreground hover:bg-primary-foreground/10 hover:text-primary-foreground"
               >
-                Call +92 (0) 000 000 0000
+                Call {site.phone}
               </Button>
             </Magnetic>
           </div>

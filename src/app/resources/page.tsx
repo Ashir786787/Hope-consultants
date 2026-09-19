@@ -4,7 +4,8 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { PageHero } from "@/components/page-hero";
 import { Reveal } from "@/components/motion/reveal";
-import { resources } from "@/lib/data/resources";
+import { getCollection } from "@/lib/store";
+import type { ResourceItem } from "@/lib/data/resources";
 
 export const metadata: Metadata = {
   title: "Resources | Hope Consultants",
@@ -12,7 +13,8 @@ export const metadata: Metadata = {
     "Plain-language guides we have written for Pakistani students on studying abroad — no fluff, no fabricated promises.",
 };
 
-export default function ResourcesPage() {
+export default async function ResourcesPage() {
+  const resources = await getCollection<ResourceItem[]>("resources");
   return (
     <main className="w-full">
       <PageHero

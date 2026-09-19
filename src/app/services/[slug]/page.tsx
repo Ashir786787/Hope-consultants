@@ -6,7 +6,8 @@ import { Button } from "@/components/ui/button";
 import { buttonVariants } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Reveal } from "@/components/motion/reveal";
-import { services } from "@/lib/data/services";
+import { getCollection } from "@/lib/store";
+import type { Service } from "@/lib/data/services";
 
 type ServicePageProps = {
   params: Promise<{ slug: string }>;
@@ -15,12 +16,14 @@ type ServicePageProps = {
 export const dynamicParams = false;
 export const revalidate = false;
 
-export function generateStaticParams() {
+export async function generateStaticParams() {
+  const services = await getCollection<Service[]>("services");
   return services.map((service) => ({ slug: service.slug }));
 }
 
 export async function generateMetadata({ params }: ServicePageProps): Promise<Metadata> {
   const { slug } = await params;
+  const services = await getCollection<Service[]>("services");
   const service = services.find((item) => item.slug === slug);
   if (!service) return { title: "Service not found | Hope Consultants" };
   return {
@@ -31,6 +34,7 @@ export async function generateMetadata({ params }: ServicePageProps): Promise<Me
 
 export default async function ServicePage({ params }: ServicePageProps) {
   const { slug } = await params;
+  const services = await getCollection<Service[]>("services");
   const service = services.find((item) => item.slug === slug);
   if (!service) notFound();
 

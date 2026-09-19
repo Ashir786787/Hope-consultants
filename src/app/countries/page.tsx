@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
-import { countries } from "@/lib/data/countries";
 import { Separator } from "@/components/ui/separator";
 import { PageHero } from "@/components/page-hero";
 import CountryFilter from "@/components/countries/country-filter";
+import { getCollection } from "@/lib/store";
+import type { CountryDestination } from "@/lib/data/types";
 
 export const metadata: Metadata = {
   title: "Study Destinations",
@@ -10,7 +11,8 @@ export const metadata: Metadata = {
     "Honest, current profiles of 14 countries for Pakistani students — real tuition ranges, living costs, intakes, requirements, and straight talk on visas and IELTS.",
 };
 
-export default function DestinationsPage() {
+export default async function DestinationsPage() {
+  const countries = await getCollection<CountryDestination[]>("countries");
   return (
     <div className="w-full">
       <PageHero
@@ -21,7 +23,7 @@ export default function DestinationsPage() {
 
       <section className="border-b border-border">
         <div className="mx-auto flex w-full max-w-6xl flex-col gap-10 px-4 py-12 sm:px-6">
-          <CountryFilter />
+          <CountryFilter countries={countries} />
         </div>
       </section>
 

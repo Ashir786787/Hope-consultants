@@ -5,7 +5,6 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
-import { countries } from "@/lib/data/countries";
 import type { CountryDestination } from "@/lib/data/types";
 
 const bandLabel: Record<CountryDestination["cost"]["band"], string> = {
@@ -20,7 +19,11 @@ const bandClasses: Record<CountryDestination["cost"]["band"], string> = {
   high: "border-rose-300 bg-rose-50 text-rose-800",
 };
 
-export default function CountryFilter() {
+export default function CountryFilter({
+  countries,
+}: {
+  countries: CountryDestination[];
+}) {
   const [query, setQuery] = useState("");
   const [bands, setBands] = useState<Set<CountryDestination["cost"]["band"]>>(
     new Set()
@@ -52,7 +55,7 @@ export default function CountryFilter() {
       if (fundedOnly && !c.cost.fundedByDefault) return false;
       return true;
     });
-  }, [query, bands, englishOnly, fundedOnly]);
+  }, [countries, query, bands, englishOnly, fundedOnly]);
 
   return (
     <div className="flex w-full flex-col gap-8">

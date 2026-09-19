@@ -6,9 +6,9 @@ import { Button } from "@/components/ui/button";
 import { buttonVariants } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Reveal } from "@/components/motion/reveal";
-import { countries, getCountry } from "@/lib/data/countries";
 import { getCostBandLabel } from "@/lib/data/helpers";
-import type { CountrySlug } from "@/lib/data/types";
+import { getCollection } from "@/lib/store";
+import type { CountryDestination, CountrySlug } from "@/lib/data/types";
 
 type CountryPageProps = {
   params: Promise<{ slug: CountrySlug }>;
@@ -17,13 +17,15 @@ type CountryPageProps = {
 export const dynamicParams = false;
 export const revalidate = false;
 
-export function generateStaticParams() {
+export async function generateStaticParams() {
+  const countries = await getCollection<CountryDestination[]>("countries");
   return countries.map((country) => ({ slug: country.slug }));
 }
 
 export async function generateMetadata({ params }: CountryPageProps): Promise<Metadata> {
   const { slug } = await params;
-  const country = getCountry(slug);
+  const countries = await getCollection<CountryDestination[]>("countries");
+  const country = countries.find((item) => item.slug === slug);
   if (!country) return { title: "Destination not found | Hope Consultants" };
   return {
     title: `${country.name} — Study costs & requirements | Hope Consultants`,
@@ -33,7 +35,8 @@ export async function generateMetadata({ params }: CountryPageProps): Promise<Me
 
 export default async function CountryPage({ params }: CountryPageProps) {
   const { slug } = await params;
-  const country = getCountry(slug);
+  const countries = await getCollection<CountryDestination[]>("countries");
+  const country = countries.find((item) => item.slug === slug);
   if (!country) notFound();
 
   const cost = country.cost;

@@ -4,7 +4,8 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { PageHero } from "@/components/page-hero";
 import { Reveal } from "@/components/motion/reveal";
-import { testimonials } from "@/lib/data/testimonials";
+import { getCollection } from "@/lib/store";
+import type { Testimonial } from "@/lib/data/testimonials";
 
 export const metadata: Metadata = {
   title: "Student Testimonials | Hope Consultants",
@@ -12,7 +13,8 @@ export const metadata: Metadata = {
     "Real words from students we have helped. We only publish a testimonial when the student has given written permission — and we never stage or rewrite what they said.",
 };
 
-export default function TestimonialsPage() {
+export default async function TestimonialsPage() {
+  const testimonials = await getCollection<Testimonial[]>("testimonials");
   return (
     <main className="w-full">
       <PageHero
