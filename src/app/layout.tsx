@@ -1,17 +1,11 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
-import { Fraunces, Inter } from "next/font/google";
+import { Montserrat } from "next/font/google";
 import "./globals.css";
-import { LenisProvider } from "@/components/shared/lenis-provider";
+import { SmoothScroll } from "@/components/motion/smooth-scroll";
 
-const fraunces = Fraunces({
-  variable: "--font-fraunces",
-  subsets: ["latin"],
-  display: "swap",
-});
-
-const inter = Inter({
-  variable: "--font-inter",
+const montserrat = Montserrat({
+  variable: "--font-montserrat",
   subsets: ["latin"],
   display: "swap",
 });
@@ -27,9 +21,9 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="en" className={`${fraunces.variable} ${inter.variable} scroll-smooth`}>
+    <html lang="en" className={montserrat.variable}>
       <body>
-        <LenisProvider>{children}</LenisProvider>
+        <SmoothScroll>{children}</SmoothScroll>
       </body>
     </html>
   );
