@@ -50,8 +50,8 @@ export function Footer() {
       <div className="mx-auto w-full max-w-6xl px-4 py-16 sm:px-6">
         <div className="grid gap-12 md:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr_1.2fr]">
           <div className="flex flex-col items-start gap-5">
-            <Link href="/" className="flex items-center gap-2" aria-label="Hope Consultants home">
-              <Logo variant="full" tone="dark" className="h-9 w-auto" />
+            <Link href="/" className="flex items-center" aria-label="Hope Consultants home">
+              <Logo variant="full" className="h-12" />
             </Link>
             <p className="max-w-xs text-sm leading-6 text-hope-fog">
               Honest study abroad guidance for Pakistani students — universities,

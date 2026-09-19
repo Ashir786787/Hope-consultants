@@ -4,6 +4,8 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { buttonVariants } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import { PageHero } from "@/components/page-hero";
+import { Reveal } from "@/components/motion/reveal";
 import { scholarships } from "@/lib/data/scholarships";
 
 export const metadata: Metadata = {
@@ -15,24 +17,16 @@ export const metadata: Metadata = {
 export default function ScholarshipsPage() {
   return (
     <main className="w-full">
-      <section className="border-b border-border bg-card">
-        <div className="mx-auto flex w-full max-w-6xl flex-col gap-6 px-4 py-16 sm:px-6">
-          <Badge variant="secondary" className="w-fit border border-border">
-            Scholarships &amp; funding
-          </Badge>
-          <h1 className="max-w-3xl font-display text-4xl font-semibold leading-tight sm:text-5xl">
-            Funding routes we actually help with
-          </h1>
-          <p className="max-w-2xl text-lg leading-8 text-muted-foreground">
-            No invented scholarship databases. No guarantees. These are the real,
-            current routes we work with - and the honest conditions attached to each.
-          </p>
-        </div>
-      </section>
+      <PageHero
+        eyebrow="Scholarships & funding"
+        title="Funding routes we actually help with"
+        lede="No invented scholarship databases. No guarantees. These are the real, current routes we work with - and the honest conditions attached to each."
+      />
 
       <section className="mx-auto grid w-full max-w-6xl grid-cols-1 gap-6 px-4 py-16 sm:px-6 md:grid-cols-2">
-        {scholarships.map((program) => (
-          <article key={program.name} className="flex flex-col gap-5 border border-border bg-card p-6">
+        {scholarships.map((program, index) => (
+          <Reveal key={program.name} delay={index * 0.05} className="h-full">
+            <article className="hope-card hope-card--light flex h-full flex-col gap-5 p-6">
             <div className="flex flex-col gap-3">
               <div className="flex flex-col gap-2">
                 <h2 className="font-display text-xl font-semibold text-card-foreground">
@@ -58,6 +52,7 @@ export default function ScholarshipsPage() {
               <p className="text-sm leading-6 text-muted-foreground">{program.advice}</p>
             </div>
           </article>
+          </Reveal>
         ))}
       </section>
 

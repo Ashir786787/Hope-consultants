@@ -9,15 +9,14 @@ export type LogoProps = {
 
 export function Logo({ tone = "light", variant = "full", className }: LogoProps) {
   void tone;
-  const dimensions =
-    variant === "full" ? { width: 200, height: 52 } : { width: 40, height: 40 };
+  void variant;
   return (
     <Image
       src="/brand/logo-full-color.jpg"
       alt="Hope Consultants"
-      width={dimensions.width}
-      height={dimensions.height}
-      className={cn("h-auto w-auto object-contain", className)}
+      width={258}
+      height={317}
+      className={cn("p-1.5 object-contain", className)}
     />
   );
 }

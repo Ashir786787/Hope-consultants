@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { buttonVariants } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import { Reveal } from "@/components/motion/reveal";
 import { services } from "@/lib/data/services";
 
 type ServicePageProps = {
@@ -35,15 +36,25 @@ export default async function ServicePage({ params }: ServicePageProps) {
 
   return (
     <main className="w-full">
-      <section className="border-b border-border bg-card">
-        <div className="mx-auto flex w-full max-w-6xl flex-col gap-8 px-4 py-14 sm:px-6">
-          <Badge variant="secondary" className="w-fit">
-            {service.shortName}
-          </Badge>
-          <h1 className="max-w-3xl font-display text-4xl font-semibold leading-tight text-card-foreground sm:text-5xl">
-            {service.name}
-          </h1>
-          <p className="max-w-2xl text-lg leading-8 text-muted-foreground">{service.description}</p>
+      <section className="relative overflow-hidden border-b border-border">
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute -top-48 right-[-10%] size-[30rem] rounded-full bg-[radial-gradient(circle,rgb(var(--hope-ember-rgb)/0.14),transparent_65%)]"
+        />
+        <div className="relative mx-auto flex w-full max-w-6xl flex-col gap-8 px-4 py-14 sm:px-6">
+          <Reveal>
+            <Badge variant="outline" className="w-fit uppercase tracking-widest text-muted-foreground">
+              {service.shortName}
+            </Badge>
+          </Reveal>
+          <Reveal delay={0.1}>
+            <h1 className="max-w-3xl font-display text-4xl font-semibold leading-tight text-foreground sm:text-5xl">
+              {service.name}
+            </h1>
+          </Reveal>
+          <Reveal delay={0.2}>
+            <p className="max-w-2xl text-lg leading-8 text-muted-foreground">{service.description}</p>
+          </Reveal>
         </div>
       </section>
 

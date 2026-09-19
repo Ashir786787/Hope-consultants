@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import { PageHero } from "@/components/page-hero";
+import { Reveal } from "@/components/motion/reveal";
+import { Magnetic } from "@/components/motion/magnetic";
 
 export const metadata: Metadata = {
   title: "About Hope Consultants",
@@ -27,37 +29,29 @@ const commitments = [
 export default function AboutPage() {
   return (
     <main className="w-full">
-      <section className="border-b border-border bg-card">
-        <div className="mx-auto flex w-full max-w-6xl flex-col gap-6 px-4 py-16 sm:px-6">
-          <Badge variant="secondary" className="w-fit border border-border">
-            About us
-          </Badge>
-          <h1 className="max-w-3xl font-display text-4xl font-semibold leading-tight sm:text-5xl">
-            Guidance a Pakistani student can actually trust
-          </h1>
-          <p className="max-w-2xl text-lg leading-8 text-muted-foreground">
-            Hope Consultants exists for one reason: most study-abroad advice for Pakistani
-            students is built on inflated promises. We built the opposite — honest,
-            patient guidance that respects your money and your time.
-          </p>
-        </div>
-      </section>
+      <PageHero
+        eyebrow="About us"
+        title="Guidance a Pakistani student can actually trust"
+        lede="Hope Consultants exists for one reason: most study-abroad advice for Pakistani students is built on inflated promises. We built the opposite — honest, patient guidance that respects your money and your time."
+      />
 
       <section className="mx-auto flex w-full max-w-6xl flex-col gap-10 px-4 py-16 sm:px-6">
-        <div className="flex flex-col gap-reminder6">
+        <div className="flex flex-col gap-4">
           <h2 className="font-display text-2xl font-semibold text-card-foreground">
             What we commit to
           </h2>
           <Separator />
         </div>
         <div className="grid w-full grid-cols-1 gap-6 sm:grid-cols-3">
-          {commitments.map((item) => (
-            <article key={item.title} className="flex flex-col gap-3 border border-border bg-card p-6">
-              <h3 className="font-display text-lg font-semibold text-card-foreground">
-                {item.title}
-              </h3>
-              <p className="text-sm leading-7 text-muted-foreground">{item.body}</p>
-            </article>
+          {commitments.map((item, index) => (
+            <Reveal key={item.title} delay={index * 0.05} className="h-full">
+              <article className="hope-card hope-card--light flex h-full flex-col gap-3 p-6">
+                <h3 className="font-display text-lg font-semibold text-card-foreground">
+                  {item.title}
+                </h3>
+                <p className="text-sm leading-7 text-muted-foreground">{item.body}</p>
+              </article>
+            </Reveal>
           ))}
         </div>
 
@@ -91,12 +85,16 @@ export default function AboutPage() {
             questionshare — and we will tell you honestly what is and is not possible.
           </p>
           <div className="flex flex-wrap items-center gap-3 pt-1">
-            <Button size="lg" render={<a href="/contact" />}>
-              Book a free consultation
-            </Button>
-            <Button size="lg" variant="outline" render={<a href="/process" />}>
-              See how we work
-            </Button>
+            <Magnetic>
+              <Button size="lg" render={<a href="/contact" />}>
+                Book a free consultation
+              </Button>
+            </Magnetic>
+            <Magnetic>
+              <Button size="lg" variant="outline" render={<a href="/process" />}>
+                See how we work
+              </Button>
+            </Magnetic>
           </div>
         </div>
       </section>

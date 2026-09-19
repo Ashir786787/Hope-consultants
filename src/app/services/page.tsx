@@ -4,6 +4,8 @@ import { buttonVariants } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { services } from "@/lib/data/services";
 import type { Service } from "@/lib/data/services";
+import { PageHero } from "@/components/page-hero";
+import { Reveal } from "@/components/motion/reveal";
 
 export const metadata: Metadata = {
   title: "Services | Hope Consultants",
@@ -13,7 +15,7 @@ export const metadata: Metadata = {
 
 function ServiceCard({ service }: { service: Service }) {
   return (
-    <article className="flex flex-col gap-4 border border-border bg-card p-6">
+    <article className="hope-card hope-card--light flex h-full flex-col gap-4 p-6">
       <div className="flex items-start justify-between gap-3">
         <h2 className="font-display text-xl font-semibold text-card-foreground">
           {service.name}
@@ -52,25 +54,17 @@ function ServiceCard({ service }: { service: Service }) {
 export default function ServicesPage() {
   return (
     <main className="w-full">
-      <section className="border-b border-border bg-card">
-        <div className="mx-auto flex w-full max-w-6xl flex-col gap-6 px-4 py-16 sm:px-6">
-          <Badge variant="secondary" className="w-fit border border-border">
-            Services
-          </Badge>
-          <h1 className="max-w-3xl font-display text-4xl font-semibold leading-tight text-card-foreground sm:text-5xl">
-            What we actually help with
-          </h1>
-          <p className="max-w-2xl text-lg leading-8 text-muted-foreground">
-            Seven areas of step-by-step guidance — no guaranteed admissions, no
-            promised visas, no invented scholarships. Just honest support from
-            the first call to the day you fly.
-          </p>
-        </div>
-      </section>
+      <PageHero
+        eyebrow="Services"
+        title="What we actually help with"
+        lede="Seven areas of step-by-step guidance — no guaranteed admissions, no promised visas, no invented scholarships. Just honest support from the first call to the day you fly."
+      />
 
       <section className="mx-auto grid w-full max-w-6xl grid-cols-1 gap-6 px-4 py-16 sm:grid-cols-2 sm:px-6 lg:grid-cols-3">
-        {services.map((service) => (
-          <ServiceCard key={service.slug} service={service} />
+        {services.map((service, index) => (
+          <Reveal key={service.slug} delay={index * 0.05} className="h-full">
+            <ServiceCard service={service} />
+          </Reveal>
         ))}
       </section>
     </main>

@@ -104,7 +104,7 @@ export default function CountryFilter() {
       </div>
 
       {results.length === 0 ? (
-        <div className="rounded-lg border border-border bg-card p-10 text-center">
+        <div className="hope-card hope-card--light p-10 text-center">
           <p className="font-display text-xl font-semibold text-card-foreground">
             No countries match those filters yet
           </p>
@@ -116,7 +116,7 @@ export default function CountryFilter() {
         <ul className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {results.map((country) => (
             <li key={country.slug}>
-              <article className="flex h-full flex-col gap-4 rounded-lg border border-border bg-card p-6">
+              <article className="hope-card hope-card--light flex h-full flex-col gap-4 p-6">
                 <div className="flex items-start justify-between gap-3">
                   <span className="text-3xl leading-none" aria-hidden="true">
                     {country.flag}

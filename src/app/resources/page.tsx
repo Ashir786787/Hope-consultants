@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import { PageHero } from "@/components/page-hero";
+import { Reveal } from "@/components/motion/reveal";
 import { resources } from "@/lib/data/resources";
 
 export const metadata: Metadata = {
@@ -13,27 +15,16 @@ export const metadata: Metadata = {
 export default function ResourcesPage() {
   return (
     <main className="w-full">
-      <section className="border-b border-border bg-card">
-        <div className="mx-auto flex w-full max-w-6xl flex-col gap-6 px-4 py-16 sm:px-6">
-          <Badge variant="secondary" className="w-fit border border-border">
-            Resources
-          </Badge>
-          <h1 className="max-w-3xl font-display text-4xl font-semibold leading-tight sm:text-5xl">
-            Guides we have written
-          </h1>
-          <p className="max-w-2xl text-lg leading-8 text-muted-foreground">
-            Short, honest, plain-language reading on studying abroad. We only publish what
-            we actually know — and we update it when things change.
-          </p>
-        </div>
-      </section>
+      <PageHero
+        eyebrow="Resources"
+        title="Guides we have written"
+        lede="Short, honest, plain-language reading on studying abroad. We only publish what we actually know — and we update it when things change."
+      />
 
       <section className="mx-auto grid w-full max-w-6xl grid-cols-1 gap-6 px-4 py-16 sm:px-6 md:grid-cols-2">
-        {resources.map((resource) => (
-          <article
-            key={resource.title}
-            className="flex flex-col gap-4 border border-border bg-card p-6"
-          >
+        {resources.map((resource, index) => (
+          <Reveal key={resource.title} delay={index * 0.05} className="h-full">
+            <article className="hope-card hope-card--light flex h-full flex-col gap-4 p-6">
             <div className="flex flex-col gap-2">
               <Badge variant="outline" className="w-fit">
                 {resource.category}
@@ -53,6 +44,7 @@ export default function ResourcesPage() {
               Ask us about this
             </Button>
           </article>
+          </Reveal>
         ))}
       </section>
 

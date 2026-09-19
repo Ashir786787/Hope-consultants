@@ -51,8 +51,8 @@ export function Navbar() {
         )}
       >
         <div className="mx-auto flex h-16 w-full max-w-6xl items-center justify-between gap-6 px-4 sm:px-6">
-          <Link href="/" className="flex shrink-0 items-center gap-2" aria-label="Hope Consultants home">
-            <Logo variant="full" tone="light" className="h-8 w-auto" />
+          <Link href="/" className="flex shrink-0 items-center" aria-label="Hope Consultants home">
+            <Logo variant="full" className="h-12" />
           </Link>
 
           <nav className="hidden items-center gap-6 text-sm font-medium text-hope-midnight/80 lg:flex">
@@ -95,7 +95,7 @@ export function Navbar() {
         >
           <div className="flex h-16 shrink-0 items-center justify-between border-b border-border px-4 sm:px-6">
 <DialogPrimitive.Close render={<Link href="/" aria-label="Hope Consultants home" />}>
-                <Logo variant="full" tone="light" className="h-8 w-auto" />
+                <Logo variant="full" className="h-12" />
               </DialogPrimitive.Close>
             <DialogPrimitive.Close
               render={

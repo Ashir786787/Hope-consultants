@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { buttonVariants } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import { Reveal } from "@/components/motion/reveal";
 import { countries, getCountry } from "@/lib/data/countries";
 import { getCostBandLabel } from "@/lib/data/helpers";
 import type { CountrySlug } from "@/lib/data/types";
@@ -40,62 +41,70 @@ export default async function CountryPage({ params }: CountryPageProps) {
 
   return (
     <main className="w-full">
-      <section className="border-b border-border bg-card">
-        <div className="mx-auto flex w-full max-w-6xl flex-col gap-10 px-4 py-14 sm:px-6">
-          <div className="flex items-center gap-6">
-            <span aria-hidden="true" className="text-6xl sm:text-7xl">
-              {country.flag}
-            </span>
-            <div className="flex flex-col gap-3">
-              <p className="text-sm font-medium uppercase tracking-wider text-muted-foreground">
-                {country.name}
-              </p>
-              <h1 className="font-display text-4xl font-semibold leading-tight text-card-foreground sm:text-5xl">
-                {country.tagline}
-              </h1>
-              <p className="max-w-2xl text-base leading-7 text-muted-foreground">
-                {country.description}
-              </p>
+      <section className="relative overflow-hidden border-b border-border">
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute -top-48 right-[-10%] size-[30rem] rounded-full bg-[radial-gradient(circle,rgb(var(--hope-ember-rgb)/0.14),transparent_65%)]"
+        />
+        <div className="relative mx-auto flex w-full max-w-6xl flex-col gap-10 px-4 py-14 sm:px-6">
+          <Reveal>
+            <div className="flex items-center gap-6">
+              <span aria-hidden="true" className="text-6xl sm:text-7xl">
+                {country.flag}
+              </span>
+              <div className="flex flex-col gap-3">
+                <p className="text-sm font-medium uppercase tracking-wider text-muted-foreground">
+                  {country.name}
+                </p>
+                <h1 className="font-display text-4xl font-semibold leading-tight text-card-foreground sm:text-5xl">
+                  {country.tagline}
+                </h1>
+                <p className="max-w-2xl text-base leading-7 text-muted-foreground">
+                  {country.description}
+                </p>
+              </div>
             </div>
-          </div>
+          </Reveal>
 
           <Separator />
 
-          <div className="grid w-full grid-cols-2 gap-8 gap-y-10 sm:grid-cols-4">
-            <div className="flex flex-col gap-168">
-              <span className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
-                Tuition per year
-              </span>
-              <span className="font-display text-2xl font-semibold text-card-foreground">
-                €{cost.tuitionEurMin.toLocaleString("en-PK")}–€{cost.tuitionEurMax.toLocaleString("en-PK")}
-              </span>
-              <span className="text-xs leading-5 text-muted-foreground">{country.tuitionNote}</span>
+          <Reveal delay={0.2}>
+            <div className="grid w-full grid-cols-2 gap-4 sm:grid-cols-4">
+              <div className="hope-card hope-card--light flex flex-col gap-2 p-5">
+                <span className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
+                  Tuition per year
+                </span>
+                <span className="font-display text-2xl font-semibold text-card-foreground">
+                  €{cost.tuitionEurMin.toLocaleString("en-PK")}–€{cost.tuitionEurMax.toLocaleString("en-PK")}
+                </span>
+                <span className="text-xs leading-5 text-muted-foreground">{country.tuitionNote}</span>
+              </div>
+              <div className="hope-card hope-card--light flex flex-col gap-2 p-5">
+                <span className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
+                  Living per month
+                </span>
+                <span className="font-display text-2xl font-semibold text-card-foreground">
+                  €{cost.livingEurMin.toLocaleString("en-PK")}–€{cost.livingEurMax.toLocaleString("en-PK")}
+                </span>
+              </div>
+              <div className="hope-card hope-card--light flex flex-col gap-2 p-5">
+                <span className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
+                  English-friendliness
+                </span>
+                <Badge variant="secondary" className="w-fit">
+                  {country.englishFriendly ? "English-friendly" : "Partially English"}
+                </Badge>
+              </div>
+              <div className="hope-card hope-card--light flex flex-col gap-2 p-5">
+                <span className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
+                  Intakes
+                </span>
+                <span className="font-display text-lg font-semibold text-card-foreground">
+                  {country.intakes.join(" · ")}
+                </span>
+              </div>
             </div>
-            <div className="flex flex-col gap-2">
-              <span className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
-                Living per month
-              </span>
-              <span className="font-display text-2xl font-semibold text-card-foreground">
-                €{cost.livingEurMin.toLocaleString("en-PK")}–€{cost.livingEurMax.toLocaleString("en-PK")}
-              </span>
-            </div>
-            <div className="flex flex-col gap-2">
-              <span className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
-                English-friendliness
-              </span>
-              <Badge variant="secondary" className="w-fit">
-                {country.englishFriendly ? "English-friendly" : "Partially English"}
-              </Badge>
-            </div>
-            <div className="flex flex-col gap-2">
-              <span className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
-                Intakes
-              </span>
-              <span className="font-display text-lg font-semibold text-card-foreground">
-                {country.intakes.join(" · ")}
-              </span>
-            </div>
-          </div>
+          </Reveal>
         </div>
       </section>
 
