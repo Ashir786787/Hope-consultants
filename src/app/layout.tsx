@@ -15,6 +15,16 @@ const montserrat = Montserrat({
 
 const SITE_URL = "https://www.hopeconsultants.pk";
 
+const organizationJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  name: "Hope Consultants",
+  url: new URL(SITE_URL).toString(),
+  email: "hello@hopeconsultants.example",
+  description:
+    "Honest study-abroad guidance for Pakistani students — university admissions, scholarships, and student visas across 14 study destinations.",
+};
+
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
@@ -44,6 +54,10 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en" className={montserrat.variable}>
       <body>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
+        />
         <SmoothScroll>
           <ScrollProgress />
           <Navbar />
