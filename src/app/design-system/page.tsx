@@ -268,15 +268,15 @@ export default function DesignSystemPage() {
         <Eyebrow tone="dark">Logo</Eyebrow>
         <div className="mt-6 flex flex-col gap-6 sm:flex-row">
           <div className="flex min-h-40 flex-1 items-center justify-center rounded-2xl border border-hope-white/10 bg-hope-white/5 p-8">
-            <Logo tone="dark" variant="full" />
+            <Logo variant="full" className="h-12 w-auto" />
           </div>
           <div className="flex min-h-40 flex-1 items-center justify-center rounded-2xl border border-[rgb(var(--hope-midnight-rgb)/0.12)] bg-hope-white p-8">
-            <Logo tone="light" variant="full" />
+            <Logo variant="full" className="h-12 w-auto" />
           </div>
         </div>
         <p className="mt-4 max-w-3xl text-sm leading-6 text-hope-fog">
-          Brand assets pending — drop the logo files into /public/brand/ and tell me the
-          names; the Logo component will pick the right file per tone.
+          Live asset: /public/brand/logo-full-color.jpg — used by the navbar, mobile menu,
+          and footer. Replace that one file to swap the logo everywhere.
         </p>
       </Section>
     </main>

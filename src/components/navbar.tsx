@@ -6,7 +6,7 @@ import { Dialog as DialogPrimitive } from "@base-ui/react/dialog";
 import { MenuIcon, XIcon } from "lucide-react";
 import { cn } from "cn";
 
-import { Logo, Wordmark } from "@/components/ui/logo";
+import { Logo } from "@/components/ui/logo";
 import { Button } from "@/components/ui/button";
 import { Z } from "@/lib/motion";
 
@@ -52,8 +52,7 @@ export function Navbar() {
       >
         <div className="mx-auto flex h-16 w-full max-w-6xl items-center justify-between gap-6 px-4 sm:px-6">
           <Link href="/" className="flex shrink-0 items-center gap-2" aria-label="Hope Consultants home">
-            <Logo variant="mark" tone="light" />
-            <Wordmark />
+            <Logo variant="full" tone="light" className="h-8 w-auto" />
           </Link>
 
           <nav className="hidden items-center gap-6 text-sm font-medium text-hope-midnight/80 lg:flex">
@@ -95,9 +94,9 @@ export function Navbar() {
           className="fixed inset-x-0 top-0 flex h-dvh flex-col overflow-hidden bg-hope-white data-open:animate-in data-open:fade-in data-open:slide-in-from-top data-closed:animate-out data-closed:fade-out data-closed:slide-out-to-top"
         >
           <div className="flex h-16 shrink-0 items-center justify-between border-b border-border px-4 sm:px-6">
-            <DialogPrimitive.Close render={<Link href="/" aria-label="Hope Consultants home" />}>
-              <Wordmark />
-            </DialogPrimitive.Close>
+<DialogPrimitive.Close render={<Link href="/" aria-label="Hope Consultants home" />}>
+                <Logo variant="full" tone="light" className="h-8 w-auto" />
+              </DialogPrimitive.Close>
             <DialogPrimitive.Close
               render={
                 <Button

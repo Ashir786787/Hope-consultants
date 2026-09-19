@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-import { Logo, Wordmark } from "@/components/ui/logo";
+import { Logo } from "@/components/ui/logo";
 
 const EXPLORE_LINKS = [
   { label: "Services", href: "/services" },
@@ -51,8 +51,7 @@ export function Footer() {
         <div className="grid gap-12 md:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr_1.2fr]">
           <div className="flex flex-col items-start gap-5">
             <Link href="/" className="flex items-center gap-2" aria-label="Hope Consultants home">
-              <Logo variant="mark" tone="dark" />
-              <Wordmark tone="dark" />
+              <Logo variant="full" tone="dark" className="h-9 w-auto" />
             </Link>
             <p className="max-w-xs text-sm leading-6 text-hope-fog">
               Honest study abroad guidance for Pakistani students — universities,

@@ -1,6 +1,10 @@
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Reveal } from "@/components/motion/reveal";
+import { Magnetic } from "@/components/motion/magnetic";
+import { CountUp } from "@/components/motion/count-up";
+import { Marquee } from "@/components/motion/marquee";
 import { countries } from "@/lib/data/countries";
 import { services } from "@/lib/data/services";
 import { processSteps } from "@/lib/data/process";
@@ -45,78 +49,114 @@ function SectionHeading({
 export default function Home() {
   return (
     <main className="min-h-screen bg-background text-foreground">
-      <section id="top" className="border-b border-border">
-        <div className="mx-auto flex w-full max-w-6xl flex-col items-start gap-10 px-4 py-20 sm:px-6 sm:py-28">
+      <section id="top" className="relative overflow-hidden border-b border-border">
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute -top-48 right-[-10%] size-[36rem] rounded-full bg-[radial-gradient(circle,rgb(var(--hope-ember-rgb)/0.16),transparent_65%)]"
+        />
+        <div className="relative mx-auto flex w-full max-w-6xl flex-col items-start gap-10 px-4 py-20 sm:px-6 sm:py-28">
           <div className="flex flex-col items-start gap-5">
-            <Badge className="bg-primary text-primary-foreground">
-              Trusted guidance for Pakistani students
-            </Badge>
-            <h1 className="max-w-3xl font-display text-4xl font-semibold leading-tight tracking-tight sm:text-6xl">
-              Your degree in Europe starts with <span className="text-primary">honest</span>{" "}
-              guidance, not promises.
-            </h1>
-            <p className="max-w-xl text-lg leading-8 text-muted-foreground">
-              Hope Consultants helps you find a university that genuinely fits your{" "}
-              <strong className="font-medium text-foreground">grades, budget, and goals</strong>{" "}
-              across {countries.length} destinations and {services.length} services. We tell
-              you the truth about costs, visas, and scholarships — before you spend a rupee.
-            </p>
+            <Reveal>
+              <Badge className="bg-primary text-primary-foreground">
+                Trusted guidance for Pakistani students
+              </Badge>
+            </Reveal>
+            <Reveal delay={0.1}>
+              <h1 className="max-w-3xl font-display text-4xl font-semibold leading-tight tracking-tight sm:text-6xl">
+                Your degree in Europe starts with <span className="text-primary">honest</span>{" "}
+                guidance, not promises.
+              </h1>
+            </Reveal>
+            <Reveal delay={0.2}>
+              <p className="max-w-xl text-lg leading-8 text-muted-foreground">
+                Hope Consultants helps you find a university that genuinely fits your{" "}
+                <strong className="font-medium text-foreground">grades, budget, and goals</strong>{" "}
+                across {countries.length} destinations and {services.length} services. We tell
+                you the truth about costs, visas, and scholarships — before you spend a rupee.
+              </p>
+            </Reveal>
           </div>
-          <div className="flex flex-wrap items-center gap-3">
-            <Button nativeButton={false} render={<a href="#countries" />} size="lg">
-              Explore {countries.length} countries
-            </Button>
-            <Button nativeButton={false} render={<a href="#contact" />} size="lg" variant="outline">
-              Book a free consultation
-            </Button>
-          </div>
-          <dl className="grid w-full max-w-2xl grid-cols-2 gap-6 border-t border-border pt-8 sm:grid-cols-4">
-            {[
-              { value: String(countries.length), label: "Study destinations" },
-              { value: String(services.length), label: "Services we offer" },
-              { value: "6", label: "Step-by-step process" },
-              { value: "0", label: "Fake promises" },
-            ].map((stat) => (
-              <div key={stat.label}>
-                <dt className="font-display text-2xl font-bold text-foreground">{stat.value}</dt>
-                <dd className="mt-1 text-sm text-muted-foreground">{stat.label}</dd>
-              </div>
-            ))}
-          </dl>
+          <Reveal delay={0.3} className="flex flex-wrap items-center gap-3">
+            <Magnetic>
+              <Button nativeButton={false} render={<a href="#countries" />} size="lg">
+                Explore {countries.length} countries
+              </Button>
+            </Magnetic>
+            <Magnetic>
+              <Button nativeButton={false} render={<a href="#contact" />} size="lg" variant="outline">
+                Book a free consultation
+              </Button>
+            </Magnetic>
+          </Reveal>
+          <Reveal delay={0.4} className="w-full">
+            <dl className="grid w-full max-w-2xl grid-cols-2 gap-6 border-t border-border pt-8 sm:grid-cols-4">
+              {[
+                { value: String(countries.length), label: "Study destinations" },
+                { value: String(services.length), label: "Services we offer" },
+                { value: "6", label: "Step-by-step process" },
+                { value: "0", label: "Fake promises" },
+              ].map((stat) => (
+                <div key={stat.label}>
+                  <dt className="font-display text-2xl font-bold text-foreground">
+                    <CountUp to={Number(stat.value)} />
+                  </dt>
+                  <dd className="mt-1 text-sm text-muted-foreground">{stat.label}</dd>
+                </div>
+              ))}
+            </dl>
+          </Reveal>
         </div>
       </section>
 
+      <Marquee
+        className="border-b border-border bg-hope-midnight py-5 text-hope-white"
+        duration={30}
+      >
+        {countries.map((country) => (
+          <span
+            key={country.slug}
+            className="mx-5 flex items-center gap-2 text-sm font-semibold tracking-[0.18em] uppercase"
+          >
+            <span aria-hidden="true" className="text-base">
+              {country.flag}
+            </span>
+            {country.name}
+          </span>
+        ))}
+      </Marquee>
+
       <section id="services" className="border-b border-border">
         <div className="mx-auto flex w-full max-w-6xl flex-col gap-12 px-4 py-20 sm:px-6">
-          <SectionHeading
-            eyebrow="What we do"
-            title="Services that cover the whole journey"
-            lede="From the first conversation to the day you land, everything we do is built on honesty about what's possible."
-          />
+          <Reveal className="w-full">
+            <SectionHeading
+              eyebrow="What we do"
+              title="Services that cover the whole journey"
+              lede="From the first conversation to the day you land, everything we do is built on honesty about what's possible."
+            />
+          </Reveal>
           <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {services.map((service) => (
-              <article
-                key={service.slug}
-                className="flex flex-col gap-4 rounded-lg border border-border bg-card p-6"
-              >
-                <div>
-                  <h3 className="font-display text-lg font-semibold text-card-foreground">
-                    {service.shortName}
-                  </h3>
-                  <p className="mt-1 text-sm text-muted-foreground">{service.name}</p>
-                </div>
-                <p className="text-sm leading-6 text-muted-foreground">{service.description}</p>
-                <ul className="mt-auto flex flex-col gap-2 text-sm text-card-foreground">
-                  {service.deliverables.map((item) => (
-                    <li key={item} className="flex items-start gap-2">
-                      <span aria-hidden="true" className="mt-0.5 text-primary">
-                        ✓
-                      </span>
-                      <span>{item}</span>
-                    </li>
-                  ))}
-                </ul>
-              </article>
+            {services.map((service, index) => (
+              <Reveal key={service.slug} delay={index * 0.05} className="h-full">
+                <article className="hope-card hope-card--light flex h-full flex-col gap-4 p-6">
+                  <div>
+                    <h3 className="font-display text-lg font-semibold text-card-foreground">
+                      {service.shortName}
+                    </h3>
+                    <p className="mt-1 text-sm text-muted-foreground">{service.name}</p>
+                  </div>
+                  <p className="text-sm leading-6 text-muted-foreground">{service.description}</p>
+                  <ul className="mt-auto flex flex-col gap-2 text-sm text-card-foreground">
+                    {service.deliverables.map((item) => (
+                      <li key={item} className="flex items-start gap-2">
+                        <span aria-hidden="true" className="mt-0.5 text-primary">
+                          ✓
+                        </span>
+                        <span>{item}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </article>
+              </Reveal>
             ))}
           </div>
         </div>
@@ -124,40 +164,41 @@ export default function Home() {
 
       <section id="countries" className="border-b border-border">
         <div className="mx-auto flex w-full max-w-6xl flex-col gap-12 px-4 py-20 sm:px-6">
-          <SectionHeading
-            eyebrow="Destinations"
-            title="Fourteen countries, one honest picture"
-            lede="Each profile gives you real figures for tuition, living costs, and visa reality — with no tuition fees hidden and no scholarship promises invented."
-          />
+          <Reveal className="w-full">
+            <SectionHeading
+              eyebrow="Destinations"
+              title="Fourteen countries, one honest picture"
+              lede="Each profile gives you real figures for tuition, living costs, and visa reality — with no tuition fees hidden and no scholarship promises invented."
+            />
+          </Reveal>
           <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {countries.map((country) => (
-              <article
-                key={country.slug}
-                className="flex flex-col gap-4 rounded-lg border border-border bg-card p-6"
-              >
-                <div className="flex items-start justify-between gap-3">
-                  <div className="text-3xl leading-none" aria-hidden="true">
-                    {country.flag}
-                  </div>
-                  <Badge className={cn("border", bandColor[country.cost.band])}>
-                    {costBandLabel[country.cost.band]}
-                  </Badge>
-                </div>
-                <div>
-                  <h3 className="font-display text-xl font-semibold text-card-foreground">
-                    {country.name}
-                  </h3>
-                  <p className="mt-1 text-sm text-muted-foreground">{country.tagline}</p>
-                </div>
-                <p className="text-sm leading-6 text-muted-foreground">{country.description}</p>
-                <div className="flex flex-wrap gap-2">
-                  {country.popularFields.slice(0, 3).map((field) => (
-                    <Badge key={field} variant="secondary">
-                      {field}
+            {countries.map((country, index) => (
+              <Reveal key={country.slug} delay={index * 0.05} className="h-full">
+                <article className="hope-card hope-card--light flex h-full flex-col gap-4 p-6">
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="text-3xl leading-none" aria-hidden="true">
+                      {country.flag}
+                    </div>
+                    <Badge className={cn("border", bandColor[country.cost.band])}>
+                      {costBandLabel[country.cost.band]}
                     </Badge>
-                  ))}
-                </div>
-              </article>
+                  </div>
+                  <div>
+                    <h3 className="font-display text-xl font-semibold text-card-foreground">
+                      {country.name}
+                    </h3>
+                    <p className="mt-1 text-sm text-muted-foreground">{country.tagline}</p>
+                  </div>
+                  <p className="text-sm leading-6 text-muted-foreground">{country.description}</p>
+                  <div className="flex flex-wrap gap-2">
+                    {country.popularFields.slice(0, 3).map((field) => (
+                      <Badge key={field} variant="secondary">
+                        {field}
+                      </Badge>
+                    ))}
+                  </div>
+                </article>
+              </Reveal>
             ))}
           </div>
         </div>
@@ -165,25 +206,26 @@ export default function Home() {
 
       <section id="process" className="border-b border-border">
         <div className="mx-auto flex w-full max-w-6xl flex-col gap-12 px-4 py-20 sm:px-6">
-          <SectionHeading
-            eyebrow="How it works"
-            title="A six-step process with zero surprises"
-            lede="Clear, transparent stages. If something isn't possible, we tell you at step one — not after you've paid."
-          />
+          <Reveal className="w-full">
+            <SectionHeading
+              eyebrow="How it works"
+              title="A six-step process with zero surprises"
+              lede="Clear, transparent stages. If something isn't possible, we tell you at step one — not after you've paid."
+            />
+          </Reveal>
           <ol className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {processSteps.map((step) => (
-              <li
-                key={step.step}
-                className="flex flex-col gap-3 rounded-lg border border-border bg-card p-6"
-              >
-                <span className="font-display text-4xl font-bold text-primary">
-                  {String(step.step).padStart(2, "0")}
-                </span>
-                <h3 className="font-display text-lg font-semibold text-card-foreground">
-                  {step.title}
-                </h3>
-                <p className="text-sm leading-6 text-muted-foreground">{step.description}</p>
-              </li>
+            {processSteps.map((step, index) => (
+              <Reveal key={step.step} delay={index * 0.05} className="h-full">
+                <li className="hope-card hope-card--light flex h-full flex-col gap-3 p-6">
+                  <span className="font-display text-4xl font-bold text-primary">
+                    {String(step.step).padStart(2, "0")}
+                  </span>
+                  <h3 className="font-display text-lg font-semibold text-card-foreground">
+                    {step.title}
+                  </h3>
+                  <p className="text-sm leading-6 text-muted-foreground">{step.description}</p>
+                </li>
+              </Reveal>
             ))}
           </ol>
         </div>
@@ -191,25 +233,26 @@ export default function Home() {
 
       <section id="scholarships" className="border-b border-border">
         <div className="mx-auto flex w-full max-w-6xl flex-col gap-12 px-4 py-20 sm:px-6">
-          <SectionHeading
-            eyebrow="Funding, honestly"
-            title="Scholarships are possible. They are never guaranteed."
-            lede="We will never sell you a scholarship. We explain the real routes to funding, and we tell you which ones are actually worth your time."
-          />
+          <Reveal className="w-full">
+            <SectionHeading
+              eyebrow="Funding, honestly"
+              title="Scholarships are possible. They are never guaranteed."
+              lede="We will never sell you a scholarship. We explain the real routes to funding, and we tell you which ones are actually worth your time."
+            />
+          </Reveal>
           <div className="grid gap-5 sm:grid-cols-2">
-            {scholarships.map((item) => (
-              <article
-                key={item.name}
-                className="flex flex-col gap-3 rounded-lg border border-border bg-card p-6"
-              >
-                <h3 className="font-display text-lg font-semibold text-card-foreground">
-                  {item.name}
-                </h3>
-                <p className="text-sm text-muted-foreground">{item.provider}</p>
-                <p className="text-sm text-muted-foreground">{item.country}</p>
-                <p className="text-sm font-medium text-primary">{item.covers}</p>
-                <p className="text-sm leading-6 text-muted-foreground">{item.advice}</p>
-              </article>
+            {scholarships.map((item, index) => (
+              <Reveal key={item.name} delay={index * 0.05} className="h-full">
+                <article className="hope-card hope-card--light flex h-full flex-col gap-3 p-6">
+                  <h3 className="font-display text-lg font-semibold text-card-foreground">
+                    {item.name}
+                  </h3>
+                  <p className="text-sm text-muted-foreground">{item.provider}</p>
+                  <p className="text-sm text-muted-foreground">{item.country}</p>
+                  <p className="text-sm font-medium text-primary">{item.covers}</p>
+                  <p className="text-sm leading-6 text-muted-foreground">{item.advice}</p>
+                </article>
+              </Reveal>
             ))}
           </div>
         </div>
@@ -217,23 +260,27 @@ export default function Home() {
 
       <section id="testimonials" className="border-b border-border">
         <div className="mx-auto flex w-full max-w-3xl flex-col gap-10 px-4 py-20 sm:px-6">
-          <SectionHeading
-            eyebrow="From our students"
-            title="What students remember us for"
-            lede="Real feedback. We only publish a testimonial when a student gives us permission."
-          />
-          <figure className="rounded-lg border border-border bg-card p-8 text-center">
-            <blockquote className="font-display text-xl font-medium leading-8 text-card-foreground">
-              {testimonials[0].quote}
-            </blockquote>
-            <figcaption className="mt-6 text-sm text-muted-foreground">
-              <span className="font-medium text-card-foreground">{testimonials[0].name}</span>
-              {" — "}
-              {testimonials[0].destination}
-              <br />
-              <span className="text-xs leading-relaxed">{testimonials[0].outcome}</span>
-            </figcaption>
-          </figure>
+          <Reveal className="w-full">
+            <SectionHeading
+              eyebrow="From our students"
+              title="What students remember us for"
+              lede="Real feedback. We only publish a testimonial when a student gives us permission."
+            />
+          </Reveal>
+          <Reveal className="w-full">
+            <figure className="hope-card hope-card--light p-8 text-center">
+              <blockquote className="font-display text-xl font-medium leading-8 text-card-foreground">
+                {testimonials[0].quote}
+              </blockquote>
+              <figcaption className="mt-6 text-sm text-muted-foreground">
+                <span className="font-medium text-card-foreground">{testimonials[0].name}</span>
+                {" — "}
+                {testimonials[0].destination}
+                <br />
+                <span className="text-xs leading-relaxed">{testimonials[0].outcome}</span>
+              </figcaption>
+            </figure>
+          </Reveal>
         </div>
       </section>
 
@@ -247,17 +294,21 @@ export default function Home() {
             help you reach a genuinely good outcome, we&apos;ll say so.
           </p>
           <div className="flex flex-wrap items-center gap-3">
-            <Button nativeButton={false} render={<a href="mailto:hello@hopeconsultants.example" />} size="lg" variant="secondary">
-              Email us
-            </Button>
-            <Button
-              nativeButton={false} render={<a href="tel:+920000000000" />}
-              size="lg"
-              variant="outline"
-              className="border-primary-foreground/40 text-primary-foreground hover:bg-primary-foreground/10 hover:text-primary-foreground"
-            >
-              Call +92 (0) 000 000 0000
-            </Button>
+            <Magnetic>
+              <Button nativeButton={false} render={<a href="mailto:hello@hopeconsultants.example" />} size="lg" variant="secondary">
+                Email us
+              </Button>
+            </Magnetic>
+            <Magnetic>
+              <Button
+                nativeButton={false} render={<a href="tel:+920000000000" />}
+                size="lg"
+                variant="outline"
+                className="border-primary-foreground/40 text-primary-foreground hover:bg-primary-foreground/10 hover:text-primary-foreground"
+              >
+                Call +92 (0) 000 000 0000
+              </Button>
+            </Magnetic>
           </div>
         </div>
       </section>
