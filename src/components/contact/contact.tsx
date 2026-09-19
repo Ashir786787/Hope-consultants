@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -27,13 +28,21 @@ export function ContactForm() {
     resolver: zodResolver(contactSchema),
   });
 
+  const [submitError, setSubmitError] = useState<string | null>(null);
+
   async function onSubmit(values: ContactValues) {
-    const subject = encodeURIComponent(`[Hope Consultants] ${values.subject}`);
-    const body = encodeURIComponent(
-      `Name: ${values.name}\nEmail: ${values.email}\n\n${values.message}`
-    );
-    window.location.assign(`mailto:hello@hopeconsultants.example?subject=${subject}&body=${body}`);
-    await new Promise<void>((resolve) => setTimeout(resolve, 600));
+    setSubmitError(null);
+    const response = await fetch("/api/contact", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(values),
+    });
+    const payload = (await response.json().catch(() => null)) as { error?: string } | null;
+    if (!response.ok) {
+      setSubmitError(
+        payload?.error ?? "Something went wrong. Please email us directly instead."
+      );
+    }
   }
 
   return (
@@ -104,15 +113,21 @@ export function ContactForm() {
         )}
       </div>
 
+      {submitError && (
+        <p className="border border-destructive/50 bg-destructive/10 p-4 text-sm leading-7 text-destructive" role="alert">
+          {submitError}
+        </p>
+      )}
+
       {isSubmitSuccessful && (
         <p className="border border-border bg-muted/50 p-4 text-sm leading-7 text-card-foreground">
-          Your email app opened with the message ready to send. Nothing was stored on any
-          server — we only receive what you choose to send.
+          Thank you — your message has been sent. A real person reads it and usually replies
+          within two working days.
         </p>
       )}
 
       <Button type="submit" size="lg" disabled={isSubmitting} className="w-fit">
-        Open my email to send
+        {isSubmitting ? "Sending…" : "Send message"}
       </Button>
       <p className="text-xs leading-6 text-muted-foreground">
         We are a real consultancy, so your message is read by a person — usually within two

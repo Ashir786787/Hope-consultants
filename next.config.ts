@@ -4,6 +4,9 @@ const nextConfig: NextConfig = {
   images: {
     dangerouslyAllowSVG: true,
   },
+  outputFileTracingIncludes: {
+    "/*": ["./data/**"],
+  },
 };
 
 export default nextConfig;

@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 import { Logo } from "@/components/ui/logo";
+import { getSite } from "@/lib/site";
 
 const EXPLORE_LINKS = [
   { label: "Services", href: "/services" },
@@ -44,7 +45,8 @@ function FooterColumn({
   );
 }
 
-export function Footer() {
+export async function Footer() {
+  const site = await getSite();
   return (
     <footer className="bg-hope-midnight text-hope-white">
       <div className="mx-auto w-full max-w-6xl px-4 py-16 sm:px-6">
@@ -67,18 +69,18 @@ export function Footer() {
             <ul className="flex flex-col gap-3 text-sm text-hope-fog">
               <li>
                 <a
-                  href="mailto:hello@hopeconsultants.example"
+                  href={`mailto:${site.email}`}
                   className="transition-colors hover:text-hope-ember"
                 >
-                  hello@hopeconsultants.example
+                  {site.email}
                 </a>
               </li>
               <li>
                 <a
-                  href="tel:+920000000000"
+                  href={`tel:${site.phoneHref}`}
                   className="transition-colors hover:text-hope-ember"
                 >
-                  +92 (0) 000 000 0000
+                  {site.phone}
                 </a>
               </li>
             </ul>
