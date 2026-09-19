@@ -3,6 +3,9 @@ import type { ReactNode } from "react";
 import { Montserrat } from "next/font/google";
 import "./globals.css";
 import { SmoothScroll } from "@/components/motion/smooth-scroll";
+import { ScrollProgress } from "@/components/scroll-progress";
+import { Navbar } from "@/components/navbar";
+import { Footer } from "@/components/footer";
 
 const montserrat = Montserrat({
   variable: "--font-montserrat",
@@ -23,7 +26,12 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en" className={montserrat.variable}>
       <body>
-        <SmoothScroll>{children}</SmoothScroll>
+        <SmoothScroll>
+          <ScrollProgress />
+          <Navbar />
+          {children}
+          <Footer />
+        </SmoothScroll>
       </body>
     </html>
   );

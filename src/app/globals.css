@@ -137,6 +137,7 @@
     -webkit-text-size-adjust: 100%;
     scrollbar-color: rgb(var(--hope-midnight-rgb) / 0.35) var(--hope-white);
     scrollbar-width: thin;
+    scroll-padding-top: 5rem;
   }
 
   html,

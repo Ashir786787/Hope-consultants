@@ -45,33 +45,6 @@ function SectionHeading({
 export default function Home() {
   return (
     <main className="min-h-screen bg-background text-foreground">
-      <header className="border-b border-border bg-background/80 backdrop-blur">
-        <div className="mx-auto flex w-full max-w-6xl items-center justify-between px-4 py-4 sm:px-6">
-          <a href="#top" className="flex items-center gap-2">
-            <span className="font-display text-xl font-bold tracking-tight">
-              Hope<span className="text-primary"> Consultants</span>
-            </span>
-          </a>
-          <nav className="hidden items-center gap-6 text-sm font-medium text-muted-foreground sm:flex">
-            <a href="#countries" className="transition-colors hover:text-foreground">
-              Countries
-            </a>
-            <a href="#services" className="transition-colors hover:text-foreground">
-              Services
-            </a>
-            <a href="#process" className="transition-colors hover:text-foreground">
-              Process
-            </a>
-            <a href="#scholarships" className="transition-colors hover:text-foreground">
-              Funding
-            </a>
-          </nav>
-            <Button nativeButton={false} render={<a href="#contact" />} size="sm">
-              Free consultation
-            </Button>
-        </div>
-      </header>
-
       <section id="top" className="border-b border-border">
         <div className="mx-auto flex w-full max-w-6xl flex-col items-start gap-10 px-4 py-20 sm:px-6 sm:py-28">
           <div className="flex flex-col items-start gap-5">
@@ -288,29 +261,6 @@ export default function Home() {
           </div>
         </div>
       </section>
-
-      <footer className="border-t border-border bg-muted">
-        <div className="mx-auto flex w-full max-w-6xl flex-col items-start justify-between gap-6 px-4 py-10 sm:flex-row sm:items-center sm:px-6">
-          <p className="text-sm text-muted-foreground">
-            © {new Date().getFullYear()} Hope Consultants. Study abroad guidance for
-            Pakistani students.
-          </p>
-          <nav className="flex items-center gap-6 text-sm text-muted-foreground">
-            <a href="#services" className="transition-colors hover:text-foreground">
-              Services
-            </a>
-            <a href="#countries" className="transition-colors hover:text-foreground">
-              Countries
-            </a>
-            <a href="#process" className="transition-colors hover:text-foreground">
-              Process
-            </a>
-            <a href="#contact" className="transition-colors hover:text-foreground">
-              Contact
-            </a>
-          </nav>
-        </div>
-      </footer>
     </main>
   );
 }
