@@ -1,22 +1,30 @@
 import Image from "next/image";
 import { cn } from "cn";
 
+const LOGO_SOURCES = {
+  lockup: { src: "/brand/logo-full-color.jpg", width: 258, height: 317 },
+  mark: { src: "/brand/logo-full-color.jpg", width: 258, height: 317 },
+} as const;
+
 export type LogoProps = {
-  tone?: "light" | "dark";
-  variant?: "full" | "mark";
+  variant?: "lockup" | "mark";
+  priority?: boolean;
   className?: string;
 };
 
-export function Logo({ tone = "light", variant = "full", className }: LogoProps) {
-  void tone;
-  void variant;
+export function Logo({ variant = "lockup", priority = false, className }: LogoProps) {
+  const source = LOGO_SOURCES[variant];
+  const sizes = variant === "lockup" ? "(min-width: 1024px) 124px, 105px" : "44px";
+
   return (
     <Image
-      src="/brand/logo-full-color.jpg"
+      src={source.src}
       alt="Hope Consultants"
-      width={258}
-      height={317}
-      className={cn("p-1.5 object-contain", className)}
+      width={source.width}
+      height={source.height}
+      priority={priority}
+      sizes={sizes}
+      className={cn("h-auto w-auto object-contain", className)}
     />
   );
 }

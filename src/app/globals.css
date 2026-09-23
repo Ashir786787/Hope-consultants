@@ -90,8 +90,7 @@
   --muted-foreground: var(--hope-fog);
   --accent: rgb(var(--hope-midnight-rgb) / 0.06);
   --accent-foreground: var(--hope-midnight);
-  --destructive: #c4303a;
-  --destructive-rgb: 196 48 58;
+  --destructive: var(--hope-midnight);
   --border: rgb(var(--hope-midnight-rgb) / 0.12);
   --input: rgb(var(--hope-midnight-rgb) / 0.18);
   --ring: var(--hope-ember);
@@ -122,7 +121,7 @@
   --muted-foreground: var(--hope-fog);
   --accent: rgb(var(--hope-white-rgb) / 0.08);
   --accent-foreground: var(--hope-white);
-  --destructive: #e07067;
+  --destructive: var(--hope-ember);
   --border: rgb(var(--hope-white-rgb) / 0.14);
   --input: rgb(var(--hope-white-rgb) / 0.22);
   --ring: var(--hope-ember);
@@ -162,6 +161,12 @@
     outline: 2px solid var(--hope-midnight);
     outline-offset: 3px;
     box-shadow: 0 0 0 2px var(--hope-white), 0 0 0 4px var(--hope-ember);
+  }
+
+  [data-tone="dark"] :focus-visible {
+    outline: 2px solid var(--hope-ember);
+    outline-offset: 3px;
+    box-shadow: 0 0 0 2px var(--hope-midnight), 0 0 0 4px var(--hope-ember);
   }
 
   img,
@@ -223,10 +228,10 @@
   position: relative;
   isolation: isolate;
   overflow: hidden;
-  border-radius: 1.5rem;
+  border-radius: 1.25rem;
   border: 1px solid rgb(var(--hope-white-rgb) / 0.1);
   background: rgb(var(--hope-white-rgb) / 0.04);
-  transition: transform 0.45s var(--ease-out), border-color 0.3s var(--ease-out), box-shadow 0.45s var(--ease-out);
+  transition: transform 0.5s var(--ease-out), border-color 0.3s ease;
 }
 
 .hope-card::before {
@@ -234,30 +239,39 @@
   position: absolute;
   inset: 0;
   z-index: -1;
-  background: radial-gradient(680px circle at var(--mx) var(--my), rgb(var(--hope-ember-rgb) / 0.16), transparent 65%);
+  border-radius: inherit;
+  background: radial-gradient(420px circle at var(--mx) var(--my), rgb(var(--hope-ember-rgb) / 0.16), transparent 45%);
   opacity: 0;
-  transition: opacity 0.35s ease;
+  transition: opacity 0.4s ease;
 }
 
-.hope-card:hover {
-  transform: translateY(-6px);
-  border-color: rgb(var(--hope-ember-rgb) / 0.4);
-  box-shadow: var(--shadow-lifted);
+@media (min-width: 640px) {
+  .hope-card {
+    border-radius: 1.5rem;
+  }
 }
 
-.hope-card:hover::before {
-  opacity: 1;
+@media (hover: hover) and (pointer: fine) {
+  .hope-card:hover {
+    transform: translateY(-6px);
+    border-color: rgb(var(--hope-ember-rgb) / 0.4);
+  }
+
+  .hope-card:hover::before {
+    opacity: 1;
+  }
 }
 
 .hope-card.hope-card--light {
   border-color: rgb(var(--hope-midnight-rgb) / 0.1);
   background: var(--hope-white);
-  box-shadow: 0 2px 8px rgb(var(--hope-midnight-rgb) / 0.06);
+  box-shadow: 0 1px 2px rgb(var(--hope-midnight-rgb) / 0.06), 0 24px 48px -24px rgb(var(--hope-midnight-rgb) / 0.18);
 }
 
-.hope-card.hope-card--light:hover {
-  border-color: rgb(var(--hope-midnight-rgb) / 0.3);
-  box-shadow: var(--shadow-card);
+@media (hover: hover) and (pointer: fine) {
+  .hope-card.hope-card--light:hover {
+    border-color: rgb(var(--hope-midnight-rgb) / 0.18);
+  }
 }
 
 .hope-marquee {

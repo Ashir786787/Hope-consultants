@@ -14,9 +14,9 @@ const bandLabel: Record<CountryDestination["cost"]["band"], string> = {
 };
 
 const bandClasses: Record<CountryDestination["cost"]["band"], string> = {
-  low: "border-emerald-300 bg-emerald-50 text-emerald-800",
-  medium: "border-amber-300 bg-amber-50 text-amber-800",
-  high: "border-rose-300 bg-rose-50 text-rose-800",
+  low: "border-[rgb(var(--hope-ember-rgb)/0.4)] bg-hope-ember text-hope-midnight",
+  medium: "border-[rgb(var(--hope-midnight-rgb)/0.18)] bg-hope-midnight text-hope-white",
+  high: "border-[rgb(var(--hope-obsidian-rgb)/0.18)] bg-hope-obsidian text-hope-white",
 };
 
 export default function CountryFilter({

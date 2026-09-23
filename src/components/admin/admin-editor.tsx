@@ -340,7 +340,7 @@ export function AdminEditor({ storage }: { storage: "mongodb" | "json-files" }) 
         <aside className="border-b border-hope-white/10 bg-hope-midnight lg:w-72 lg:shrink-0 lg:border-b-0 lg:border-r">
           <div className="sticky top-0 flex flex-col gap-6 p-4 sm:px-6 lg:h-dvh lg:p-5">
             <div className="flex items-center justify-between gap-3 lg:justify-start">
-              <Logo variant="full" className="h-10" />
+              <Logo variant="lockup" className="h-10" />
               <Badge
                 variant="outline"
                 className="border-hope-white/15 text-hope-fog"

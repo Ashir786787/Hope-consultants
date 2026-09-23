@@ -23,9 +23,9 @@ const costBandLabel: Record<CostBand, string> = {
 };
 
 const bandColor: Record<CostBand, string> = {
-  low: "border-border bg-emerald-50 text-emerald-800",
-  medium: "border-border bg-amber-50 text-amber-800",
-  high: "border-border bg-rose-50 text-rose-800",
+  low: "border-[rgb(var(--hope-ember-rgb)/0.4)] bg-hope-ember text-hope-midnight",
+  medium: "border-[rgb(var(--hope-midnight-rgb)/0.18)] bg-hope-midnight text-hope-white",
+  high: "border-[rgb(var(--hope-obsidian-rgb)/0.18)] bg-hope-obsidian text-hope-white",
 };
 
 function SectionHeading({

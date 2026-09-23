@@ -15,9 +15,10 @@ export type RevealProps = {
   className?: string;
   delay?: number;
   y?: number;
+  stagger?: number;
 };
 
-export function Reveal({ children, className, delay = 0, y = 32 }: RevealProps) {
+export function Reveal({ children, className, delay = 0, y = 32, stagger }: RevealProps) {
   const ref = useRef<HTMLDivElement>(null);
 
   useGSAP(
@@ -25,8 +26,9 @@ export function Reveal({ children, className, delay = 0, y = 32 }: RevealProps) 
       const el = ref.current;
       if (!el) return;
       if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+      const targets = stagger ? Array.from(el.children) : el;
       gsap.fromTo(
-        el,
+        targets,
         { y, autoAlpha: 0 },
         {
           y: 0,
@@ -34,6 +36,7 @@ export function Reveal({ children, className, delay = 0, y = 32 }: RevealProps) 
           duration: DURATIONS.reveal,
           delay,
           ease: EASE_OUT,
+          stagger,
           scrollTrigger: {
             trigger: el,
             start: VIEWPORT.trigger,
