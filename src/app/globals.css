@@ -307,6 +307,14 @@
   }
 }
 
+.navbar-logo {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  transform-origin: left center;
+  transition: transform 0.5s var(--ease-out);
+}
+
 html.lenis,
 html.lenis body {
   height: auto;

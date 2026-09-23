@@ -54,7 +54,7 @@ export async function Footer() {
         <div className="grid gap-12 md:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr_1.2fr]">
           <div className="flex flex-col items-start gap-5">
             <Link href="/" className="flex items-center" aria-label="Hope Consultants home">
-              <Logo variant="lockup" className="h-12" />
+              <Logo variant="lockup" className="h-14 w-auto" />
             </Link>
             <p className="max-w-xs text-sm leading-6 text-hope-fog">
               Honest study abroad guidance for Pakistani students — universities,
