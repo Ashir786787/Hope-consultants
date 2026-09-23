@@ -1,6 +1,7 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 
+import { mongoConfigured, mongoRead, mongoWrite } from "@/lib/mongo";
 import { defaultSite } from "@/lib/site";
 
 export type DataCollection =
@@ -10,6 +11,7 @@ export type DataCollection =
   | "scholarships"
   | "resources"
   | "process"
+  | "blog"
   | "site";
 
 export const COLLECTIONS: readonly DataCollection[] = [
@@ -19,6 +21,7 @@ export const COLLECTIONS: readonly DataCollection[] = [
   "scholarships",
   "resources",
   "process",
+  "blog",
   "site",
 ];
 
@@ -55,12 +58,21 @@ async function seed(collection: DataCollection): Promise<unknown> {
       return (await import("@/lib/data/resources")).resources;
     case "process":
       return (await import("@/lib/data/process")).processSteps;
+    case "blog":
+      return (await import("@/lib/data/blog")).blogPosts;
     case "site":
       return defaultSite;
   }
 }
 
 export async function getCollection<T>(collection: DataCollection): Promise<T> {
+  if (mongoConfigured()) {
+    const existing = await mongoRead(collection);
+    if (existing !== null) return existing as T;
+    const fallback = (await seed(collection)) as T;
+    await mongoWrite(collection, fallback);
+    return fallback;
+  }
   const existing = await readFile(collection);
   if (existing !== null) return existing as T;
   return (await seed(collection)) as T;
@@ -70,6 +82,10 @@ export async function saveCollection(
   collection: DataCollection,
   value: unknown
 ): Promise<void> {
+  if (mongoConfigured()) {
+    await mongoWrite(collection, value);
+    return;
+  }
   await fs.mkdir(DATA_DIR, { recursive: true });
   await fs.writeFile(
     collectionFile(collection),

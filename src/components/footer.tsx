@@ -9,6 +9,7 @@ const EXPLORE_LINKS = [
   { label: "Process", href: "/process" },
   { label: "Scholarships", href: "/scholarships" },
   { label: "Resources", href: "/resources" },
+  { label: "Blog", href: "/blog" },
 ] as const;
 
 const COMPANY_LINKS = [
