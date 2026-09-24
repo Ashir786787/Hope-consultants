@@ -353,3 +353,20 @@ html.lenis body {
     transition-duration: 0.01ms !important;
   }
 }
+.hope-dot-grid {
+  background-image: radial-gradient(circle, rgb(var(--hope-white-rgb) / 0.14) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+.hope-hero {
+  position: relative;
+  overflow: hidden;
+  border-bottom: 1px solid rgb(var(--hope-white-rgb) / 0.06);
+}
+
+@media (prefers-reduced-motion: reduce), (hover: none) {
+  .hope-cursor,
+  .preloader {
+    display: none;
+  }
+}

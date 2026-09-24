@@ -1,4 +1,4 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -6,8 +6,8 @@ import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Reveal } from "@/components/motion/reveal";
 import { Magnetic } from "@/components/motion/magnetic";
-import { CountUp } from "@/components/motion/count-up";
 import { Marquee } from "@/components/motion/marquee";
+import { Hero } from "@/components/sections/hero";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { getSite } from "@/lib/site";
 import { getCollection } from "@/lib/store";
@@ -32,7 +32,7 @@ const HERO = {
 
 const INTRO = {
   title: "Studying abroad shouldn't mean piecing together answers from a dozen sources.",
-  body: "Hope Consultants guides Pakistani students through every stage — choosing where to go, getting in, funding it, and actually arriving — with honest advice and affordable support.",
+  body: "Hope Consultants guides Pakistani students through every stage â€” choosing where to go, getting in, funding it, and actually arriving â€” with honest advice and affordable support.",
 } as const;
 
 const HOW_IT_WORKS = {
@@ -49,7 +49,7 @@ const OUR_SERVICES = {
 
 const FOR_PARENTS = {
   title: "For parents",
-  body: "Studying abroad is a family decision. We walk parents through costs, safety and timelines in a calm, honest conversation — so everyone agrees on the plan before anything starts.",
+  body: "Studying abroad is a family decision. We walk parents through costs, safety and timelines in a calm, honest conversation â€” so everyone agrees on the plan before anything starts.",
   cta: "Book a Parent Session",
 } as const;
 
@@ -79,11 +79,11 @@ const WHY_US = {
     },
     {
       title: "Verified institutions only",
-      body: "We verify every university, scholarship and agent before recommending it — so you never commit to something that isn't what it claims.",
+      body: "We verify every university, scholarship and agent before recommending it â€” so you never commit to something that isn't what it claims.",
     },
     {
       title: "We're with you the whole way",
-      body: "From the first question to your first day abroad, a real person stays alongside you — not a form that disappears after payment.",
+      body: "From the first question to your first day abroad, a real person stays alongside you â€” not a form that disappears after payment.",
     },
     {
       title: "Affordable, transparent support",
@@ -106,7 +106,7 @@ const FAQ = {
     },
     {
       q: "When should I start planning to study abroad?",
-      a: "Ideally 9–12 months before your intended intake. Some routes — like national scholarships — have fixed annual windows, so starting early keeps every option open.",
+      a: "Ideally 9â€“12 months before your intended intake. Some routes â€” like national scholarships â€” have fixed annual windows, so starting early keeps every option open.",
     },
     {
       q: "Can you help if I already have an offer from an agent?",
@@ -114,20 +114,20 @@ const FAQ = {
     },
     {
       q: "Do you only work with European destinations?",
-      a: "No. We work with students across Europe, Asia and beyond — including destinations like Japan, China, Türkiye and Australia, depending on what fits your profile.",
+      a: "No. We work with students across Europe, Asia and beyond â€” including destinations like Japan, China, TÃ¼rkiye and Australia, depending on what fits your profile.",
     },
   ],
 } as const;
 
 const FINAL_CTA = {
   title: "Not sure where to start? Start with a conversation.",
-  body: "Tell us where you want to study and what you're working with. We'll answer honestly — including whether we think the goal is realistic for you.",
+  body: "Tell us where you want to study and what you're working with. We'll answer honestly â€” including whether we think the goal is realistic for you.",
 } as const;
 
 export const metadata = {
   title: "Hope Consultants | Study Abroad Guidance for Pakistani Students",
   description:
-    "Hope Consultants guides Pakistani students through admissions, scholarships, visas and arrival — with honest advice and affordable support across 14 destinations.",
+    "Hope Consultants guides Pakistani students through admissions, scholarships, visas and arrival â€” with honest advice and affordable support across 14 destinations.",
 };
 
 export default async function Home() {
@@ -144,63 +144,12 @@ export default async function Home() {
 
   return (
     <main className="min-h-screen bg-background text-foreground">
-      <section id="top" className="relative overflow-hidden border-b border-border">
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute -top-48 right-[-10%] size-[36rem] rounded-full bg-[radial-gradient(circle,rgb(var(--hope-ember-rgb)/0.16),transparent_65%)]"
-        />
-        <div className="relative mx-auto flex w-full max-w-6xl flex-col items-start gap-8 px-4 py-20 sm:px-6 sm:py-28">
-          <Reveal>
-            <Badge className="bg-primary text-primary-foreground">{HERO.eyebrow}</Badge>
-          </Reveal>
-          <Reveal delay={0.1}>
-            <h1 className="max-w-3xl font-display text-4xl font-semibold leading-tight tracking-tight sm:text-6xl">
-              {HERO.headline}
-            </h1>
-          </Reveal>
-          <Reveal delay={0.2}>
-            <p className="max-w-xl text-lg leading-8 text-muted-foreground">{HERO.sub}</p>
-          </Reveal>
-          <Reveal delay={0.3} className="flex flex-wrap items-center gap-3">
-            <Magnetic>
-              <Button nativeButton={false} render={<a href="/contact" />} size="lg">
-                {HERO.primaryCta}
-              </Button>
-            </Magnetic>
-            {site.whatsapp ? (
-              <Magnetic>
-                <Button
-                  nativeButton={false}
-                  render={
-                    <a href={`https://wa.me/${site.whatsapp}`} target="_blank" rel="noreferrer" />
-                  }
-                  size="lg"
-                  variant="outline"
-                >
-                  {HERO.secondaryCta}
-                </Button>
-              </Magnetic>
-            ) : null}
-          </Reveal>
-          <Reveal delay={0.4} className="w-full">
-            <dl className="grid w-full max-w-2xl grid-cols-2 gap-6 border-t border-border pt-8 sm:grid-cols-4">
-              {[
-                { value: String(countries.length), label: "Study destinations" },
-                { value: String(services.length), label: "Services we offer" },
-                { value: String(processSteps.length), label: "Steps in our process" },
-                { value: "0", label: "Fake promises" },
-              ].map((stat) => (
-                <div key={stat.label}>
-                  <dt className="font-display text-2xl font-bold text-foreground">
-                    <CountUp to={Number(stat.value)} />
-                  </dt>
-                  <dd className="mt-1 text-sm text-muted-foreground">{stat.label}</dd>
-                </div>
-              ))}
-            </dl>
-          </Reveal>
-        </div>
-      </section>
+      <Hero
+        countries={sortedCountries}
+        services={services}
+        processSteps={processSteps}
+        whatsapp={site.whatsapp ?? ""}
+      />
 
       <Marquee
         className="border-b border-border bg-hope-midnight py-5 text-hope-white"
@@ -294,7 +243,7 @@ export default async function Home() {
             <SectionHeading
               eyebrow="Destinations"
               title="Fourteen countries, one honest picture."
-              lede="Each profile gives you real figures for tuition, living costs and visa reality — no hidden fees, no invented scholarships."
+              lede="Each profile gives you real figures for tuition, living costs and visa reality â€” no hidden fees, no invented scholarships."
             />
           </Reveal>
           <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
@@ -321,7 +270,7 @@ export default async function Home() {
                     href={`/countries/${country.slug}`}
                     className="text-sm font-semibold text-primary"
                   >
-                    View {country.name} →
+                    View {country.name} â†’
                   </Link>
                 </article>
               </Reveal>
@@ -474,6 +423,5 @@ function SectionHeading({
       </h2>
       {lede ? <p className="text-base leading-7 text-muted-foreground">{lede}</p> : null}
     </div>
-
-.);
+  );
 }

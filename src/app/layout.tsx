@@ -4,6 +4,8 @@ import { Montserrat } from "next/font/google";
 import "./globals.css";
 import { SmoothScroll } from "@/components/motion/smooth-scroll";
 import { ScrollProgress } from "@/components/scroll-progress";
+import { Preloader } from "@/components/motion/preloader";
+import { Cursor } from "@/components/motion/cursor";
 import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/footer";
 
@@ -58,12 +60,14 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
         />
+        <Preloader />
         <SmoothScroll>
           <ScrollProgress />
           <Navbar />
           {children}
           <Footer />
         </SmoothScroll>
+        <Cursor />
       </body>
     </html>
   );
