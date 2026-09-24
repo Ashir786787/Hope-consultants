@@ -6,7 +6,8 @@ export type FieldKind =
   | "select"
   | "liststrings"
   | "image"
-  | "date";
+  | "date"
+  | "json";
 
 export interface FieldDef {
   key: string;
@@ -37,14 +38,7 @@ export const SCHEMAS: readonly CollectionSchema[] = [
     fields: [
       { key: "slug", label: "Slug", kind: "text", required: true },
       { key: "name", label: "Name", kind: "text", required: true },
-      { key: "shortName", label: "Short name (nav/cards)", kind: "text" },
       { key: "description", label: "Description", kind: "textarea", required: true },
-      {
-        key: "deliverables",
-        label: "Deliverables",
-        kind: "liststrings",
-        help: "One item per line.",
-      },
     ],
   },
   {
@@ -56,40 +50,24 @@ export const SCHEMAS: readonly CollectionSchema[] = [
       { key: "slug", label: "Slug", kind: "text", required: true },
       { key: "name", label: "Name", kind: "text", required: true },
       { key: "flag", label: "Flag (one emoji)", kind: "text" },
-      { key: "tagline", label: "Tagline", kind: "text" },
-      { key: "description", label: "Description", kind: "textarea", required: true },
-      { key: "englishFriendly", label: "English widely spoken (IELTS waiver likely)", kind: "boolean" },
+      { key: "position", label: "Position (homepage order)", kind: "number" },
       {
-        key: "intakes",
-        label: "Academic intakes",
-        kind: "liststrings",
-        help: "One intake per line, e.g. Fall / Spring.",
+        key: "group",
+        label: "Group",
+        kind: "select",
+        options: ["one", "two"],
+        help: "Group decides the order the country appears in listings.",
       },
       {
-        key: "requirements",
-        label: "Requirements",
-        kind: "liststrings",
-        help: "One requirement per line.",
-      },
-      {
-        key: "popularFields",
-        label: "Popular fields",
-        kind: "liststrings",
-        help: "One field per line.",
-      },
-      { key: "cost.tuitionEurMin", label: "Tuition (EUR) — from", kind: "number" },
-      { key: "cost.tuitionEurMax", label: "Tuition (EUR) — to", kind: "number" },
-      { key: "cost.livingEurMin", label: "Living (EUR/month) — from", kind: "number" },
-      { key: "cost.livingEurMax", label: "Living (EUR/month) — to", kind: "number" },
-      {
-        key: "cost.band",
+        key: "costBand",
         label: "Cost band",
         kind: "select",
         options: ["low", "medium", "high"],
+        help: "Used by the cost filter on /countries.",
       },
-      { key: "cost.fundedByDefault", label: "Funding is the norm (low/no tuition)", kind: "boolean" },
-      { key: "tuitionNote", label: "Tuition note", kind: "textarea" },
-      { key: "visaNote", label: "Visa note", kind: "textarea" },
+      { key: "financialInsight", label: "Key financial insight", kind: "textarea" },
+      { key: "intro", label: "Intro", kind: "textarea", required: true },
+      { key: "sections", label: "Sections (advanced JSON)", kind: "json", help: "Optional. Leave blank unless you know the data shape." },
     ],
   },
   {
@@ -111,11 +89,27 @@ export const SCHEMAS: readonly CollectionSchema[] = [
     singular: "Scholarship",
     titleKey: "name",
     fields: [
+      { key: "id", label: "ID", kind: "text" },
       { key: "name", label: "Name", kind: "text", required: true },
-      { key: "provider", label: "Provider", kind: "text" },
+      {
+        key: "group",
+        label: "Group",
+        kind: "select",
+        options: ["spotlight", "fully-funded", "partially-funded"],
+      },
       { key: "country", label: "Country", kind: "text" },
-      { key: "covers", label: "Covers", kind: "textarea" },
-      { key: "advice", label: "Advice / honesty note", kind: "textarea" },
+      { key: "level", label: "Level", kind: "text" },
+      { key: "deadline", label: "Deadline", kind: "text" },
+      { key: "benefits", label: "What it covers", kind: "textarea" },
+      { key: "eligibility", label: "Who can apply", kind: "textarea" },
+      { key: "applyAt", label: "Apply at", kind: "text" },
+      { key: "source", label: "Official source", kind: "text" },
+      {
+        key: "universities",
+        label: "Universities we help with",
+        kind: "liststrings",
+        help: "One university per line.",
+      },
     ],
   },
   {
@@ -183,6 +177,8 @@ export function defaultValue(field: FieldDef): unknown {
       return false;
     case "liststrings":
       return "";
+    case "json":
+      return "";
     case "select":
       return field.options?.[0] ?? "";
     case "date":
@@ -227,14 +223,19 @@ export function flattenRecord(
 ): Record<string, unknown> {
   const flat: Record<string, unknown> = {};
   for (const field of schema.fields) {
-    const raw = field.kind === "liststrings"
-      ? (getPath(record, field.key) as string[] | undefined)
-      : getPath(record, field.key);
+    const raw = getPath(record, field.key);
     if (field.kind === "liststrings") {
       flat[field.key] = Array.isArray(raw) ? raw.join("\n") : "";
-    } else {
-      flat[field.key] = raw;
+      continue;
     }
+    if (field.kind === "json") {
+      flat[field.key] =
+        typeof raw === "string"
+          ? raw
+          : JSON.stringify(raw ?? null, null, 2);
+      continue;
+    }
+    flat[field.key] = raw;
   }
   return flat;
 }
@@ -248,9 +249,20 @@ export function unflattenRecord(
     const raw = flat[field.key];
     if (field.kind === "liststrings") {
       const lines = typeof raw === "string"
-        ? raw.split("\n").map((line) => line.trim()).filter(Boolean)
+        ? String(raw).split("\n").map((line) => line.trim()).filter(Boolean)
         : [];
       if (lines.length > 0) setPath(record, field.key, lines);
+      continue;
+    }
+    if (field.kind === "json") {
+      const text = typeof raw === "string" ? raw.trim() : "";
+      if (text) {
+        try {
+          setPath(record, field.key, JSON.parse(text) as unknown);
+        } catch {
+          setPath(record, field.key, null);
+        }
+      }
       continue;
     }
     if (raw === undefined || raw === null) continue;

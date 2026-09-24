@@ -2,8 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { buttonVariants } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Reveal } from "@/components/motion/reveal";
 import { getCollection } from "@/lib/store";
@@ -48,7 +47,7 @@ export default async function ServicePage({ params }: ServicePageProps) {
         <div className="relative mx-auto flex w-full max-w-6xl flex-col gap-8 px-4 py-14 sm:px-6">
           <Reveal>
             <Badge variant="outline" className="w-fit uppercase tracking-widest text-muted-foreground">
-              {service.shortName}
+              Service
             </Badge>
           </Reveal>
           <Reveal delay={0.1}>
@@ -66,18 +65,12 @@ export default async function ServicePage({ params }: ServicePageProps) {
         <div className="grid w-full gap-12 lg:grid-cols-[1.2fr_1fr]">
           <div className="flex flex-col gap-6">
             <h2 className="font-display text-2xl font-semibold text-card-foreground">
-              What we help you with
+              How we help with this
             </h2>
-            <ul className="flex flex-col gap-3">
-              {service.deliverables.map((item) => (
-                <li key={item} className="flex items-start gap-3 text-sm leading-6 text-muted-foreground">
-                  <span aria-hidden="true" className="mt-0.5 text-primary">
-                    ✓
-                  </span>
-                  <span>{item}</span>
-                </li>
-              ))}
-            </ul>
+            <p className="max-w-2xl text-sm leading-7 text-muted-foreground">
+              We work through this service with clear checklists, honest timelines and real
+              documentation — and we tell you exactly what is and is not possible at every step.
+            </p>
           </div>
 
           <aside className="flex flex-col gap-6">

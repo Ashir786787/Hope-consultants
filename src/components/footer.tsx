@@ -18,6 +18,14 @@ const COMPANY_LINKS = [
   { label: "Contact", href: "/contact" },
 ] as const;
 
+const LEGAL_LINKS = [
+  { label: "Privacy Policy", href: "/privacy" },
+  { label: "Terms of Service", href: "/terms" },
+  { label: "Refund & Fee Policy", href: "/refunds" },
+  { label: "Disclaimer", href: "/disclaimer" },
+  { label: "Cookie Notice", href: "/cookies" },
+] as const;
+
 function FooterColumn({
   title,
   links,
@@ -48,6 +56,9 @@ function FooterColumn({
 
 export async function Footer() {
   const site = await getSite();
+  const hasContact =
+    Boolean(site.email.trim()) || Boolean(site.phone.trim()) || Boolean(site.whatsapp.trim());
+
   return (
     <footer className="bg-hope-midnight text-hope-white">
       <div className="mx-auto w-full max-w-6xl px-4 py-16 sm:px-6">
@@ -57,40 +68,58 @@ export async function Footer() {
               <Logo variant="lockup" className="h-14 w-auto" />
             </Link>
             <p className="max-w-xs text-sm leading-6 text-hope-fog">
-              Honest study abroad guidance for Pakistani students — universities,
-              scholarships, and student visas across 14 destinations.
+              Honest study abroad guidance for Pakistani students — universities, scholarships,
+              and student visas across 14 destinations.
             </p>
           </div>
           <FooterColumn title="Explore" links={EXPLORE_LINKS} />
           <FooterColumn title="Company" links={COMPANY_LINKS} />
+          <FooterColumn title="Legal" links={LEGAL_LINKS} />
           <div className="flex flex-col gap-4">
             <h3 className="font-display text-xs font-semibold tracking-[0.18em] text-hope-ember uppercase">
-              Visit
+              Contact
             </h3>
             <ul className="flex flex-col gap-3 text-sm text-hope-fog">
-              <li>
-                <a
-                  href={`mailto:${site.email}`}
-                  className="transition-colors hover:text-hope-ember"
-                >
-                  {site.email}
-                </a>
-              </li>
-              <li>
-                <a
-                  href={`tel:${site.phoneHref}`}
-                  className="transition-colors hover:text-hope-ember"
-                >
-                  {site.phone}
-                </a>
-              </li>
+              {site.email.trim() ? (
+                <li>
+                  <a href={`mailto:${site.email}`} className="transition-colors hover:text-hope-ember">
+                    {site.email}
+                  </a>
+                </li>
+              ) : null}
+              {site.phone.trim() ? (
+                <li>
+                  <a href={`tel:${site.phoneHref}`} className="transition-colors hover:text-hope-ember">
+                    {site.phone}
+                  </a>
+                </li>
+              ) : null}
+              {site.whatsapp.trim() ? (
+                <li>
+                  <a
+                    href={`https://wa.me/${site.whatsapp}`}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="transition-colors hover:text-hope-ember"
+                  >
+                    WhatsApp
+                  </a>
+                </li>
+              ) : null}
+              {!hasContact ? (
+                <li>
+                  <Link href="/contact" className="transition-colors hover:text-hope-ember">
+                    Contact page
+                  </Link>
+                </li>
+              ) : null}
             </ul>
           </div>
         </div>
         <div className="mt-14 flex flex-col gap-2 border-t border-hope-white/10 pt-6 sm:flex-row sm:items-center sm:justify-between">
           <p className="text-xs leading-5 text-hope-fog">
-            © {new Date().getFullYear()} Hope Consultants. Study abroad guidance for
-            Pakistani students.
+            © {new Date().getFullYear()} Hope Consultants. Study abroad guidance for Pakistani
+            students.
           </p>
         </div>
       </div>

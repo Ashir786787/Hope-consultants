@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { buttonVariants } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { PageHero } from "@/components/page-hero";
 import { Reveal } from "@/components/motion/reveal";
@@ -11,7 +10,7 @@ import type { ProcessStep } from "@/lib/data/process";
 export const metadata: Metadata = {
   title: "Our Process | Hope Consultants",
   description:
-    "How we work with Pakistani students in six honest, step-by-step phases — from your first free conversation to settling in.",
+    "How we work with Pakistani students in seven honest, step-by-step phases — from your first free conversation to arriving on campus.",
 };
 
 export default async function ProcessPage() {
@@ -21,7 +20,7 @@ export default async function ProcessPage() {
       <PageHero
         eyebrow="Our process"
         title="How we work with you"
-        lede="Six clear phases, from the first free conversation to the day you arrive. No pressure, no invented timelines, and nothing is promised beyond what we can actually deliver."
+        lede="Seven clear phases, from the first free conversation to the day you arrive. No pressure, no invented timelines, and nothing is promised beyond what we can actually deliver."
       />
 
       <section className="mx-auto w-full max-w-6xl px-4 py-16 sm:px-6">
@@ -55,8 +54,8 @@ export default async function ProcessPage() {
             Start with a free conversation
           </h2>
           <p className="max-w-2xl text-sm leading-7 text-muted-foreground">
-            No fee, no pressure, no fake assurances. If we cannot help you reach a
-            genuinely good outcome, we will say so early.
+            No fee, no pressure, no fake assurances. If we cannot help you reach a genuinely good
+            outcome, we will say so early.
           </p>
           <div className="flex flex-wrap items-center gap-3 pt-2">
             <Button size="lg" nativeButton={false} render={<a href="/contact" />}>

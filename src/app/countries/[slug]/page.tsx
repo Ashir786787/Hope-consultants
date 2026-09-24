@@ -2,13 +2,12 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { buttonVariants } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Reveal } from "@/components/motion/reveal";
 import { getCostBandLabel } from "@/lib/data/helpers";
 import { getCollection } from "@/lib/store";
-import type { CountryDestination, CountrySlug } from "@/lib/data/types";
+import type { CountryDestination, CountrySection, CountrySlug } from "@/lib/data/types";
 
 type CountryPageProps = {
   params: Promise<{ slug: CountrySlug }>;
@@ -28,9 +27,70 @@ export async function generateMetadata({ params }: CountryPageProps): Promise<Me
   const country = countries.find((item) => item.slug === slug);
   if (!country) return { title: "Destination not found | Hope Consultants" };
   return {
-    title: `${country.name} — Study costs & requirements | Hope Consultants`,
-    description: `${country.description} Honest study cost guidance for Pakistani students.`,
+    title: `Study in ${country.name} | Hope Consultants`,
+    description: country.intro,
   };
+}
+
+function SectionBlock({
+  section,
+  index,
+}: {
+  section: CountrySection;
+  index: number;
+}) {
+  return (
+    <Reveal delay={index * 0.05} className="w-full">
+      <div className="flex flex-col gap-4">
+        <h2 className="font-display text-2xl font-semibold text-card-foreground">
+          {section.title}
+        </h2>
+        <Separator className="max-w-md" />
+        {section.body ? (
+          <p className="max-w-2xl text-sm leading-7 text-muted-foreground">{section.body}</p>
+        ) : null}
+        {section.items ? (
+          <ul className="flex flex-col gap-3">
+            {section.items.map((item) => (
+              <li
+                key={item}
+                className="flex items-start gap-3 text-sm leading-6 text-muted-foreground"
+              >
+                <span aria-hidden="true" className="mt-0.5 text-primary">
+                  ✓
+                </span>
+                <span>{item}</span>
+              </li>
+            ))}
+          </ul>
+        ) : null}
+        {section.table ? (
+          <div className="overflow-x-auto">
+            <table className="w-full min-w-[32rem] divide-y divide-border border border-border text-left text-sm">
+              <thead className="bg-muted/40">
+                <tr>
+                  <th scope="col" className="px-4 py-3 font-display font-semibold text-card-foreground">
+                    {section.table.header[0]}
+                  </th>
+                  <th scope="col" className="px-4 py-3 font-display font-semibold text-card-foreground">
+                    {section.table.header[1]}
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-border">
+                {section.table.rows.map((row) => (
+                  <tr key={row[0]}>
+                    <td className="px-4 py-3 font-medium text-card-foreground">{row[0]}</td>
+                    <td className="px-4 py-3 text-muted-foreground">{row[1]}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        ) : null}
+      </div>
+    </Reveal>
+  );
 }
 
 export default async function CountryPage({ params }: CountryPageProps) {
@@ -38,9 +98,6 @@ export default async function CountryPage({ params }: CountryPageProps) {
   const countries = await getCollection<CountryDestination[]>("countries");
   const country = countries.find((item) => item.slug === slug);
   if (!country) notFound();
-
-  const cost = country.cost;
-  const fields = country.popularFields;
 
   return (
     <main className="w-full">
@@ -57,116 +114,57 @@ export default async function CountryPage({ params }: CountryPageProps) {
               </span>
               <div className="flex flex-col gap-3">
                 <p className="text-sm font-medium uppercase tracking-wider text-muted-foreground">
-                  {country.name}
+                  Study in {country.name}
                 </p>
                 <h1 className="font-display text-4xl font-semibold leading-tight text-card-foreground sm:text-5xl">
-                  {country.tagline}
+                  {country.name}
                 </h1>
-                <p className="max-w-2xl text-base leading-7 text-muted-foreground">
-                  {country.description}
-                </p>
+                <Badge className="w-fit border-[rgb(var(--hope-ember-rgb)/0.4)] bg-hope-ember text-hope-midnight">
+                  {getCostBandLabel(country.costBand)}
+                </Badge>
               </div>
             </div>
           </Reveal>
 
-          <Separator />
+          <Reveal delay={0.1}>
+            <p className="max-w-2xl text-base leading-7 text-muted-foreground">{country.intro}</p>
+          </Reveal>
 
           <Reveal delay={0.2}>
-            <div className="grid w-full grid-cols-2 gap-4 sm:grid-cols-4">
-              <div className="hope-card hope-card--light flex flex-col gap-2 p-5">
-                <span className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
-                  Tuition per year
-                </span>
-                <span className="font-display text-2xl font-semibold text-card-foreground">
-                  €{cost.tuitionEurMin.toLocaleString("en-PK")}–€{cost.tuitionEurMax.toLocaleString("en-PK")}
-                </span>
-                <span className="text-xs leading-5 text-muted-foreground">{country.tuitionNote}</span>
-              </div>
-              <div className="hope-card hope-card--light flex flex-col gap-2 p-5">
-                <span className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
-                  Living per month
-                </span>
-                <span className="font-display text-2xl font-semibold text-card-foreground">
-                  €{cost.livingEurMin.toLocaleString("en-PK")}–€{cost.livingEurMax.toLocaleString("en-PK")}
-                </span>
-              </div>
-              <div className="hope-card hope-card--light flex flex-col gap-2 p-5">
-                <span className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
-                  English-friendliness
-                </span>
-                <Badge variant="secondary" className="w-fit">
-                  {country.englishFriendly ? "English-friendly" : "Partially English"}
-                </Badge>
-              </div>
-              <div className="hope-card hope-card--light flex flex-col gap-2 p-5">
-                <span className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
-                  Intakes
-                </span>
-                <span className="font-display text-lg font-semibold text-card-foreground">
-                  {country.intakes.join(" · ")}
-                </span>
-              </div>
+            <div className="hope-card hope-card--light flex max-w-3xl flex-col gap-3 p-6">
+              <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
+                Key financial insight
+              </p>
+              <p className="text-sm leading-7 text-card-foreground">{country.financialInsight}</p>
             </div>
           </Reveal>
         </div>
       </section>
 
-      <section className="mx-auto w-full max-w-6xl px-4 py-14 sm:px-6">
-        <div className="grid w-full gap-12 lg:grid-cols-[1.2fr_1fr]">
-          <div className="flex flex-col gap-8">
-            <div className="flex flex-col gap-4">
-              <h2 className="font-display text-2xl font-semibold text-card-foreground">
-                Popular fields of study
-              </h2>
-              <div className="flex flex-wrap gap-2">
-                {fields.map((field) => (
-                  <Badge key={field} variant="outline">
-                    {field}
-                  </Badge>
-                ))}
-              </div>
-            </div>
-            <div className="flex flex-col gap-4">
-              <h2 className="font-display text-2xl font-semibold text-card-foreground">
-                Typical entry requirements
-              </h2>
-              <ul className="flex flex-col gap-3">
-                {country.requirements.map((req) => (
-                  <li key={req} className="flex items-start gap-3 text-sm leading-6 text-muted-foreground">
-                    <span aria-hidden="true" className="mt-0.5 text-primary">
-                      ✓
-                    </span>
-                    <span>{req}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
+      <section className="mx-auto flex w-full max-w-6xl flex-col gap-12 px-4 py-14 sm:px-6">
+        {country.sections.map((section, index) => (
+          <SectionBlock key={section.title} section={section} index={index} />
+        ))}
+      </section>
 
-          <aside className="flex flex-col gap-6 border-l border-border pl-8">
-            <h2 className="font-display text-2xl font-semibold text-card-foreground">
-              What this country costs
-            </h2>
-            <div className="flex flex-col gap-3">
-              <div className="flex items-center justify-between gap-4">
-                <span className="text-sm text-muted-foreground">Overall cost band</span>
-                <Badge>{getCostBandLabel(cost.band)}</Badge>
-              </div>
-              <Separator />
-              {country.visaNote ? (
-                <p className="text-sm leading-6 text-muted-foreground">{country.visaNote}</p>
-              ) : null}
+      <section className="border-t border-border">
+        <div className="mx-auto flex w-full max-w-6xl flex-col items-start gap-6 px-4 py-14 sm:px-6">
+          <Reveal className="w-full">
+            <div className="flex max-w-3xl flex-col gap-4">
+              <h2 className="font-display text-2xl font-semibold text-card-foreground">
+                Start your {country.name} journey
+              </h2>
+              <p className="text-base leading-7 text-muted-foreground">{country.journey}</p>
             </div>
-            <Separator />
-            <div className="flex flex-col gap-3">
-              <Button nativeButton={false} render={<a href={`/contact?country=${country.slug}`} />} size="lg">
-                Ask about {country.name}
-              </Button>
-              <Link className={buttonVariants({ variant: "outline", size: "lg" })} href="/countries">
-                All destinations
-              </Link>
-            </div>
-          </aside>
+          </Reveal>
+          <Reveal delay={0.1} className="flex flex-wrap items-center gap-3">
+            <Button nativeButton={false} render={<a href="/contact" />} size="lg">
+              Book a free consultation
+            </Button>
+            <Link className={buttonVariants({ variant: "outline", size: "lg" })} href="/countries">
+              All destinations
+            </Link>
+          </Reveal>
         </div>
       </section>
     </main>

@@ -1,9 +1,5 @@
-import type { CostBand } from "@/lib/data/types";
+import type { CountryGroup, CostBand } from "@/lib/data/types";
 
-/**
- * Human-readable label for a country's overall cost band.
- * Pure map — no fabricated figures, just a wording ladder for the band.
- */
 const bandLabels: Record<CostBand, string> = {
   low: "Low cost",
   medium: "Moderate cost",
@@ -12,4 +8,13 @@ const bandLabels: Record<CostBand, string> = {
 
 export function getCostBandLabel(band: CostBand): string {
   return bandLabels[band];
+}
+
+const groupLabels: Record<CountryGroup, string> = {
+  one: "Priority group one",
+  two: "Priority group two",
+};
+
+export function getCountryGroupLabel(group: CountryGroup): string {
+  return groupLabels[group];
 }

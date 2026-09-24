@@ -178,7 +178,8 @@ export function AdminEditor({ storage }: { storage: "mongodb" | "json-files" }) 
     if (editing === "new") {
       next.push(record);
     } else {
-      next[editing] = record;
+      const existing = (model[editing] as FieldMap) ?? {};
+      next[editing] = { ...existing, ...record };
     }
     await persist(next);
   }

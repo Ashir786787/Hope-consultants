@@ -4,16 +4,10 @@ import { useMemo, useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Separator } from "@/components/ui/separator";
-import type { CountryDestination } from "@/lib/data/types";
+import { getCostBandLabel } from "@/lib/data/helpers";
+import type { CountryDestination, CostBand } from "@/lib/data/types";
 
-const bandLabel: Record<CountryDestination["cost"]["band"], string> = {
-  low: "Low cost",
-  medium: "Medium cost",
-  high: "High cost",
-};
-
-const bandClasses: Record<CountryDestination["cost"]["band"], string> = {
+const bandColors: Record<CostBand, string> = {
   low: "border-[rgb(var(--hope-ember-rgb)/0.4)] bg-hope-ember text-hope-midnight",
   medium: "border-[rgb(var(--hope-midnight-rgb)/0.18)] bg-hope-midnight text-hope-white",
   high: "border-[rgb(var(--hope-obsidian-rgb)/0.18)] bg-hope-obsidian text-hope-white",
@@ -25,13 +19,9 @@ export default function CountryFilter({
   countries: CountryDestination[];
 }) {
   const [query, setQuery] = useState("");
-  const [bands, setBands] = useState<Set<CountryDestination["cost"]["band"]>>(
-    new Set()
-  );
-  const [englishOnly, setEnglishOnly] = useState(false)
-  const [fundedOnly, setFundedOnly] = useState(false)
+  const [bands, setBands] = useState<Set<CostBand>>(new Set());
 
-  const toggleBand = (band: CountryDestination["cost"]["band"]) => {
+  const toggleBand = (band: CostBand) => {
     setBands((prev) => {
       const next = new Set(prev);
       if (next.has(band)) {
@@ -45,24 +35,24 @@ export default function CountryFilter({
 
   const results = useMemo(() => {
     const q = query.trim().toLowerCase();
-    return countries.filter((c) => {
-      if (q) {
-        const hay = (c.name + " " + c.tagline + " " + c.popularFields.join(" ")).toLowerCase();
-        if (!hay.includes(q)) return false;
-      }
-      if (bands.size > 0 && !bands.has(c.cost.band)) return false;
-      if (englishOnly && !c.englishFriendly) return false;
-      if (fundedOnly && !c.cost.fundedByDefault) return false;
-      return true;
-    });
-  }, [countries, query, bands, englishOnly, fundedOnly]);
+    return [...countries]
+      .sort((a, b) => a.position - b.position)
+      .filter((c) => {
+        if (q) {
+          const hay = `${c.name} ${c.financialInsight}`.toLowerCase();
+          if (!hay.includes(q)) return false;
+        }
+        if (bands.size > 0 && !bands.has(c.costBand)) return false;
+        return true;
+      });
+  }, [countries, query, bands]);
 
   return (
     <div className="flex w-full flex-col gap-8">
       <div className="flex flex-col gap-6">
         <Input
           type="search"
-          placeholder="Search countries, fields, or keywords…"
+          placeholder="Search countries or keywords…"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           className="h-11 w-full max-w-md"
@@ -77,32 +67,15 @@ export default function CountryFilter({
               onClick={() => toggleBand(band)}
               className={
                 "text-sm font-medium capitalize transition-colors" +
-                (bands.has(band) ? " text-foreground underline underline-offset-4" : " text-muted-foreground hover:text-foreground")
+                (bands.has(band)
+                  ? " text-foreground underline underline-offset-4"
+                  : " text-muted-foreground hover:text-foreground")
               }
               aria-pressed={bands.has(band)}
             >
-              {bandLabel[band]}
+              {getCostBandLabel(band)}
             </button>
           ))}
-          <Separator orientation="vertical" className="hidden h-5 sm:block" />
-          <label className="flex cursor-pointer items-center gap-2 text-sm text-foreground">
-            <input
-              type="checkbox"
-              checked={englishOnly}
-              onChange={(e) => setEnglishOnly(e.target.checked)}
-              className="h-4 w-4 accent-primary"
-            />
-            English-friendly
-          </label>
-          <label className="flex cursor-pointer items-center gap-2 text-sm text-foreground">
-            <input
-              type="checkbox"
-              checked={fundedOnly}
-              onChange={(e) => setFundedOnly(e.target.checked)}
-              className="h-4 w-4 accent-primary"
-            />
-            Low/funded tuition
-          </label>
         </div>
       </div>
 
@@ -124,26 +97,28 @@ export default function CountryFilter({
                   <span className="text-3xl leading-none" aria-hidden="true">
                     {country.flag}
                   </span>
-                  <Badge className={bandClasses[country.cost.band]}>
-                    {bandLabel[country.cost.band]}
+                  <Badge className={bandColors[country.costBand]}>
+                    {getCostBandLabel(country.costBand)}
                   </Badge>
                 </div>
                 <div>
                   <h3 className="font-display text-xl font-semibold text-card-foreground">
                     {country.name}
                   </h3>
-                  <p className="mt-1 text-sm leading-6 text-muted-foreground">
-                    {country.tagline}
+                  <p className="mt-1 text-xs font-medium uppercase tracking-wider text-muted-foreground">
+                    Homepage position {country.position}
                   </p>
                 </div>
                 <p className="mt-auto text-sm leading-6 text-muted-foreground">
-                  {country.cost.tuitionEurMin > 0
-                    ? `€${country.cost.tuitionEurMin.toLocaleString()}–€${country.cost.tuitionEurMax.toLocaleString()}/yr tuition`
-                    : "No tuition at public universities"}{" "}
-                  · {country.englishFriendly ? "English-friendly" : "IELTS may be needed"}
+                  {country.financialInsight}
                 </p>
-                <Button nativeButton={false} render={<a href={`/countries/${country.slug}`} />} size="sm" variant="outline">
-                  View {country.name}
+                <Button
+                  nativeButton={false}
+                  render={<a href={`/countries/${country.slug}`} />}
+                  size="sm"
+                  variant="outline"
+                >
+                  Read about {country.name}
                 </Button>
               </article>
             </li>

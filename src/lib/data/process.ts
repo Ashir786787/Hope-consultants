@@ -9,36 +9,42 @@ export const processSteps: ProcessStep[] = [
     step: 1,
     title: "Free Consultation",
     description:
-      "We listen to your background, goals, and budget — and honestly tell you what is and is not realistic.",
+      "We listen to your background, goals, budget and concerns — and tell you honestly what is and is not realistic before any commitment.",
   },
   {
     step: 2,
-    title: "Profile & Budget Review",
+    title: "Country & University Shortlist",
     description:
-      "We shortlist countries and universities that actually fit your profile and finances.",
+      "We shortlist countries and universities that actually fit your academic level, grades, language skills and family budget.",
   },
   {
     step: 3,
-    title: "Application & Documents",
+    title: "Applications & Documents",
     description:
-      "We guide your applications smoothly with clear checklists and deadlines.",
+      "We prepare your applications, Statement of Purpose, motivation letter, CV and academic/financial documents, and track every deadline.",
   },
   {
     step: 4,
-    title: "Offer & Funding",
+    title: "Scholarships & Funding",
     description:
-      "We help you understand any offers and funding options, without overpromising scholarships.",
+      "We screen which funding routes — national, government and university — realistically fit your profile, and guide your applications.",
   },
   {
     step: 5,
-    title: "Visa & Pre-Departure",
+    title: "Offers & University Verification",
     description:
-      "We prepare your visa application and get you ready to leave, step by step.",
+      "When offers arrive, we verify the institution and the offer are genuine — and confirm your choices before you accept or pay anything.",
   },
   {
     step: 6,
-    title: "Arrival & Settling In",
+    title: "Visa Application & Interview Preparation",
     description:
-      "We support you once you arrive so the transition is as smooth as it can be.",
+      "We prepare your student visa application and realistic visa interview practice, aligned to the current rules of your destination.",
+  },
+  {
+    step: 7,
+    title: "Pre-Departure & Arrival",
+    description:
+      "We support your enrollment, accommodation, exchange and arrival — so the transition to student life starts clean and supported.",
   },
 ];

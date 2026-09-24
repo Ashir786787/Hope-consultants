@@ -1,26 +1,20 @@
+import Link from "next/link";
+
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Separator } from "@/components/ui/separator";
 import { Reveal } from "@/components/motion/reveal";
 import { Magnetic } from "@/components/motion/magnetic";
 import { CountUp } from "@/components/motion/count-up";
 import { Marquee } from "@/components/motion/marquee";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { getSite } from "@/lib/site";
 import { getCollection } from "@/lib/store";
-import type {
-  CostBand,
-  CountryDestination,
-} from "@/lib/data/types";
+import { getCostBandLabel } from "@/lib/data/helpers";
+import type { CountryDestination, CostBand } from "@/lib/data/types";
 import type { Service } from "@/lib/data/services";
 import type { ProcessStep } from "@/lib/data/process";
-import type { ScholarshipProgram } from "@/lib/data/scholarships";
-import type { Testimonial } from "@/lib/data/testimonials";
-
-const costBandLabel: Record<CostBand, string> = {
-  low: "Low cost",
-  medium: "Medium cost",
-  high: "Premium cost",
-};
 
 const bandColor: Record<CostBand, string> = {
   low: "border-[rgb(var(--hope-ember-rgb)/0.4)] bg-hope-ember text-hope-midnight",
@@ -28,37 +22,125 @@ const bandColor: Record<CostBand, string> = {
   high: "border-[rgb(var(--hope-obsidian-rgb)/0.18)] bg-hope-obsidian text-hope-white",
 };
 
-function SectionHeading({
-  eyebrow,
-  title,
-  lede,
-}: {
-  eyebrow: string;
-  title: string;
-  lede: string;
-}) {
-  return (
-    <div className="mx-auto flex max-w-2xl flex-col items-center gap-4 text-center">
-      <Badge variant="outline" className="uppercase tracking-widest text-muted-foreground">
-        {eyebrow}
-      </Badge>
-      <h2 className="font-display text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
-        {title}
-      </h2>
-      <p className="text-base leading-7 text-muted-foreground">{lede}</p>
-    </div>
-  );
-}
+const HERO = {
+  eyebrow: "Hope Consultants",
+  headline: "From your first question to your first day abroad, we're with you.",
+  sub: "Admissions, scholarships, visas, and arrival guidance for students from Pakistan, all in one place, with honest advice and affordable support.",
+  primaryCta: "Book a Free Consultation",
+  secondaryCta: "Chat on WhatsApp",
+} as const;
+
+const INTRO = {
+  title: "Studying abroad shouldn't mean piecing together answers from a dozen sources.",
+  body: "Hope Consultants guides Pakistani students through every stage — choosing where to go, getting in, funding it, and actually arriving — with honest advice and affordable support.",
+} as const;
+
+const HOW_IT_WORKS = {
+  eyebrow: "How it works",
+  title: "Seven steps, from first call to first day on campus.",
+  lede: "A clear path with a real person alongside you at every stage.",
+} as const;
+
+const OUR_SERVICES = {
+  eyebrow: "Our services",
+  title: "Everything you need, in one place.",
+  lede: "Ten focused services that carry you from the first conversation to the day you land.",
+} as const;
+
+const FOR_PARENTS = {
+  title: "For parents",
+  body: "Studying abroad is a family decision. We walk parents through costs, safety and timelines in a calm, honest conversation — so everyone agrees on the plan before anything starts.",
+  cta: "Book a Parent Session",
+} as const;
+
+const COMING_SOON = {
+  eyebrow: "Coming soon",
+  title: "Two things we're building next.",
+  items: [
+    {
+      name: "Language Classes & Courses",
+      description: "In-house language preparation for IELTS and the languages your destination actually needs.",
+    },
+    {
+      name: "Student Profile Assessment Tool",
+      description: "A quick, honest read on where your grades, budget and goals realistically point.",
+    },
+  ],
+  cta: "Notify Me When It Launches",
+} as const;
+
+const WHY_US = {
+  eyebrow: "Why students and families choose us",
+  title: "Honest advice, real people, no empty promises.",
+  items: [
+    {
+      title: "We tell you the truth",
+      body: "No inflated promises, no fake success stories. If a goal isn't realistic, we say so in the first conversation.",
+    },
+    {
+      title: "Verified institutions only",
+      body: "We verify every university, scholarship and agent before recommending it — so you never commit to something that isn't what it claims.",
+    },
+    {
+      title: "We're with you the whole way",
+      body: "From the first question to your first day abroad, a real person stays alongside you — not a form that disappears after payment.",
+    },
+    {
+      title: "Affordable, transparent support",
+      body: "Clear fees explained before you commit, and guidance in a language you actually understand.",
+    },
+  ],
+} as const;
+
+const FAQ = {
+  eyebrow: "FAQ",
+  title: "Questions families actually ask.",
+  items: [
+    {
+      q: "Do you guarantee admission or a scholarship?",
+      a: "No. Admission, scholarships and visas rest with universities, scholarship bodies and immigration authorities. We prepare the strongest honest application we can, and we never promise an outcome we don't control.",
+    },
+    {
+      q: "How much does it cost to work with you?",
+      a: "Fees depend on the service and are agreed with you in writing before any work begins. The first consultation is free, and there are no hidden charges.",
+    },
+    {
+      q: "When should I start planning to study abroad?",
+      a: "Ideally 9–12 months before your intended intake. Some routes — like national scholarships — have fixed annual windows, so starting early keeps every option open.",
+    },
+    {
+      q: "Can you help if I already have an offer from an agent?",
+      a: "Yes. We independently verify the institution, the offer and the pressure to pay before you commit a rupee. Many families come to us exactly for this check.",
+    },
+    {
+      q: "Do you only work with European destinations?",
+      a: "No. We work with students across Europe, Asia and beyond — including destinations like Japan, China, Türkiye and Australia, depending on what fits your profile.",
+    },
+  ],
+} as const;
+
+const FINAL_CTA = {
+  title: "Not sure where to start? Start with a conversation.",
+  body: "Tell us where you want to study and what you're working with. We'll answer honestly — including whether we think the goal is realistic for you.",
+} as const;
+
+export const metadata = {
+  title: "Hope Consultants | Study Abroad Guidance for Pakistani Students",
+  description:
+    "Hope Consultants guides Pakistani students through admissions, scholarships, visas and arrival — with honest advice and affordable support across 14 destinations.",
+};
 
 export default async function Home() {
-  const [countries, services, processSteps, scholarships, testimonials] = await Promise.all([
+  const [countries, services, processSteps] = await Promise.all([
     getCollection<CountryDestination[]>("countries"),
     getCollection<Service[]>("services"),
     getCollection<ProcessStep[]>("process"),
-    getCollection<ScholarshipProgram[]>("scholarships"),
-    getCollection<Testimonial[]>("testimonials"),
   ]);
   const site = await getSite();
+
+  const sortedCountries = [...countries].sort((a, b) => a.position - b.position);
+  const featuredCountries = sortedCountries.slice(0, 3);
+  const featuredServices = services.slice(0, 3);
 
   return (
     <main className="min-h-screen bg-background text-foreground">
@@ -67,46 +149,45 @@ export default async function Home() {
           aria-hidden="true"
           className="pointer-events-none absolute -top-48 right-[-10%] size-[36rem] rounded-full bg-[radial-gradient(circle,rgb(var(--hope-ember-rgb)/0.16),transparent_65%)]"
         />
-        <div className="relative mx-auto flex w-full max-w-6xl flex-col items-start gap-10 px-4 py-20 sm:px-6 sm:py-28">
-          <div className="flex flex-col items-start gap-5">
-            <Reveal>
-              <Badge className="bg-primary text-primary-foreground">
-                Trusted guidance for Pakistani students
-              </Badge>
-            </Reveal>
-            <Reveal delay={0.1}>
-              <h1 className="max-w-3xl font-display text-4xl font-semibold leading-tight tracking-tight sm:text-6xl">
-                Your degree in Europe starts with <span className="text-primary">honest</span>{" "}
-                guidance, not promises.
-              </h1>
-            </Reveal>
-            <Reveal delay={0.2}>
-              <p className="max-w-xl text-lg leading-8 text-muted-foreground">
-                Hope Consultants helps you find a university that genuinely fits your{" "}
-                <strong className="font-medium text-foreground">grades, budget, and goals</strong>{" "}
-                across {countries.length} destinations and {services.length} services. We tell
-                you the truth about costs, visas, and scholarships — before you spend a rupee.
-              </p>
-            </Reveal>
-          </div>
+        <div className="relative mx-auto flex w-full max-w-6xl flex-col items-start gap-8 px-4 py-20 sm:px-6 sm:py-28">
+          <Reveal>
+            <Badge className="bg-primary text-primary-foreground">{HERO.eyebrow}</Badge>
+          </Reveal>
+          <Reveal delay={0.1}>
+            <h1 className="max-w-3xl font-display text-4xl font-semibold leading-tight tracking-tight sm:text-6xl">
+              {HERO.headline}
+            </h1>
+          </Reveal>
+          <Reveal delay={0.2}>
+            <p className="max-w-xl text-lg leading-8 text-muted-foreground">{HERO.sub}</p>
+          </Reveal>
           <Reveal delay={0.3} className="flex flex-wrap items-center gap-3">
             <Magnetic>
-              <Button nativeButton={false} render={<a href="#countries" />} size="lg">
-                Explore {countries.length} countries
+              <Button nativeButton={false} render={<a href="/contact" />} size="lg">
+                {HERO.primaryCta}
               </Button>
             </Magnetic>
-            <Magnetic>
-              <Button nativeButton={false} render={<a href="#contact" />} size="lg" variant="outline">
-                Book a free consultation
-              </Button>
-            </Magnetic>
+            {site.whatsapp ? (
+              <Magnetic>
+                <Button
+                  nativeButton={false}
+                  render={
+                    <a href={`https://wa.me/${site.whatsapp}`} target="_blank" rel="noreferrer" />
+                  }
+                  size="lg"
+                  variant="outline"
+                >
+                  {HERO.secondaryCta}
+                </Button>
+              </Magnetic>
+            ) : null}
           </Reveal>
           <Reveal delay={0.4} className="w-full">
             <dl className="grid w-full max-w-2xl grid-cols-2 gap-6 border-t border-border pt-8 sm:grid-cols-4">
               {[
                 { value: String(countries.length), label: "Study destinations" },
                 { value: String(services.length), label: "Services we offer" },
-                { value: "6", label: "Step-by-step process" },
+                { value: String(processSteps.length), label: "Steps in our process" },
                 { value: "0", label: "Fake promises" },
               ].map((stat) => (
                 <div key={stat.label}>
@@ -125,7 +206,7 @@ export default async function Home() {
         className="border-b border-border bg-hope-midnight py-5 text-hope-white"
         duration={30}
       >
-        {countries.map((country) => (
+        {sortedCountries.map((country) => (
           <span
             key={country.slug}
             className="mx-5 flex items-center gap-2 text-sm font-semibold tracking-[0.18em] uppercase"
@@ -138,95 +219,29 @@ export default async function Home() {
         ))}
       </Marquee>
 
-      <section id="services" className="border-b border-border">
-        <div className="mx-auto flex w-full max-w-6xl flex-col gap-12 px-4 py-20 sm:px-6">
+      <section id="intro" className="border-b border-border">
+        <div className="mx-auto grid w-full max-w-6xl grid-cols-1 gap-10 px-4 py-20 sm:px-6 lg:grid-cols-[1.2fr_1fr] lg:gap-16">
           <Reveal className="w-full">
-            <SectionHeading
-              eyebrow="What we do"
-              title="Services that cover the whole journey"
-              lede="From the first conversation to the day you land, everything we do is built on honesty about what's possible."
-            />
+            <h2 className="max-w-2xl font-display text-3xl font-semibold leading-tight tracking-tight text-foreground sm:text-4xl">
+              {INTRO.title}
+            </h2>
           </Reveal>
-          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {services.map((service, index) => (
-              <Reveal key={service.slug} delay={index * 0.05} className="h-full">
-                <article className="hope-card hope-card--light flex h-full flex-col gap-4 p-6">
-                  <div>
-                    <h3 className="font-display text-lg font-semibold text-card-foreground">
-                      {service.shortName}
-                    </h3>
-                    <p className="mt-1 text-sm text-muted-foreground">{service.name}</p>
-                  </div>
-                  <p className="text-sm leading-6 text-muted-foreground">{service.description}</p>
-                  <ul className="mt-auto flex flex-col gap-2 text-sm text-card-foreground">
-                    {service.deliverables.map((item) => (
-                      <li key={item} className="flex items-start gap-2">
-                        <span aria-hidden="true" className="mt-0.5 text-primary">
-                          ✓
-                        </span>
-                        <span>{item}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </article>
-              </Reveal>
-            ))}
-          </div>
+          <Reveal delay={0.1} className="w-full">
+            <p className="max-w-xl text-base leading-7 text-muted-foreground">{INTRO.body}</p>
+          </Reveal>
         </div>
       </section>
 
-      <section id="countries" className="border-b border-border">
+      <section id="how-it-works" className="border-b border-border">
         <div className="mx-auto flex w-full max-w-6xl flex-col gap-12 px-4 py-20 sm:px-6">
           <Reveal className="w-full">
             <SectionHeading
-              eyebrow="Destinations"
-              title="Fourteen countries, one honest picture"
-              lede="Each profile gives you real figures for tuition, living costs, and visa reality — with no tuition fees hidden and no scholarship promises invented."
+              eyebrow={HOW_IT_WORKS.eyebrow}
+              title={HOW_IT_WORKS.title}
+              lede={HOW_IT_WORKS.lede}
             />
           </Reveal>
-          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {countries.map((country, index) => (
-              <Reveal key={country.slug} delay={index * 0.05} className="h-full">
-                <article className="hope-card hope-card--light flex h-full flex-col gap-4 p-6">
-                  <div className="flex items-start justify-between gap-3">
-                    <div className="text-3xl leading-none" aria-hidden="true">
-                      {country.flag}
-                    </div>
-                    <Badge className={cn("border", bandColor[country.cost.band])}>
-                      {costBandLabel[country.cost.band]}
-                    </Badge>
-                  </div>
-                  <div>
-                    <h3 className="font-display text-xl font-semibold text-card-foreground">
-                      {country.name}
-                    </h3>
-                    <p className="mt-1 text-sm text-muted-foreground">{country.tagline}</p>
-                  </div>
-                  <p className="text-sm leading-6 text-muted-foreground">{country.description}</p>
-                  <div className="flex flex-wrap gap-2">
-                    {country.popularFields.slice(0, 3).map((field) => (
-                      <Badge key={field} variant="secondary">
-                        {field}
-                      </Badge>
-                    ))}
-                  </div>
-                </article>
-              </Reveal>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section id="process" className="border-b border-border">
-        <div className="mx-auto flex w-full max-w-6xl flex-col gap-12 px-4 py-20 sm:px-6">
-          <Reveal className="w-full">
-            <SectionHeading
-              eyebrow="How it works"
-              title="A six-step process with zero surprises"
-              lede="Clear, transparent stages. If something isn't possible, we tell you at step one — not after you've paid."
-            />
-          </Reveal>
-          <ol className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          <ol className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
             {processSteps.map((step, index) => (
               <Reveal key={step.step} delay={index * 0.05} className="h-full">
                 <li className="hope-card hope-card--light flex h-full flex-col gap-3 p-6">
@@ -244,26 +259,142 @@ export default async function Home() {
         </div>
       </section>
 
-      <section id="scholarships" className="border-b border-border">
+      <section id="services" className="border-b border-border">
         <div className="mx-auto flex w-full max-w-6xl flex-col gap-12 px-4 py-20 sm:px-6">
           <Reveal className="w-full">
             <SectionHeading
-              eyebrow="Funding, honestly"
-              title="Scholarships are possible. They are never guaranteed."
-              lede="We will never sell you a scholarship. We explain the real routes to funding, and we tell you which ones are actually worth your time."
+              eyebrow={OUR_SERVICES.eyebrow}
+              title={OUR_SERVICES.title}
+              lede={OUR_SERVICES.lede}
+            />
+          </Reveal>
+          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {featuredServices.map((service, index) => (
+              <Reveal key={service.slug} delay={index * 0.05} className="h-full">
+                <article className="hope-card hope-card--light flex h-full flex-col gap-3 p-6">
+                  <h3 className="font-display text-lg font-semibold text-card-foreground">
+                    {service.name}
+                  </h3>
+                  <p className="text-sm leading-6 text-muted-foreground">{service.description}</p>
+                </article>
+              </Reveal>
+            ))}
+          </div>
+          <Reveal className="w-full">
+            <Button nativeButton={false} render={<Link href="/services" />} variant="outline" size="lg">
+              View more services
+            </Button>
+          </Reveal>
+        </div>
+      </section>
+
+      <section id="destinations" className="border-b border-border">
+        <div className="mx-auto flex w-full max-w-6xl flex-col gap-12 px-4 py-20 sm:px-6">
+          <Reveal className="w-full">
+            <SectionHeading
+              eyebrow="Destinations"
+              title="Fourteen countries, one honest picture."
+              lede="Each profile gives you real figures for tuition, living costs and visa reality — no hidden fees, no invented scholarships."
+            />
+          </Reveal>
+          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {featuredCountries.map((country, index) => (
+              <Reveal key={country.slug} delay={index * 0.05} className="h-full">
+                <article className="hope-card hope-card--light flex h-full flex-col gap-4 p-6">
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="text-3xl leading-none" aria-hidden="true">
+                      {country.flag}
+                    </div>
+                    <Badge className={cn("border", bandColor[country.costBand])}>
+                      {getCostBandLabel(country.costBand)}
+                    </Badge>
+                  </div>
+                  <div>
+                    <h3 className="font-display text-xl font-semibold text-card-foreground">
+                      {country.name}
+                    </h3>
+                  </div>
+                  <p className="mt-auto text-sm leading-6 text-muted-foreground">
+                    {country.financialInsight}
+                  </p>
+                  <Link
+                    href={`/countries/${country.slug}`}
+                    className="text-sm font-semibold text-primary"
+                  >
+                    View {country.name} →
+                  </Link>
+                </article>
+              </Reveal>
+            ))}
+          </div>
+          <Reveal className="w-full">
+            <Button nativeButton={false} render={<Link href="/countries" />} variant="outline" size="lg">
+              View more destinations
+            </Button>
+          </Reveal>
+        </div>
+      </section>
+
+      <section id="for-parents" className="border-b border-border">
+        <div className="mx-auto grid w-full max-w-6xl grid-cols-1 items-center gap-10 px-4 py-20 sm:px-6 lg:grid-cols-[1.2fr_1fr] lg:gap-16">
+          <Reveal className="w-full">
+            <div className="flex flex-col gap-4">
+              <Badge variant="outline" className="w-fit uppercase tracking-widest text-muted-foreground">
+                {FOR_PARENTS.title}
+              </Badge>
+              <p className="max-w-2xl text-base leading-7 text-muted-foreground">{FOR_PARENTS.body}</p>
+              <div className="pt-2">
+                <Button nativeButton={false} render={<a href="/contact" />} size="lg">
+                  {FOR_PARENTS.cta}
+                </Button>
+              </div>
+            </div>
+          </Reveal>
+        </div>
+      </section>
+
+      <section id="coming-soon" className="border-b border-border">
+        <div className="mx-auto flex w-full max-w-6xl flex-col gap-12 px-4 py-20 sm:px-6">
+          <Reveal className="w-full">
+            <SectionHeading
+              eyebrow={COMING_SOON.eyebrow}
+              title={COMING_SOON.title}
+              lede=""
             />
           </Reveal>
           <div className="grid gap-5 sm:grid-cols-2">
-            {scholarships.map((item, index) => (
+            {COMING_SOON.items.map((item, index) => (
               <Reveal key={item.name} delay={index * 0.05} className="h-full">
                 <article className="hope-card hope-card--light flex h-full flex-col gap-3 p-6">
-                  <h3 className="font-display text-lg font-semibold text-card-foreground">
-                    {item.name}
-                  </h3>
-                  <p className="text-sm text-muted-foreground">{item.provider}</p>
-                  <p className="text-sm text-muted-foreground">{item.country}</p>
-                  <p className="text-sm font-medium text-primary">{item.covers}</p>
-                  <p className="text-sm leading-6 text-muted-foreground">{item.advice}</p>
+                  <h3 className="font-display text-lg font-semibold text-card-foreground">{item.name}</h3>
+                  <p className="text-sm leading-6 text-muted-foreground">{item.description}</p>
+                </article>
+              </Reveal>
+            ))}
+          </div>
+          <Reveal className="w-full">
+            <Button nativeButton={false} render={<a href="/contact" />} variant="outline" size="lg">
+              {COMING_SOON.cta}
+            </Button>
+          </Reveal>
+        </div>
+      </section>
+
+      <section id="why-us" className="border-b border-border">
+        <div className="mx-auto flex w-full max-w-6xl flex-col gap-12 px-4 py-20 sm:px-6">
+          <Reveal className="w-full">
+            <SectionHeading
+              eyebrow={WHY_US.eyebrow}
+              title={WHY_US.title}
+              lede=""
+            />
+          </Reveal>
+          <div className="grid gap-5 sm:grid-cols-2">
+            {WHY_US.items.map((item, index) => (
+              <Reveal key={item.title} delay={index * 0.05} className="h-full">
+                <article className="hope-card hope-card--light flex h-full flex-col gap-3 p-6">
+                  <h3 className="font-display text-lg font-semibold text-card-foreground">{item.title}</h3>
+                  <p className="text-sm leading-6 text-muted-foreground">{item.body}</p>
                 </article>
               </Reveal>
             ))}
@@ -271,28 +402,20 @@ export default async function Home() {
         </div>
       </section>
 
-      <section id="testimonials" className="border-b border-border">
+      <section id="faq" className="border-b border-border">
         <div className="mx-auto flex w-full max-w-3xl flex-col gap-10 px-4 py-20 sm:px-6">
           <Reveal className="w-full">
-            <SectionHeading
-              eyebrow="From our students"
-              title="What students remember us for"
-              lede="Real feedback. We only publish a testimonial when a student gives us permission."
-            />
+            <SectionHeading eyebrow={FAQ.eyebrow} title={FAQ.title} lede="" />
           </Reveal>
           <Reveal className="w-full">
-            <figure className="hope-card hope-card--light p-8 text-center">
-              <blockquote className="font-display text-xl font-medium leading-8 text-card-foreground">
-                {testimonials[0].quote}
-              </blockquote>
-              <figcaption className="mt-6 text-sm text-muted-foreground">
-                <span className="font-medium text-card-foreground">{testimonials[0].name}</span>
-                {" — "}
-                {testimonials[0].destination}
-                <br />
-                <span className="text-xs leading-relaxed">{testimonials[0].outcome}</span>
-              </figcaption>
-            </figure>
+            <Accordion>
+              {FAQ.items.map((item, index) => (
+                <AccordionItem key={item.q} value={`faq-${index}`}>
+                  <AccordionTrigger>{item.q}</AccordionTrigger>
+                  <AccordionContent>{item.a}</AccordionContent>
+                </AccordionItem>
+              ))}
+            </Accordion>
           </Reveal>
         </div>
       </section>
@@ -300,31 +423,57 @@ export default async function Home() {
       <section id="contact" className="bg-primary text-primary-foreground">
         <div className="mx-auto flex w-full max-w-6xl flex-col items-start gap-8 px-4 py-20 sm:px-6">
           <h2 className="max-w-2xl font-display text-3xl font-semibold leading-tight tracking-tight sm:text-4xl">
-            Book your free consultation. Bring your questions — and your honesty.
+            {FINAL_CTA.title}
           </h2>
-          <p className="max-w-xl text-base leading-7 text-primary-foreground/80">
-            No pressure, no fake assurances, no fee for the first conversation. If we can&apos;t
-            help you reach a genuinely good outcome, we&apos;ll say so.
-          </p>
+          <p className="max-w-xl text-base leading-7 text-primary-foreground/80">{FINAL_CTA.body}</p>
           <div className="flex flex-wrap items-center gap-3">
             <Magnetic>
-              <Button nativeButton={false} render={<a href={`mailto:${site.email}`} />} size="lg" variant="secondary">
-                Email us
+              <Button nativeButton={false} render={<a href="/contact" />} size="lg" variant="secondary">
+                {HERO.primaryCta}
               </Button>
             </Magnetic>
-            <Magnetic>
-              <Button
-                nativeButton={false} render={<a href={`tel:${site.phoneHref}`} />}
-                size="lg"
-                variant="outline"
-                className="border-primary-foreground/40 text-primary-foreground hover:bg-primary-foreground/10 hover:text-primary-foreground"
-              >
-                Call {site.phone}
-              </Button>
-            </Magnetic>
+            {site.whatsapp ? (
+              <Magnetic>
+                <Button
+                  nativeButton={false}
+                  render={
+                    <a href={`https://wa.me/${site.whatsapp}`} target="_blank" rel="noreferrer" />
+                  }
+                  size="lg"
+                  variant="outline"
+                  className="border-primary-foreground/40 text-primary-foreground hover:bg-primary-foreground/10 hover:text-primary-foreground"
+                >
+                  {HERO.secondaryCta}
+                </Button>
+              </Magnetic>
+            ) : null}
           </div>
         </div>
       </section>
+      <Separator />
     </main>
   );
+}
+
+function SectionHeading({
+  eyebrow,
+  title,
+  lede,
+}: {
+  eyebrow: string;
+  title: string;
+  lede: string;
+}) {
+  return (
+    <div className="mx-auto flex max-w-2xl flex-col items-center gap-4 text-center">
+      <Badge variant="outline" className="uppercase tracking-widest text-muted-foreground">
+        {eyebrow}
+      </Badge>
+      <h2 className="font-display text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
+        {title}
+      </h2>
+      {lede ? <p className="text-base leading-7 text-muted-foreground">{lede}</p> : null}
+    </div>
+
+.);
 }
