@@ -54,7 +54,7 @@ function ResourceCard({ resource }: { resource: ResourceItem }) {
 export default async function ResourcesPage() {
   const resources = await getCollection<ResourceItem[]>("resources");
   return (
-    <main className="w-full">
+    <main id="main-content" className="w-full">
       <DarkPageHero
         eyebrow="Resources"
         title="Guides we have written"

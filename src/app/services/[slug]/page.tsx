@@ -40,7 +40,7 @@ export default async function ServicePage({ params }: ServicePageProps) {
   if (!service) notFound();
 
   return (
-    <main className="w-full">
+    <main id="main-content" className="w-full">
       <section className="relative overflow-hidden border-b border-border">
         <div
           aria-hidden="true"

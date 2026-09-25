@@ -336,7 +336,7 @@ export function AdminEditor({ storage }: { storage: "mongodb" | "json-files" }) 
   }
 
   return (
-    <main className="min-h-dvh bg-hope-white">
+    <main id="main-content" className="min-h-dvh bg-hope-white">
       <div className="flex flex-col lg:flex-row">
         <aside className="border-b border-hope-white/10 bg-hope-midnight lg:w-72 lg:shrink-0 lg:border-b-0 lg:border-r">
           <div className="sticky top-0 flex flex-col gap-6 p-4 sm:px-6 lg:h-dvh lg:p-5">

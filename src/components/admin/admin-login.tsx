@@ -33,7 +33,7 @@ export function AdminLogin() {
   }
 
   return (
-    <main className="flex min-h-screen items-center justify-center bg-hope-white px-4">
+    <main id="main-content" className="flex min-h-screen items-center justify-center bg-hope-white px-4">
       <form
         onSubmit={handleSubmit}
         className="hope-card hope-card--light flex w-full max-w-sm flex-col gap-4 p-8"

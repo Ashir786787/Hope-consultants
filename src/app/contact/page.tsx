@@ -15,7 +15,7 @@ export const metadata: Metadata = {
 
 export default function ContactPage() {
   return (
-    <main className="w-full">
+    <main id="main-content" className="w-full">
       <DarkPageHero
         eyebrow="Contact"
         title="A real person reads every message"

@@ -58,7 +58,7 @@ const CLOSING_CTA = {
 
 export default function AboutPage() {
   return (
-    <main className="w-full">
+    <main id="main-content" className="w-full">
       <DarkPageHero
         eyebrow="About us"
         title="Study abroad, without the struggle or the scams."

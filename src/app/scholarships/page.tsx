@@ -148,7 +148,7 @@ export default async function ScholarshipsPage() {
   const partiallyFunded = scholarships.filter((item) => item.group === "partially-funded");
 
   return (
-    <main className="w-full">
+    <main id="main-content" className="w-full">
       <DarkPageHero
         eyebrow="Scholarships & funding"
         title="Funding routes we actually help with"

@@ -1,10 +1,12 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
-import { Badge } from "@/components/ui/badge";
 import { CoverImage } from "@/components/ui/cover-image";
-import { PageHero } from "@/components/page-hero";
+import { DarkPageHero } from "@/components/sections/dark-page-hero";
+import { DarkSection } from "@/components/sections/dark-section";
+import { Magnetic } from "@/components/motion/magnetic";
 import { Reveal } from "@/components/motion/reveal";
+import { Button } from "@/components/ui/button";
 import { getCollection } from "@/lib/store";
 import type { BlogPost } from "@/lib/data/blog";
 
@@ -26,15 +28,15 @@ function formatDate(value: string): string {
 
 export default async function BlogPage() {
   const posts = (await getCollection<BlogPost[]>("blog"))
-    .filter((post) => post.published)
+    .filter((post) => post.published && post.coverImage)
     .sort(
       (a, b) =>
         new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
     );
 
   return (
-    <main className="w-full">
-      <PageHero
+    <main id="main-content" className="w-full">
+      <DarkPageHero
         eyebrow="Blog"
         title="Notes from the road"
         lede="Practical, honest writing on studying abroad — universities, scholarships, visas, and student life. New posts appear here automatically when the team publishes them."
@@ -48,19 +50,27 @@ export default async function BlogPage() {
           </p>
         </section>
       ) : (
-        <section className="mx-auto grid w-full max-w-6xl grid-cols-1 gap-6 px-4 py-16 sm:px-6 md:grid-cols-2">
+        <section className="mx-auto grid w-full max-w-6xl grid-cols-1 gap-6 px-4 py-16 sm:px-6 md:grid-cols-2 lg:grid-cols-3">
           {posts.map((post, index) => (
             <Reveal key={post.slug} delay={index * 0.05} className="h-full">
               <Link
                 href={`/blog/${post.slug}`}
-                className="hope-card hope-card--light flex h-full flex-col overflow-hidden transition-shadow hover:shadow-lg"
+                className="hope-card hope-card--light group flex h-full flex-col"
               >
-                <div className="aspect-[16/9] w-full overflow-hidden">
+                <div className="relative aspect-16/9 w-full overflow-hidden">
                   <CoverImage src={post.coverImage} alt={post.title} />
                 </div>
                 <div className="flex flex-1 flex-col gap-3 p-6">
-                  <div className="flex items-center gap-3 text-xs text-muted-foreground">
-                    <span>{formatDate(post.publishedAt)}</span>
+                  <h3 className="font-display text-xl font-semibold text-card-foreground">
+                    {post.title}
+                  </h3>
+                  {post.excerpt && (
+                    <p className="line-clamp-3 text-sm leading-7 text-muted-foreground">
+                      {post.excerpt}
+                    </p>
+                  )}
+                  <div className="mt-auto flex items-center gap-3 pt-2 text-xs text-muted-foreground">
+                    <time dateTime={post.publishedAt}>{formatDate(post.publishedAt)}</time>
                     {post.author && (
                       <>
                         <span aria-hidden="true">·</span>
@@ -68,17 +78,6 @@ export default async function BlogPage() {
                       </>
                     )}
                   </div>
-                  <h2 className="font-display text-xl font-semibold text-card-foreground">
-                    {post.title}
-                  </h2>
-                  {post.excerpt && (
-                    <p className="line-clamp-3 text-sm leading-7 text-muted-foreground">
-                      {post.excerpt}
-                    </p>
-                  )}
-                  <span className="pt-2 text-sm font-semibold text-hope-ember">
-                    Read post →
-                  </span>
                 </div>
               </Link>
             </Reveal>
@@ -86,28 +85,24 @@ export default async function BlogPage() {
         </section>
       )}
 
-      <section className="border-t border-border">
-        <div className="mx-auto flex w-full max-w-6xl flex-col gap-4 px-4 py-12 sm:px-6">
-          <Badge variant="outline" className="w-fit">
-            Talk to us first
-          </Badge>
-          <h2 className="font-display text-xl font-semibold text-card-foreground">
+      <DarkSection>
+        <div className="flex flex-col gap-4">
+          <h2 className="font-display text-xl font-semibold text-hope-white">
             Reading is one thing — your situation is another.
           </h2>
-          <p className="max-w-2xl text-sm leading-7 text-muted-foreground">
+          <p className="max-w-2xl text-sm leading-7 text-hope-white/70">
             Book a consultation and we will tell you honestly what is realistic for
             your grades, budget, and goals.
           </p>
           <div className="pt-2">
-            <Link
-              href="/contact"
-              className="inline-flex items-center justify-center rounded-full bg-hope-ember px-6 py-3 font-semibold text-hope-white transition-opacity hover:opacity-90"
-            >
-              Book a free consultation
-            </Link>
+            <Magnetic>
+              <Button nativeButton={false} render={<a href="/contact" />} size="lg">
+                Book a free consultation
+              </Button>
+            </Magnetic>
           </div>
         </div>
-      </section>
+      </DarkSection>
     </main>
   );
 }

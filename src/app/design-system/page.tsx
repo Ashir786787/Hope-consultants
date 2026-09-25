@@ -50,7 +50,7 @@ export default function DesignSystemPage() {
   }
 
   return (
-    <main className="bg-hope-white text-hope-midnight">
+    <main id="main-content" className="bg-hope-white text-hope-midnight">
       <Section tone="light">
         <div className="flex flex-col gap-2">
           <Eyebrow>Design system</Eyebrow>

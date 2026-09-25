@@ -146,7 +146,7 @@ export default async function Home() {
   const featuredServices = services.slice(0, 3);
 
   return (
-    <main className="min-h-screen bg-background text-foreground">
+    <main id="main-content" className="min-h-screen bg-background text-foreground">
       <Hero
         countries={sortedCountries}
         services={services}

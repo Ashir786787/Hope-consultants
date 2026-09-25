@@ -18,7 +18,7 @@ export const metadata: Metadata = {
 export default async function TestimonialsPage() {
   const testimonials = await getCollection<Testimonial[]>("testimonials");
   return (
-    <main className="w-full">
+    <main id="main-content" className="w-full">
       <DarkPageHero
         eyebrow="Testimonials"
         title="Students we have genuinely helped"

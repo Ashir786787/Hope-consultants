@@ -8,6 +8,7 @@ import { Separator } from "@/components/ui/separator";
 import { Reveal } from "@/components/motion/reveal";
 import { Magnetic } from "@/components/motion/magnetic";
 import { DarkSection } from "@/components/sections/dark-section";
+import { FlightPath } from "@/components/motion/flight-path";
 import { getCostBandLabel } from "@/lib/data/helpers";
 import { getCollection } from "@/lib/store";
 import type { CountryDestination, CountrySection, CountrySlug } from "@/lib/data/types";
@@ -168,7 +169,7 @@ export default async function CountryPage({ params }: CountryPageProps) {
   const galleryImages = country.images.slice(1);
 
   return (
-    <main className="w-full">
+    <main id="main-content" className="w-full">
       <section className="relative isolate overflow-hidden border-b border-[rgb(255_255_255/0.10)] bg-hope-midnight">
         <div
           aria-hidden="true"
@@ -178,6 +179,15 @@ export default async function CountryPage({ params }: CountryPageProps) {
           aria-hidden="true"
           className="hope-dot-grid pointer-events-none absolute inset-0 opacity-[0.06]"
         />
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-x-0 top-0 h-56 opacity-50"
+        >
+          <FlightPath
+            d="M-40 170 C 220 30, 500 210, 760 90 S 1120 20, 1260 100"
+            className="h-full w-full"
+          />
+        </div>
         <div className="relative mx-auto flex w-full max-w-6xl flex-col gap-10 px-4 py-14 sm:px-6 sm:py-20">
           <Reveal>
             <div className="flex items-center gap-6">

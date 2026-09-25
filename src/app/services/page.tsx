@@ -42,7 +42,7 @@ function ServiceCard({ service }: { service: Service }) {
 export default async function ServicesPage() {
   const services = await getCollection<Service[]>("services");
   return (
-    <main className="w-full">
+    <main id="main-content" className="w-full">
       <DarkPageHero
         eyebrow="Services"
         title="What we actually help with"

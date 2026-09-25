@@ -5,7 +5,7 @@ import { DarkPageHero } from "@/components/sections/dark-page-hero";
 
 export function LegalDocument({ page }: { page: LegalPage }) {
   return (
-    <main className="w-full">
+    <main id="main-content" className="w-full">
       <DarkPageHero eyebrow="Legal" title={page.title} />
 
       <section className="mx-auto flex w-full max-w-3xl flex-col gap-10 px-4 py-14 sm:px-6 sm:py-16">
