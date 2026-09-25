@@ -17,7 +17,7 @@ export function Marquee({ children, direction = "left", duration = 24, className
     <div className={cn("hope-marquee", className)} data-direction={direction} style={style}>
       <div className="hope-marquee__track">
         <div className="hope-marquee__group">{children}</div>
-        <div className="hope-marquee__group" aria-hidden="true">
+        <div className="hope-marquee__group" aria-hidden="true" inert>
           {children}
         </div>
       </div>

@@ -8,7 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Reveal } from "@/components/motion/reveal";
 import { Magnetic } from "@/components/motion/magnetic";
-import { Marquee } from "@/components/motion/marquee";
+import { CountryMarquee } from "@/components/countries/country-marquee";
 import { Hero } from "@/components/sections/hero";
 import { ProcessSequence } from "@/components/sections/process-sequence";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
@@ -154,22 +154,8 @@ export default async function Home() {
         whatsapp={site.whatsapp ?? ""}
       />
 
-      <Marquee
-        className="border-b border-border bg-hope-midnight py-5 text-hope-white"
-        duration={30}
-      >
-        {sortedCountries.map((country) => (
-          <span
-            key={country.slug}
-            className="mx-5 flex items-center gap-2 text-sm font-semibold tracking-[0.18em] uppercase"
-          >
-            <span aria-hidden="true" className="text-base">
-              {country.flag}
-            </span>
-            {country.name}
-          </span>
-        ))}
-      </Marquee>
+      <CountryMarquee countries={sortedCountries} />
+
 
       <section id="intro" className="border-b border-border">
         <div className="mx-auto grid w-full max-w-6xl grid-cols-1 gap-10 px-4 py-20 sm:px-6 lg:grid-cols-[1.2fr_1fr] lg:gap-16">
