@@ -99,6 +99,7 @@ export const countries: CountryDestination[] = [
     ],
     journey:
       "Italy is more than a degree — it is a lifestyle, a new language, and a whole continent to explore. If you are ready to adapt and learn, this could be the right home for your next few years.",
+    images: ['/countries/italy/italy-1.jpg', '/countries/italy/italy-2.jpg', '/countries/italy/italy-3.jpg'],
   },
   {
     slug: "germany",
@@ -179,6 +180,7 @@ export const countries: CountryDestination[] = [
     ],
     journey:
       "Germany rewards preparation. If you meet the admission and financial requirements, you get a first-class degree for a fraction of the cost of most English-speaking countries.",
+    images: ['/countries/germany/germany-1.jpg', '/countries/germany/germany-2.jpg', '/countries/germany/germany-3.jpg'],
   },
   {
     slug: "sweden",
@@ -256,6 +258,7 @@ export const countries: CountryDestination[] = [
     ],
     journey:
       "If you want a modern, English-friendly education in a safe and progressive country, Sweden is one of the best — if you can meet its financial requirements.",
+    images: ['/countries/sweden/sweden-1.jpg', '/countries/sweden/sweden-2.jpg', '/countries/sweden/sweden-3.jpg'],
   },
   {
     slug: "finland",
@@ -333,6 +336,7 @@ export const countries: CountryDestination[] = [
     ],
     journey:
       "Finland is for focused, independent students who want a modern, honest education in one of the safest countries in the world — with tuition waivers available for strong profiles.",
+    images: ['/countries/finland/finland-1.jpg', '/countries/finland/finland-2.jpg', '/countries/finland/finland-3.jpg'],
   },
   {
     slug: "turkey",
@@ -410,6 +414,7 @@ export const countries: CountryDestination[] = [
     ],
     journey:
       "Turkey is one of the most accessible destinations for Pakistani students — generous scholarships, low costs, and a culture that feels close to home.",
+    images: ['/countries/turkey/turkey-1.webp', '/countries/turkey/turkey-3.jpg'],
   },
   {
     slug: "portugal",
@@ -478,6 +483,7 @@ export const countries: CountryDestination[] = [
     ],
     journey:
       "Portugal is a calm, affordable and genuinely welcoming destination — especially strong once English-taught options and a realistic visa path are confirmed for your profile.",
+    images: ['/countries/portugal/portugal-1.jpg', '/countries/portugal/portugal-2.jpg', '/countries/portugal/portugal-3.jpg'],
   },
   {
     slug: "hungary",
@@ -554,6 +560,7 @@ export const countries: CountryDestination[] = [
     ],
     journey:
       "Hungary is one of the best-funded realistic routes for Pakistani students — if you are ready to prepare a serious, complete scholarship application.",
+    images: ['/countries/hungary/hungary-1.jpg', '/countries/hungary/hungary-2.jpg', '/countries/hungary/hungary-3.jpg'],
   },
   {
     slug: "belgium",
@@ -623,6 +630,7 @@ export const countries: CountryDestination[] = [
     ],
     journey:
       "Belgium is an excellent, central European choice — especially for master's students — when you treat the right community, its tuition and its visa rules correctly.",
+    images: ['/countries/belgium/belgium-1.jpg', '/countries/belgium/belgium-2.jpeg', '/countries/belgium/belgium-3.jpg'],
   },
   {
     slug: "netherlands",
@@ -692,6 +700,7 @@ export const countries: CountryDestination[] = [
     ],
     journey:
       "The Netherlands offers excellent English-taught education and genuine post-study opportunities — if you can meet its higher financial requirements honestly.",
+    images: ['/countries/netherlands/netherlands-1.jpg', '/countries/netherlands/netherlands-2.jpg', '/countries/netherlands/netherlands-3.jpeg'],
   },
   {
     slug: "lithuania",
@@ -768,6 +777,7 @@ export const countries: CountryDestination[] = [
     ],
     journey:
       "Lithuania is a genuinely affordable EU destination with real scholarships — an underrated, honest option for budget-conscious Pakistani students.",
+    images: ['/countries/lithuania/lithuania-2.jpg', '/countries/lithuania/lithuania-3.jpg'],
   },
   {
     slug: "cyprus",
@@ -835,6 +845,7 @@ export const countries: CountryDestination[] = [
     ],
     journey:
       "Cyprus is a practical, English-first EU choice — especially for medicine and health students who want a clear, faster route with honest documentation.",
+    images: ['/countries/cyprus/cyprus-1.jpg', '/countries/cyprus/cyprus-2.jpg', '/countries/cyprus/cyprus-3.webp'],
   },
   {
     slug: "malta",
@@ -900,6 +911,7 @@ export const countries: CountryDestination[] = [
     ],
     journey:
       "Malta is a stable, English-native EU option for students who value a small, safe island environment — with private-institution costs handled honestly.",
+    images: ['/countries/malta/malta-1.jpg', '/countries/malta/malta-2.jpg', '/countries/malta/malta-3.jpg'],
   },
   {
     slug: "japan",
@@ -977,6 +989,7 @@ export const countries: CountryDestination[] = [
     ],
     journey:
       "Japan is for disciplined students planning ahead — MEXT and national university options make it one of the most rewarding funded routes for the right profile.",
+    images: ['/countries/japan/japan-1.jpg', '/countries/japan/japan-2.jpeg', '/countries/japan/japan-3.webp'],
   },
   {
     slug: "china",
@@ -1055,6 +1068,7 @@ export const countries: CountryDestination[] = [
     ],
     journey:
       "China offers a world-class, genuinely fundable pathway for engineering, medicine and language students — especially when CSC funding is matched to your profile.",
+    images: ['/countries/china/china-1.webp', '/countries/china/china-2.jpg', '/countries/china/china-3.jpg'],
   },
 ];
 

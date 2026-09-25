@@ -1,4 +1,6 @@
 ﻿import Link from "next/link";
+import Image from "next/image";
+
 
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -250,6 +252,17 @@ export default async function Home() {
             {featuredCountries.map((country, index) => (
               <Reveal key={country.slug} delay={index * 0.05} className="h-full">
                 <article className="hope-card hope-card--light flex h-full flex-col gap-4 p-6">
+                  {country.images[0] ? (
+                    <div className="relative -mx-6 -mt-6 aspect-16/9 w-[calc(100%+3rem)] overflow-hidden rounded-t-[1.5rem]">
+                      <Image
+                        src={country.images[0]}
+                        alt={`${country.name} — study destination`}
+                        fill
+                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                        className="object-cover"
+                      />
+                    </div>
+                  ) : null}
                   <div className="flex items-start justify-between gap-3">
                     <div className="text-3xl leading-none" aria-hidden="true">
                       {country.flag}

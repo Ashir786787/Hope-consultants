@@ -41,6 +41,7 @@ export interface CountryDestination {
   intro: string;
   sections: CountrySection[];
   journey: string;
+  images: string[];
 }
 
 export type ScholarshipGroup = "spotlight" | "fully-funded" | "partially-funded";

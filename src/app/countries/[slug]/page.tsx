@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
@@ -99,6 +100,9 @@ export default async function CountryPage({ params }: CountryPageProps) {
   const country = countries.find((item) => item.slug === slug);
   if (!country) notFound();
 
+  const heroImage = country.images[0] ?? null;
+  const galleryImages = country.images.slice(1);
+
   return (
     <main className="w-full">
       <section className="relative overflow-hidden border-b border-border">
@@ -126,7 +130,22 @@ export default async function CountryPage({ params }: CountryPageProps) {
             </div>
           </Reveal>
 
-          <Reveal delay={0.1}>
+          {heroImage ? (
+            <Reveal delay={0.1}>
+              <div className="relative aspect-16/9 w-full overflow-hidden rounded-3xl border border-border">
+                <Image
+                  src={heroImage}
+                  alt={`${country.name} — study destination`}
+                  fill
+                  priority
+                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 100vw, 1152px"
+                  className="object-cover"
+                />
+              </div>
+            </Reveal>
+          ) : null}
+
+          <Reveal delay={0.15}>
             <p className="max-w-2xl text-base leading-7 text-muted-foreground">{country.intro}</p>
           </Reveal>
 
@@ -140,6 +159,28 @@ export default async function CountryPage({ params }: CountryPageProps) {
           </Reveal>
         </div>
       </section>
+
+      {galleryImages.length > 0 ? (
+        <section className="border-b border-border">
+          <div className="mx-auto w-full max-w-6xl px-4 py-12 sm:px-6">
+            <ul className="grid grid-cols-1 gap-5 sm:grid-cols-2">
+              {galleryImages.map((image, index) => (
+                <Reveal key={image} delay={index * 0.08} className="h-full">
+                  <li className="relative aspect-4/3 w-full overflow-hidden rounded-3xl border border-border">
+                    <Image
+                      src={image}
+                      alt={`${country.name} — landmark`}
+                      fill
+                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 560px"
+                      className="object-cover"
+                    />
+                  </li>
+                </Reveal>
+              ))}
+            </ul>
+          </div>
+        </section>
+      ) : null}
 
       <section className="mx-auto flex w-full max-w-6xl flex-col gap-12 px-4 py-14 sm:px-6">
         {country.sections.map((section, index) => (

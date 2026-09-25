@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -93,6 +94,17 @@ export default function CountryFilter({
           {results.map((country) => (
             <li key={country.slug}>
               <article className="hope-card hope-card--light flex h-full flex-col gap-4 p-6">
+                {country.images[0] ? (
+                  <div className="relative -mx-6 -mt-6 aspect-16/9 w-[calc(100%+3rem)] overflow-hidden rounded-t-[1.5rem]">
+                    <Image
+                      src={country.images[0]}
+                      alt={`${country.name} — study destination`}
+                      fill
+                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                      className="object-cover"
+                    />
+                  </div>
+                ) : null}
                 <div className="flex items-start justify-between gap-3">
                   <span className="text-3xl leading-none" aria-hidden="true">
                     {country.flag}
