@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
@@ -58,6 +59,20 @@ export default async function ServicePage({ params }: ServicePageProps) {
           <Reveal delay={0.2}>
             <p className="max-w-2xl text-lg leading-8 text-muted-foreground">{service.description}</p>
           </Reveal>
+          {service.image ? (
+            <Reveal delay={0.3}>
+              <div className="relative aspect-16/9 w-full overflow-hidden rounded-3xl border border-border">
+                <Image
+                  src={service.image}
+                  alt={service.name}
+                  fill
+                  priority
+                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 100vw, 1152px"
+                  className="object-cover"
+                />
+              </div>
+            </Reveal>
+          ) : null}
         </div>
       </section>
 

@@ -10,6 +10,7 @@ import { Reveal } from "@/components/motion/reveal";
 import { Magnetic } from "@/components/motion/magnetic";
 import { Marquee } from "@/components/motion/marquee";
 import { Hero } from "@/components/sections/hero";
+import { ProcessSequence } from "@/components/sections/process-sequence";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { getSite } from "@/lib/site";
 import { getCollection } from "@/lib/store";
@@ -192,21 +193,30 @@ export default async function Home() {
               lede={HOW_IT_WORKS.lede}
             />
           </Reveal>
-          <ol className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+          <ProcessSequence>
             {processSteps.map((step, index) => (
-              <Reveal key={step.step} delay={index * 0.05} className="h-full">
-                <li className="hope-card hope-card--light flex h-full flex-col gap-3 p-6">
-                  <span className="font-display text-4xl font-bold text-primary">
-                    {String(step.step).padStart(2, "0")}
-                  </span>
-                  <h3 className="font-display text-lg font-semibold text-card-foreground">
-                    {step.title}
-                  </h3>
-                  <p className="text-sm leading-6 text-muted-foreground">{step.description}</p>
-                </li>
-              </Reveal>
+              <li key={step.step} className="relative pb-8 pl-0 last:pb-0">
+                <Reveal delay={index * 0.04} className="w-full">
+                  <div className="relative flex flex-col gap-3 lg:flex-row lg:items-baseline lg:gap-8">
+                    <div className="flex shrink-0 items-center gap-3">
+                      <span className="relative z-10 flex size-10 items-center justify-center rounded-full border border-border bg-background font-display text-sm font-bold text-hope-ember">
+                        {String(step.step).padStart(2, "0")}
+                      </span>
+                      <h3 className="font-display text-lg font-semibold text-card-foreground lg:hidden">
+                        {step.title}
+                      </h3>
+                    </div>
+                    <div className="flex flex-col gap-2">
+                      <h3 className="hidden font-display text-lg font-semibold text-card-foreground lg:block">
+                        {step.title}
+                      </h3>
+                      <p className="text-sm leading-6 text-muted-foreground">{step.description}</p>
+                    </div>
+                  </div>
+                </Reveal>
+              </li>
             ))}
-          </ol>
+          </ProcessSequence>
         </div>
       </section>
 

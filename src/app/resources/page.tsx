@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { PageHero } from "@/components/page-hero";
-import { Reveal } from "@/components/motion/reveal";
+import { PreviewGrid } from "@/components/ui/preview-grid";
 import { getCollection } from "@/lib/store";
 import type { ResourceItem } from "@/lib/data/resources";
 
@@ -12,6 +13,41 @@ export const metadata: Metadata = {
   description:
     "Plain-language guides we have written for Pakistani students on studying abroad — no fluff, no fabricated promises.",
 };
+
+function ResourceCard({ resource }: { resource: ResourceItem }) {
+  return (
+    <article className="hope-card hope-card--light flex h-full flex-col gap-4 p-6">
+      {resource.image ? (
+        <div className="relative -mx-6 -mt-6 aspect-16/9 w-[calc(100%+3rem)] overflow-hidden rounded-t-[1.5rem]">
+          <Image
+            src={resource.image}
+            alt={resource.title}
+            fill
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+            className="object-cover"
+          />
+        </div>
+      ) : null}
+      <div className="flex flex-col gap-2">
+        <Badge variant="outline" className="w-fit">
+          {resource.category}
+        </Badge>
+        <h2 className="font-display text-xl font-semibold text-card-foreground">{resource.title}</h2>
+      </div>
+      <p className="text-sm leading-7 text-muted-foreground">{resource.description}</p>
+      <Separator />
+      <Button
+        className="w-fit"
+        size="sm"
+        nativeButton={false}
+        render={<a href="/contact" />}
+        variant="outline"
+      >
+        Ask us about this
+      </Button>
+    </article>
+  );
+}
 
 export default async function ResourcesPage() {
   const resources = await getCollection<ResourceItem[]>("resources");
@@ -23,31 +59,13 @@ export default async function ResourcesPage() {
         lede="Short, honest, plain-language reading on studying abroad. We only publish what we actually know — and we update it when things change."
       />
 
-      <section className="mx-auto grid w-full max-w-6xl grid-cols-1 gap-6 px-4 py-16 sm:px-6 md:grid-cols-2">
-        {resources.map((resource, index) => (
-          <Reveal key={resource.title} delay={index * 0.05} className="h-full">
-            <article className="hope-card hope-card--light flex h-full flex-col gap-4 p-6">
-            <div className="flex flex-col gap-2">
-              <Badge variant="outline" className="w-fit">
-                {resource.category}
-              </Badge>
-              <h2 className="font-display text-xl font-semibold text-card-foreground">
-                {resource.title}
-              </h2>
-            </div>
-            <p className="text-sm leading-7 text-muted-foreground">{resource.description}</p>
-            <Separator />
-            <Button
-              className="w-fit"
-              size="sm"
-              nativeButton={false} render={<a href="/contact" />}
-              variant="outline"
-            >
-              Ask us about this
-            </Button>
-          </article>
-          </Reveal>
-        ))}
+      <section className="mx-auto w-full max-w-6xl px-4 py-16 sm:px-6">
+        <PreviewGrid
+          items={resources.map((resource) => ({
+            key: resource.title,
+            content: <ResourceCard resource={resource} />,
+          }))}
+        />
       </section>
 
       <section className="border-t border-border">

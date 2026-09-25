@@ -14,6 +14,7 @@ export interface Service {
   slug: ServiceSlug;
   name: string;
   description: string;
+  image?: string;
 }
 
 export const services: Service[] = [

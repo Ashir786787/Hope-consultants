@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
-import { buttonVariants } from "@/components/ui/button";
+import Image from "next/image";
 import { Separator } from "@/components/ui/separator";
 import { getCollection } from "@/lib/store";
 import type { Service } from "@/lib/data/services";
 import { PageHero } from "@/components/page-hero";
-import { Reveal } from "@/components/motion/reveal";
+import { PreviewGrid } from "@/components/ui/preview-grid";
 
 export const metadata: Metadata = {
   title: "Services | Hope Consultants",
@@ -15,12 +15,24 @@ export const metadata: Metadata = {
 function ServiceCard({ service }: { service: Service }) {
   return (
     <article className="hope-card hope-card--light flex h-full flex-col gap-4 p-6">
-      <h2 className="font-display text-xl font-semibold text-card-foreground">
-        {service.name}
-      </h2>
+      {service.image ? (
+        <div className="relative -mx-6 -mt-6 aspect-16/9 w-[calc(100%+3rem)] overflow-hidden rounded-t-[1.5rem]">
+          <Image
+            src={service.image}
+            alt={service.name}
+            fill
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+            className="object-cover"
+          />
+        </div>
+      ) : null}
+      <h2 className="font-display text-xl font-semibold text-card-foreground">{service.name}</h2>
       <p className="mt-auto text-sm leading-7 text-muted-foreground">{service.description}</p>
       <Separator />
-      <a className={buttonVariants({ variant: "outline", size: "sm" })} href={`/services/${service.slug}`}>
+      <a
+        className="text-sm font-semibold text-foreground underline-offset-4 hover:underline"
+        href={`/services/${service.slug}`}
+      >
         Learn more
       </a>
     </article>
@@ -37,12 +49,13 @@ export default async function ServicesPage() {
         lede="Ten areas of step-by-step guidance — from choosing where to go, to the day you arrive. No guaranteed admissions, no promised visas, no invented scholarships."
       />
 
-      <section className="mx-auto grid w-full max-w-6xl grid-cols-1 gap-6 px-4 py-16 sm:grid-cols-2 sm:px-6 lg:grid-cols-3">
-        {services.map((service, index) => (
-          <Reveal key={service.slug} delay={index * 0.05} className="h-full">
-            <ServiceCard service={service} />
-          </Reveal>
-        ))}
+      <section className="mx-auto w-full max-w-6xl px-4 py-16 sm:px-6">
+        <PreviewGrid
+          items={services.map((service) => ({
+            key: service.slug,
+            content: <ServiceCard service={service} />,
+          }))}
+        />
       </section>
     </main>
   );

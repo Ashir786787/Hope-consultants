@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Button, buttonVariants } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
 import { PageHero } from "@/components/page-hero";
 import { Reveal } from "@/components/motion/reveal";
+import { ProcessSequence } from "@/components/sections/process-sequence";
 import { getCollection } from "@/lib/store";
 import type { ProcessStep } from "@/lib/data/process";
 
@@ -24,14 +24,16 @@ export default async function ProcessPage() {
       />
 
       <section className="mx-auto w-full max-w-6xl px-4 py-16 sm:px-6">
-        <ol className="flex flex-col gap-0">
-          {processSteps.map((step) => (
-            <li key={step.step} className="flex flex-col gap-3">
-              <Reveal className="w-full">
-                <div className="flex flex-col gap-3 sm:flex-row sm:items-baseline sm:gap-5">
-                  <span className="font-display text-2xl font-semibold text-primary">
-                    {String(step.step).padStart(2, "0")}
-                  </span>
+        <ProcessSequence>
+          {processSteps.map((step, index) => (
+            <li key={step.step} className="relative pb-10 pl-0 last:pb-0">
+              <Reveal className="w-full" delay={index * 0.03}>
+                <div className="relative flex flex-col gap-3 lg:flex-row lg:items-baseline lg:gap-8">
+                  <div className="flex shrink-0 items-center gap-3">
+                    <span className="relative z-10 flex size-10 items-center justify-center rounded-full border border-border bg-background font-display text-sm font-bold text-hope-ember">
+                      {String(step.step).padStart(2, "0")}
+                    </span>
+                  </div>
                   <div className="flex flex-col gap-2">
                     <h2 className="font-display text-xl font-semibold text-card-foreground">
                       {step.title}
@@ -42,10 +44,9 @@ export default async function ProcessPage() {
                   </div>
                 </div>
               </Reveal>
-              {step.step < processSteps.length ? <Separator className="my-6" /> : null}
             </li>
           ))}
-        </ol>
+        </ProcessSequence>
       </section>
 
       <section className="border-t border-border">

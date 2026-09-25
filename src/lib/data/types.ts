@@ -58,6 +58,7 @@ export interface ScholarshipProgram {
   applyAt?: string;
   source?: string;
   universities?: string[];
+  image?: string;
 }
 
 export interface TeamMember {
