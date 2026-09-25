@@ -13,15 +13,7 @@ export function Preloader() {
   const markRef = useRef<HTMLDivElement>(null);
   const arcRef = useRef<SVGPathElement>(null);
   const planeRef = useRef<SVGGElement>(null);
-  const [hidden, setHidden] = useState(() => {
-    if (typeof window === "undefined") return false;
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return true;
-    try {
-      return sessionStorage.getItem(SESSION_KEY) !== null;
-    } catch {
-      return false;
-    }
-  });
+  const [hidden, setHidden] = useState(false);
 
   useEffect(() => {
     if (hidden) return;
@@ -30,6 +22,20 @@ export function Preloader() {
     const arc = arcRef.current;
     const plane = planeRef.current;
     if (!root || !mark || !arc || !plane) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      gsap.delayedCall(0.001, () => setHidden(true));
+      return;
+    }
+    let repeat = false;
+    try {
+      repeat = sessionStorage.getItem(SESSION_KEY) !== null;
+    } catch {
+      repeat = false;
+    }
+    if (repeat) {
+      gsap.delayedCall(0.001, () => setHidden(true));
+      return;
+    }
 
     gsap.set(mark, { autoAlpha: 0, scale: 0.92 });
     gsap.set(plane, { autoAlpha: 0 });
