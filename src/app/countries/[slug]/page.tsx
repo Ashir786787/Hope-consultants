@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Reveal } from "@/components/motion/reveal";
+import { Magnetic } from "@/components/motion/magnetic";
 import { getCostBandLabel } from "@/lib/data/helpers";
 import { getCollection } from "@/lib/store";
 import type { CountryDestination, CountrySection, CountrySlug } from "@/lib/data/types";
@@ -199,9 +200,11 @@ export default async function CountryPage({ params }: CountryPageProps) {
             </div>
           </Reveal>
           <Reveal delay={0.1} className="flex flex-wrap items-center gap-3">
-            <Button nativeButton={false} render={<a href="/contact" />} size="lg">
-              Book a free consultation
-            </Button>
+            <Magnetic>
+              <Button nativeButton={false} render={<a href="/contact" />} size="lg">
+                Book a free consultation
+              </Button>
+            </Magnetic>
             <Link className={buttonVariants({ variant: "outline", size: "lg" })} href="/countries">
               All destinations
             </Link>

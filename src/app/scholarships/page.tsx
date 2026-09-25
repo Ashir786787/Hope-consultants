@@ -4,7 +4,9 @@ import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { PageHero } from "@/components/page-hero";
+import { DarkPageHero } from "@/components/sections/dark-page-hero";
+import { DarkSection } from "@/components/sections/dark-section";
+import { Magnetic } from "@/components/motion/magnetic";
 import { Reveal } from "@/components/motion/reveal";
 import { PreviewGrid } from "@/components/ui/preview-grid";
 import { getCollection } from "@/lib/store";
@@ -147,7 +149,7 @@ export default async function ScholarshipsPage() {
 
   return (
     <main className="w-full">
-      <PageHero
+      <DarkPageHero
         eyebrow="Scholarships & funding"
         title="Funding routes we actually help with"
         lede="No invented scholarship databases. No guarantees. These are the real, current routes we work with — and the honest conditions attached to each."
@@ -235,25 +237,32 @@ export default async function ScholarshipsPage() {
         </div>
       </section>
 
-      <section className="border-t border-border">
-        <div className="mx-auto flex w-full max-w-6xl flex-col gap-4 px-4 py-12 sm:px-6">
-          <h2 className="font-display text-xl font-semibold text-card-foreground">
-            Need a realistic funding plan?
-          </h2>
-          <p className="max-w-2xl text-sm leading-7 text-muted-foreground">
-            Tell us your budget, your family situation, and your goals. We will tell you which of
-            these routes are realistic for you — and which are not.
-          </p>
-          <div className="flex flex-wrap items-center gap-3 pt-2">
-            <Button size="lg" nativeButton={false} render={<a href="/contact" />}>
-              Talk to us about funding
-            </Button>
-            <Link className={buttonVariants({ variant: "outline", size: "lg" })} href="/countries">
-              Compare study destinations
-            </Link>
+      <DarkSection>
+        <Reveal className="w-full">
+          <div className="flex flex-col gap-4">
+            <h2 className="font-display text-xl font-semibold text-hope-white">
+              Need a realistic funding plan?
+            </h2>
+            <p className="max-w-2xl text-sm leading-7 text-hope-white/70">
+              Tell us your budget, your family situation, and your goals. We will tell you which
+              of these routes are realistic for you — and which are not.
+            </p>
+            <div className="flex flex-wrap items-center gap-3 pt-2">
+              <Magnetic>
+                <Button size="lg" nativeButton={false} render={<a href="/contact" />}>
+                  Talk to us about funding
+                </Button>
+              </Magnetic>
+              <Link
+                className={buttonVariants({ variant: "outline", size: "lg" })}
+                href="/countries"
+              >
+                Compare study destinations
+              </Link>
+            </div>
           </div>
-        </div>
-      </section>
+        </Reveal>
+      </DarkSection>
     </main>
   );
 }

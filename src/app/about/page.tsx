@@ -1,7 +1,8 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { PageHero } from "@/components/page-hero";
+import { DarkPageHero } from "@/components/sections/dark-page-hero";
+import { DarkSection } from "@/components/sections/dark-section";
 import { Reveal } from "@/components/motion/reveal";
 import { Magnetic } from "@/components/motion/magnetic";
 import { team } from "@/lib/data/team";
@@ -58,7 +59,7 @@ const CLOSING_CTA = {
 export default function AboutPage() {
   return (
     <main className="w-full">
-      <PageHero
+      <DarkPageHero
         eyebrow="About us"
         title="Study abroad, without the struggle or the scams."
         lede="We guide Pakistani students through admissions, scholarships, visas and arrival — honestly, affordably, and to the very end."
@@ -157,19 +158,23 @@ export default function AboutPage() {
 
         <Separator />
 
-        <Reveal className="hope-card hope-card--light mx-auto flex w-full max-w-3xl flex-col items-center gap-4 p-8 text-center sm:p-10">
-          <h2 className="max-w-xl font-display text-2xl font-semibold leading-tight tracking-tight text-card-foreground sm:text-3xl">
-            {CLOSING_CTA.title}
-          </h2>
-          <p className="max-w-xl text-base leading-7 text-muted-foreground">{CLOSING_CTA.body}</p>
-          <div className="pt-1">
-            <Magnetic>
-              <Button size="lg" render={<a href="/contact" />}>
-                {CLOSING_CTA.cta}
-              </Button>
-            </Magnetic>
-          </div>
-        </Reveal>
+        <DarkSection className="border-t-0">
+          <Reveal className="mx-auto w-full max-w-3xl">
+            <div className="hope-card flex flex-col items-center gap-4 p-8 text-center sm:p-10">
+              <h2 className="max-w-xl font-display text-2xl font-semibold leading-tight tracking-tight text-hope-white sm:text-3xl">
+                {CLOSING_CTA.title}
+              </h2>
+              <p className="max-w-xl text-base leading-7 text-hope-white/70">{CLOSING_CTA.body}</p>
+              <div className="pt-1">
+                <Magnetic>
+                  <Button size="lg" nativeButton={false} render={<a href="/contact" />}>
+                    {CLOSING_CTA.cta}
+                  </Button>
+                </Magnetic>
+              </div>
+            </div>
+          </Reveal>
+        </DarkSection>
       </section>
     </main>
   );

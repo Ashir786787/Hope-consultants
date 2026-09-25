@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Separator } from "@/components/ui/separator";
-import { PageHero } from "@/components/page-hero";
+import { DarkPageHero } from "@/components/sections/dark-page-hero";
 import CountryFilter from "@/components/countries/country-filter";
 import { getCollection } from "@/lib/store";
 import type { CountryDestination } from "@/lib/data/types";
@@ -15,7 +15,7 @@ export default async function DestinationsPage() {
   const countries = await getCollection<CountryDestination[]>("countries");
   return (
     <div className="w-full">
-      <PageHero
+      <DarkPageHero
         eyebrow={`${countries.length} destinations · 1 honest direction`}
         title="Study destinations, without the fairy tales"
         lede="Every profile lists what a year really costs, when intakes actually happen, whether you can study in English, and what the visa genuinely requires — including the things most agencies quietly skip."

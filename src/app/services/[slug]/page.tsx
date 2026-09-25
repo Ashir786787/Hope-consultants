@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Reveal } from "@/components/motion/reveal";
+import { Magnetic } from "@/components/motion/magnetic";
 import { getCollection } from "@/lib/store";
 import type { Service } from "@/lib/data/services";
 
@@ -91,9 +92,11 @@ export default async function ServicePage({ params }: ServicePageProps) {
           <aside className="flex flex-col gap-6">
             <Separator />
             <div className="flex flex-col gap-3">
-              <Button nativeButton={false} render={<a href="/contact" />} size="lg">
-                Book a free consultation
-              </Button>
+              <Magnetic>
+                <Button nativeButton={false} render={<a href="/contact" />} size="lg">
+                  Book a free consultation
+                </Button>
+              </Magnetic>
               <Link className={buttonVariants({ variant: "outline", size: "lg" })} href="/services">
                 All services
               </Link>

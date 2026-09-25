@@ -3,7 +3,7 @@ import Image from "next/image";
 import { Separator } from "@/components/ui/separator";
 import { getCollection } from "@/lib/store";
 import type { Service } from "@/lib/data/services";
-import { PageHero } from "@/components/page-hero";
+import { DarkPageHero } from "@/components/sections/dark-page-hero";
 import { PreviewGrid } from "@/components/ui/preview-grid";
 
 export const metadata: Metadata = {
@@ -43,7 +43,7 @@ export default async function ServicesPage() {
   const services = await getCollection<Service[]>("services");
   return (
     <main className="w-full">
-      <PageHero
+      <DarkPageHero
         eyebrow="Services"
         title="What we actually help with"
         lede="Ten areas of step-by-step guidance — from choosing where to go, to the day you arrive. No guaranteed admissions, no promised visas, no invented scholarships."

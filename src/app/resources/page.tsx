@@ -3,7 +3,9 @@ import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { PageHero } from "@/components/page-hero";
+import { DarkPageHero } from "@/components/sections/dark-page-hero";
+import { DarkSection } from "@/components/sections/dark-section";
+import { Magnetic } from "@/components/motion/magnetic";
 import { PreviewGrid } from "@/components/ui/preview-grid";
 import { getCollection } from "@/lib/store";
 import type { ResourceItem } from "@/lib/data/resources";
@@ -53,7 +55,7 @@ export default async function ResourcesPage() {
   const resources = await getCollection<ResourceItem[]>("resources");
   return (
     <main className="w-full">
-      <PageHero
+      <DarkPageHero
         eyebrow="Resources"
         title="Guides we have written"
         lede="Short, honest, plain-language reading on studying abroad. We only publish what we actually know — and we update it when things change."
@@ -68,22 +70,24 @@ export default async function ResourcesPage() {
         />
       </section>
 
-      <section className="border-t border-border">
-        <div className="mx-auto flex w-full max-w-6xl flex-col gap-4 px-4 py-12 sm:px-6">
-          <h2 className="font-display text-xl font-semibold text-card-foreground">
+      <DarkSection>
+        <div className="flex flex-col gap-4">
+          <h2 className="font-display text-xl font-semibold text-hope-white">
             Want a topic covered?
           </h2>
-          <p className="max-w-2xl text-sm leading-7 text-muted-foreground">
+          <p className="max-w-2xl text-sm leading-7 text-hope-white/70">
             Tell us what you are unsure about. If it is a real question for Pakistani
             students, we will write about it honestly.
           </p>
           <div className="pt-2">
-            <Button nativeButton={false} render={<a href="/contact" />} size="lg">
-              Suggest a resource
-            </Button>
+            <Magnetic>
+              <Button nativeButton={false} render={<a href="/contact" />} size="lg">
+                Suggest a resource
+              </Button>
+            </Magnetic>
           </div>
         </div>
-      </section>
+      </DarkSection>
     </main>
   );
 }

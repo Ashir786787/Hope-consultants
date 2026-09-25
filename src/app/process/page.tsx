@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Button, buttonVariants } from "@/components/ui/button";
-import { PageHero } from "@/components/page-hero";
+import { DarkPageHero } from "@/components/sections/dark-page-hero";
+import { DarkSection } from "@/components/sections/dark-section";
+import { Magnetic } from "@/components/motion/magnetic";
 import { Reveal } from "@/components/motion/reveal";
 import { ProcessSequence } from "@/components/sections/process-sequence";
 import { getCollection } from "@/lib/store";
@@ -17,7 +19,7 @@ export default async function ProcessPage() {
   const processSteps = await getCollection<ProcessStep[]>("process");
   return (
     <main className="w-full">
-      <PageHero
+      <DarkPageHero
         eyebrow="Our process"
         title="How we work with you"
         lede="Seven clear phases, from the first free conversation to the day you arrive. No pressure, no invented timelines, and nothing is promised beyond what we can actually deliver."
@@ -49,28 +51,32 @@ export default async function ProcessPage() {
         </ProcessSequence>
       </section>
 
-      <section className="border-t border-border">
-        <div className="mx-auto flex w-full max-w-6xl flex-col gap-4 px-4 py-12 sm:px-6">
-          <h2 className="font-display text-xl font-semibold text-card-foreground">
-            Start with a free conversation
-          </h2>
-          <p className="max-w-2xl text-sm leading-7 text-muted-foreground">
-            No fee, no pressure, no fake assurances. If we cannot help you reach a genuinely good
-            outcome, we will say so early.
-          </p>
-          <div className="flex flex-wrap items-center gap-3 pt-2">
-            <Button size="lg" nativeButton={false} render={<a href="/contact" />}>
-              Book a free consultation
-            </Button>
-            <Link
-              className={buttonVariants({ variant: "outline", size: "lg" })}
-              href="/services"
-            >
-              See our services
-            </Link>
+      <DarkSection>
+        <Reveal className="w-full">
+          <div className="flex flex-col gap-4">
+            <h2 className="font-display text-xl font-semibold text-hope-white">
+              Start with a free conversation
+            </h2>
+            <p className="max-w-2xl text-sm leading-7 text-hope-white/70">
+              No fee, no pressure, no fake assurances. If we cannot help you reach a genuinely
+              good outcome, we will say so early.
+            </p>
+            <div className="flex flex-wrap items-center gap-3 pt-2">
+              <Magnetic>
+                <Button size="lg" nativeButton={false} render={<a href="/contact" />}>
+                  Book a free consultation
+                </Button>
+              </Magnetic>
+              <Link
+                className={buttonVariants({ variant: "outline", size: "lg" })}
+                href="/services"
+              >
+                See our services
+              </Link>
+            </div>
           </div>
-        </div>
-      </section>
+        </Reveal>
+      </DarkSection>
     </main>
   );
 }
