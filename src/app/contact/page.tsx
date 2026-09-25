@@ -3,7 +3,9 @@ import Link from 'next/link';
 import { ContactForm, ContactInfo } from "@/components/contact/contact";
 import { buttonVariants } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { PageHero } from "@/components/page-hero";
+import { DarkPageHero } from "@/components/sections/dark-page-hero";
+import { DarkSection } from "@/components/sections/dark-section";
+import { Magnetic } from "@/components/motion/magnetic";
 
 export const metadata: Metadata = {
   title: "Contact us | Hope Consultants",
@@ -14,7 +16,7 @@ export const metadata: Metadata = {
 export default function ContactPage() {
   return (
     <main className="w-full">
-      <PageHero
+      <DarkPageHero
         eyebrow="Contact"
         title="A real person reads every message"
         lede="Tell us where you want to study and what you are working with. We will answer honestly — including whether we think the goal is realistic for you."
@@ -25,20 +27,25 @@ export default function ContactPage() {
         <ContactForm />
       </section>
 
-      <section className="border-t border-border bg-muted/30">
-        <div className="mx-auto flex w-full max-w-6xl flex-col gap-4 px-4 py-12 sm:px-6 sm:flex-row sm:items-center sm:justify-between">
-          <p className="max-w-2xl text-sm leading-7 text-muted-foreground">
+      <DarkSection>
+        <div className="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
+          <p className="max-w-2xl text-sm leading-7 text-hope-white/70">
             Prefer to read first? Start on our{" "}
-            <Link className={buttonVariants({ variant: "link" })} href="/process">
+            <Link
+              className="font-medium text-hope-white underline underline-offset-4"
+              href="/process"
+            >
               free consultation process
             </Link>
             .
           </p>
-          <Link className={buttonVariants({ variant: "outline" })} href="/">
-            Back to home
-          </Link>
+          <Magnetic>
+            <Link className={buttonVariants({ size: "lg" })} href="/">
+              Back to home
+            </Link>
+          </Magnetic>
         </div>
-      </section>
+      </DarkSection>
       <Separator />
     </main>
   );

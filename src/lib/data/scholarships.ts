@@ -3,6 +3,7 @@ import type { ScholarshipProgram } from "./types";
 export const scholarships: ScholarshipProgram[] = [
   {
     id: "maecib",
+    image: "/scholarships/maecib.jpg",
     group: "spotlight",
     name: "Italy MAECI – Italy",
     country: "Italy",
@@ -25,6 +26,7 @@ export const scholarships: ScholarshipProgram[] = [
   },
   {
     id: "turkiye-burslari",
+    image: "/scholarships/turkiye-burslari.jpg",
     group: "spotlight",
     name: "Türkiye Scholarships – Türkiye",
     country: "Turkey",
@@ -47,6 +49,7 @@ export const scholarships: ScholarshipProgram[] = [
   },
   {
     id: "nl-scholarship",
+    image: "/scholarships/nl-scholarship.jpg",
     group: "spotlight",
     name: "NL (Holland) Scholarship – Netherlands",
     country: "Netherlands",
@@ -70,6 +73,7 @@ export const scholarships: ScholarshipProgram[] = [
   },
   {
     id: "stipendium-hungaricum",
+    image: "/scholarships/stipendium-hungaricum.jpg",
     group: "spotlight",
     name: "Stipendium Hungaricum – Hungary",
     country: "Hungary",
@@ -91,6 +95,7 @@ export const scholarships: ScholarshipProgram[] = [
   },
   {
     id: "chevening",
+    image: "/scholarships/chevening.jpg",
     group: "fully-funded",
     name: "Chevening Scholarships",
     country: "United Kingdom",
@@ -105,6 +110,7 @@ export const scholarships: ScholarshipProgram[] = [
   },
   {
     id: "commonwealth-masters",
+    image: "/scholarships/commonwealth-masters.jpg",
     group: "fully-funded",
     name: "Commonwealth Master's Scholarships",
     country: "United Kingdom",
@@ -119,6 +125,7 @@ export const scholarships: ScholarshipProgram[] = [
   },
   {
     id: "fulbright",
+    image: "/scholarships/fulbright.jpg",
     group: "fully-funded",
     name: "Fulbright Foreign Student Program",
     country: "United States of America",
@@ -133,6 +140,7 @@ export const scholarships: ScholarshipProgram[] = [
   },
   {
     id: "daad",
+    image: "/scholarships/daad.jpg",
     group: "fully-funded",
     name: "DAAD Scholarships",
     country: "Germany",
@@ -147,6 +155,7 @@ export const scholarships: ScholarshipProgram[] = [
   },
   {
     id: "turkiye-burslari-program",
+    image: "/scholarships/turkiye-burslari-program.jpg",
     group: "fully-funded",
     name: "Türkiye Burslari",
     country: "Turkey",
@@ -161,6 +170,7 @@ export const scholarships: ScholarshipProgram[] = [
   },
   {
     id: "csc",
+    image: "/scholarships/csc.jpg",
     group: "fully-funded",
     name: "Chinese Government Scholarship (CSC)",
     country: "China",
@@ -175,6 +185,7 @@ export const scholarships: ScholarshipProgram[] = [
   },
   {
     id: "mext",
+    image: "/scholarships/mext.jpg",
     group: "fully-funded",
     name: "MEXT Scholarship",
     country: "Japan",
@@ -189,6 +200,7 @@ export const scholarships: ScholarshipProgram[] = [
   },
   {
     id: "stipendium-hungaricum-program",
+    image: "/scholarships/stipendium-hungaricum-program.jpg",
     group: "fully-funded",
     name: "Stipendium Hungaricum",
     country: "Hungary",
@@ -203,6 +215,7 @@ export const scholarships: ScholarshipProgram[] = [
   },
   {
     id: "erasmus-mundus",
+    image: "/scholarships/erasmus-mundus.jpg",
     group: "fully-funded",
     name: "Erasmus Mundus Joint Master's",
     country: "Europe (multiple countries)",
@@ -217,6 +230,7 @@ export const scholarships: ScholarshipProgram[] = [
   },
   {
     id: "australia-awards",
+    image: "/scholarships/australia-awards.jpg",
     group: "fully-funded",
     name: "Australia Awards",
     country: "Australia",
@@ -231,6 +245,7 @@ export const scholarships: ScholarshipProgram[] = [
   },
   {
     id: "maeci",
+    image: "/scholarships/maeci.jpg",
     group: "partially-funded",
     name: "MAECI Scholarships",
     country: "Italy",
@@ -245,6 +260,7 @@ export const scholarships: ScholarshipProgram[] = [
   },
   {
     id: "dsu-regional",
+    image: "/scholarships/dsu-regional.jpg",
     group: "partially-funded",
     name: "DSU / Regional Scholarships",
     country: "Italy",
@@ -259,6 +275,7 @@ export const scholarships: ScholarshipProgram[] = [
   },
   {
     id: "agakhan",
+    image: "/scholarships/agakhan.jpg",
     group: "partially-funded",
     name: "Aga Khan Foundation Scholarships",
     country: "International",
@@ -273,6 +290,7 @@ export const scholarships: ScholarshipProgram[] = [
   },
   {
     id: "holland-scholarship",
+    image: "/scholarships/holland-scholarship.jpg",
     group: "partially-funded",
     name: "Holland / NL Scholarship",
     country: "Netherlands",
