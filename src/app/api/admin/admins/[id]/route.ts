@@ -1,0 +1,99 @@
+import { NextResponse } from "next/server";
+import { z } from "zod";
+
+import {
+  deleteAdmin,
+  findAdminById,
+  setAdminActive,
+  toAdminSummary,
+  updateAdmin,
+} from "@/lib/admin/admin-user";
+import { requireAdminForApi } from "@/lib/admin/require-admin";
+
+const patchSchema = z
+  .object({
+    role: z.string().trim().min(1, "Enter a role.").max(40, "That role is too long."),
+    isActive: z.boolean(),
+  })
+  .partial()
+  .refine((value) => Object.keys(value).length > 0, "Nothing to change.");
+
+export async function PATCH(
+  request: Request,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  const current = await requireAdminForApi();
+  if (!current) {
+    return NextResponse.json({ error: "Not signed in." }, { status: 401 });
+  }
+
+  const { id } = await params;
+  const target = await findAdminById(id);
+  if (!target) {
+    return NextResponse.json({ error: "That admin no longer exists." }, { status: 404 });
+  }
+
+  const body = await request.json().catch(() => null);
+  const parsed = patchSchema.safeParse(body);
+  if (!parsed.success) {
+    return NextResponse.json(
+      { error: parsed.error.issues[0]?.message ?? "Check the details and try again." },
+      { status: 400 }
+    );
+  }
+
+  const { role, isActive } = parsed.data;
+  if (target.isOwner && isActive === false) {
+    return NextResponse.json(
+      { error: "The owner account cannot be deactivated." },
+      { status: 409 }
+    );
+  }
+  if (isActive === true && target.isAccessRequest && !target.hasCompletedFirstLogin) {
+    return NextResponse.json(
+      { error: "A waiting request is approved by the one-time code, not from this page." },
+      { status: 409 }
+    );
+  }
+
+  if (role !== undefined) {
+    await updateAdmin(id, { role });
+  }
+  if (isActive !== undefined) {
+    await setAdminActive(id, isActive);
+  }
+
+  const updated = await findAdminById(id);
+  return NextResponse.json({ admin: updated ? toAdminSummary(updated) : null });
+}
+
+export async function DELETE(
+  _request: Request,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  const current = await requireAdminForApi();
+  if (!current) {
+    return NextResponse.json({ error: "Not signed in." }, { status: 401 });
+  }
+
+  const { id } = await params;
+  const target = await findAdminById(id);
+  if (!target) {
+    return NextResponse.json({ error: "That admin no longer exists." }, { status: 404 });
+  }
+  if (target.isOwner) {
+    return NextResponse.json(
+      { error: "The owner account cannot be deleted." },
+      { status: 409 }
+    );
+  }
+  if (target.id === current.id) {
+    return NextResponse.json(
+      { error: "You cannot delete your own account." },
+      { status: 409 }
+    );
+  }
+
+  await deleteAdmin(id);
+  return NextResponse.json({ ok: true });
+}

@@ -6,6 +6,7 @@ import { Reveal } from "@/components/motion/reveal";
 type PreviewGridProps = {
   items: Array<{ key: string; content: ReactNode }>;
   viewMoreHref?: string;
+  viewMoreLink?: ReactNode;
   viewMoreLabel?: string;
   columns?: 2 | 3;
 };
@@ -13,6 +14,7 @@ type PreviewGridProps = {
 export function PreviewGrid({
   items,
   viewMoreHref,
+  viewMoreLink,
   viewMoreLabel = "View more",
   columns = 3,
 }: PreviewGridProps) {
@@ -24,18 +26,20 @@ export function PreviewGrid({
     <div className="flex w-full flex-col gap-10">
       <ul className={`grid w-full grid-cols-1 gap-5 ${columnClass}`}>
         {items.map((item, index) => (
-          <Reveal key={item.key} delay={index * 0.05} className="h-full">
-            <li className="h-full">{item.content}</li>
-          </Reveal>
+          <li key={item.key} className="h-full">
+            <Reveal delay={index * 0.05} className="h-full">
+              {item.content}
+            </Reveal>
+          </li>
         ))}
       </ul>
-      {viewMoreHref ? (
+      {viewMoreLink ?? (viewMoreHref ? (
         <Reveal className="w-full">
           <Button nativeButton={false} render={<a href={viewMoreHref} />} variant="outline" size="lg">
             {viewMoreLabel}
           </Button>
         </Reveal>
-      ) : null}
+      ) : null)}
     </div>
   );
 }

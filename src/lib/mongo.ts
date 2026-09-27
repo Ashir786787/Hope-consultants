@@ -1,4 +1,4 @@
-import { MongoClient } from "mongodb";
+import { MongoClient, type Collection, type Document, type Filter, type FindOptions, type UpdateFilter } from "mongodb";
 
 const MONGO_URI = process.env.MONGODB_URI;
 const MONGO_DB = process.env.MONGODB_DB || "hope-consultants";
@@ -42,4 +42,62 @@ export async function mongoPing(): Promise<boolean> {
   } catch {
     return false;
   }
+}
+
+async function collection(name: string): Promise<Collection<Document>> {
+  return (await client()).db(MONGO_DB).collection(name);
+}
+
+function withoutMongoId(options?: FindOptions): FindOptions {
+  return { ...options, projection: { ...(options?.projection ?? {}), _id: 0 } };
+}
+
+export async function mongoFindOne<T>(
+  name: string,
+  filter: Filter<Document>
+): Promise<T | null> {
+  const doc = await (await collection(name)).findOne(filter, withoutMongoId());
+  return (doc as T | undefined) ?? null;
+}
+
+export async function mongoFind<T>(
+  name: string,
+  filter: Filter<Document>,
+  options?: FindOptions
+): Promise<T[]> {
+  return (await collection(name))
+    .find(filter, withoutMongoId(options))
+    .toArray() as Promise<T[]>;
+}
+
+export async function mongoInsertOne(name: string, doc: Document): Promise<void> {
+  await (await collection(name)).insertOne(doc);
+}
+
+export async function mongoUpdateOne(
+  name: string,
+  filter: Filter<Document>,
+  update: UpdateFilter<Document>
+): Promise<void> {
+  await (await collection(name)).updateOne(filter, update, { upsert: false });
+}
+
+export async function mongoDeleteOne(
+  name: string,
+  filter: Filter<Document>
+): Promise<number> {
+  const result = await (await collection(name)).deleteOne(filter);
+  return result.deletedCount;
+}
+
+export async function mongoCount(name: string, filter: Filter<Document>): Promise<number> {
+  return (await collection(name)).countDocuments(filter);
+}
+
+export async function mongoEnsureIndex(
+  name: string,
+  keys: Document,
+  options?: { unique?: boolean; expireAfterSeconds?: number }
+): Promise<void> {
+  await (await collection(name)).createIndex(keys, options);
 }

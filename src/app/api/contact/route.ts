@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 
+import { createLead } from "@/lib/admin/lead";
+import { refererPath } from "@/lib/request-meta";
 import { isMailConfigured, sendContactMail } from "@/lib/mail";
 
 const contactSchema = z.object({
@@ -39,11 +41,20 @@ export async function POST(request: Request) {
       subject: `${SUBJECT_PREFIX} ${subject}`,
       text,
     });
-    return NextResponse.json({ ok: true });
   } catch {
     return NextResponse.json(
       { error: "We could not send your message right now. Please email us directly instead." },
       { status: 502 }
     );
   }
+
+  await createLead({
+    name,
+    email,
+    subject,
+    message,
+    sourcePage: refererPath(request),
+  }).catch(() => null);
+
+  return NextResponse.json({ ok: true });
 }

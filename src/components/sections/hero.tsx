@@ -9,8 +9,11 @@ import { Button } from "@/components/ui/button";
 import { Magnetic } from "@/components/motion/magnetic";
 import { MaskWords } from "@/components/motion/mask-words";
 import { FlightPath } from "@/components/motion/flight-path";
+import { CinematicReveal } from "@/components/motion/cinematic-reveal";
+import { HeroAurora } from "@/components/motion/hero-aurora";
 import { CountUp } from "@/components/motion/count-up";
 import { EASE_OUT } from "@/lib/motion";
+import type { HeroMedia } from "@/lib/hero-media";
 import type { CountryDestination } from "@/lib/data/types";
 import type { Service } from "@/lib/data/services";
 import type { ProcessStep } from "@/lib/data/process";
@@ -128,24 +131,19 @@ export type HeroProps = {
   services: Service[];
   processSteps: ProcessStep[];
   whatsapp: string;
+  media: HeroMedia;
 };
 
-export function Hero({ countries, services, processSteps, whatsapp }: HeroProps) {
+export function Hero({ countries, services, processSteps, whatsapp, media }: HeroProps) {
   const chips = countries.slice(0, 6);
 
   return (
     <section className="relative overflow-hidden bg-hope-midnight text-white">
+      <CinematicReveal media={media} />
+      <HeroAurora />
       <div
         aria-hidden="true"
         className="hope-dot-grid pointer-events-none absolute inset-0 opacity-40"
-      />
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute -top-40 right-[-10%] size-[34rem] rounded-full bg-[radial-gradient(circle,rgb(var(--hope-ember-rgb)/0.16),transparent_65%)]"
-      />
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute bottom-[-12rem] left-[-8%] size-[30rem] rounded-full bg-[radial-gradient(circle,rgb(var(--hope-ember-rgb)/0.1),transparent_65%)]"
       />
       <FlightPath
         d={FLIGHT_D}

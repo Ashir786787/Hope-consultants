@@ -1,8 +1,9 @@
 import { NextResponse } from "next/server";
 
-import { endSession } from "@/lib/auth";
+import { endSession, readSession } from "@/lib/admin/session";
 
 export async function POST() {
-  await endSession();
+  const session = await readSession();
+  if (session) await endSession(session.adminUserId);
   return NextResponse.json({ ok: true });
 }

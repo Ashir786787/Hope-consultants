@@ -2,7 +2,6 @@
 
 import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
-import Image from "next/image";
 
 import { EASE_OUT, Z } from "@/lib/motion";
 
@@ -98,6 +97,7 @@ export function Preloader() {
           viewBox="0 0 200 200"
           className="absolute inset-0 h-full w-full"
           fill="none"
+          aria-hidden="true"
         >
           <path
             ref={arcRef}
@@ -116,13 +116,6 @@ export function Preloader() {
             />
           </g>
         </svg>
-        <Image
-          src="/brand/logo-mark-white.png"
-          alt=""
-          width={286}
-          height={321}
-          className="h-24 w-auto object-contain"
-        />
       </div>
     </div>
   );

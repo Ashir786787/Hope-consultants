@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 
-import { isAuthenticated } from "@/lib/auth";
+import { requireAdminForApi } from "@/lib/admin/require-admin";
 import { getCollection, isCollection, saveCollection } from "@/lib/store";
 
 type RouteContext = { params: Promise<{ collection: string }> };
@@ -9,6 +9,9 @@ export async function GET(_request: Request, context: RouteContext) {
   const { collection } = await context.params;
   if (!isCollection(collection)) {
     return NextResponse.json({ error: "Unknown collection." }, { status: 400 });
+  }
+  if (!(await requireAdminForApi())) {
+    return NextResponse.json({ error: "Unauthorized." }, { status: 401 });
   }
   const data = await getCollection(collection);
   return NextResponse.json({ collection, data });
@@ -19,7 +22,7 @@ export async function PUT(request: Request, context: RouteContext) {
   if (!isCollection(collection)) {
     return NextResponse.json({ error: "Unknown collection." }, { status: 400 });
   }
-  if (!(await isAuthenticated())) {
+  if (!(await requireAdminForApi())) {
     return NextResponse.json({ error: "Unauthorized." }, { status: 401 });
   }
   const body = await request.json().catch(() => null);

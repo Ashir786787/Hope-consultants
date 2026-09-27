@@ -6,7 +6,7 @@ export interface SiteFields {
 }
 
 export const defaultSite: SiteFields = {
-  email: "",
+  email: "hopeconsultants.pk@gmail.com",
   phone: "",
   phoneHref: "",
   whatsapp: "",

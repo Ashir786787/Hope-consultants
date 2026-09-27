@@ -39,7 +39,7 @@ export function ProcessSequence({ children }: { children: React.ReactNode }) {
   );
 
   return (
-    <ol ref={scope} className="relative flex flex-col gap-0 pl-0">
+    <div className="relative">
       <span
         aria-hidden="true"
         className="absolute top-2 bottom-2 left-[1.1875rem] hidden w-px bg-border lg:block"
@@ -49,7 +49,9 @@ export function ProcessSequence({ children }: { children: React.ReactNode }) {
         aria-hidden="true"
         className="absolute top-2 bottom-2 left-[1.1875rem] hidden w-px origin-top bg-hope-ember lg:block"
       />
-      {children}
-    </ol>
+      <ol ref={scope} className="relative flex flex-col gap-0 pl-0">
+        {children}
+      </ol>
+    </div>
   );
 }
