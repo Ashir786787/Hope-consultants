@@ -8,9 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Magnetic } from "@/components/motion/magnetic";
 import { MaskWords } from "@/components/motion/mask-words";
-import { FlightPath } from "@/components/motion/flight-path";
-import { CinematicReveal } from "@/components/motion/cinematic-reveal";
-import { HeroAurora } from "@/components/motion/hero-aurora";
+import { HeroBackdrop } from "@/components/motion/hero-backdrop";
 import { CountUp } from "@/components/motion/count-up";
 import { EASE_OUT } from "@/lib/motion";
 import type { HeroMedia } from "@/lib/hero-media";
@@ -27,8 +25,6 @@ const HERO = {
   primaryCta: "Book a Free Consultation",
   secondaryCta: "Chat on WhatsApp",
 } as const;
-
-const FLIGHT_D = "M 60 340 C 300 300 380 170 560 190 C 740 210 860 90 1160 40";
 
 function ApplicationProgress({ steps }: { steps: ProcessStep[] }) {
   const rowsRef = useRef<HTMLUListElement>(null);
@@ -139,17 +135,7 @@ export function Hero({ countries, services, processSteps, whatsapp, media }: Her
 
   return (
     <section className="relative overflow-hidden bg-hope-midnight text-white">
-      <CinematicReveal media={media} />
-      <HeroAurora />
-      <div
-        aria-hidden="true"
-        className="hope-dot-grid pointer-events-none absolute inset-0 opacity-40"
-      />
-      <FlightPath
-        d={FLIGHT_D}
-        viewBox="0 0 1200 420"
-        className="absolute inset-x-0 top-10 h-72 w-full text-hope-ember sm:top-16 sm:h-96"
-      />
+      <HeroBackdrop media={media} />
 
       <div className="relative mx-auto grid w-full max-w-6xl grid-cols-1 items-center gap-14 px-4 pt-16 pb-20 sm:px-6 sm:pt-24 lg:grid-cols-[1.15fr_0.85fr] lg:gap-16 lg:pt-32 lg:pb-28">
         <div className="flex flex-col items-start gap-7">

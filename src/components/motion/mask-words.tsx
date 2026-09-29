@@ -30,6 +30,12 @@ export function MaskWords({ text, className, as: Tag = "span", stagger = 0.06 }:
       if (!inner.length) return;
 
       gsap.set(inner, { yPercent: 110 });
+
+      if (el.getBoundingClientRect().top < window.innerHeight) {
+        gsap.to(inner, { yPercent: 0, duration: 0.9, ease: "power3.out", stagger });
+        return;
+      }
+
       gsap.to(inner, {
         yPercent: 0,
         duration: 0.9,

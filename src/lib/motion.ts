@@ -13,6 +13,7 @@ export const DURATIONS = {
   base: 0.6,
   reveal: 0.9,
   hero: 1.2,
+  crossfade: 1.2,
 } as const;
 
 export const STAGGER = {

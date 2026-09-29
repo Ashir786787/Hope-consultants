@@ -1,34 +1,38 @@
-import { existsSync } from "node:fs";
+import { existsSync, readdirSync } from "node:fs";
 import path from "node:path";
 
-export type HeroMedia = {
-  mp4?: string;
-  webm?: string;
+export type HeroClip = {
+  src: string;
   poster?: string;
-  still?: string;
 };
 
-const CANDIDATES = {
-  mp4: "hero-background.mp4",
-  webm: "hero-background.webm",
-  poster: "hero-background-poster.jpg",
-  still: "hero-background.jpg",
-} as const;
+export type HeroMedia = {
+  clips: HeroClip[];
+};
+
+const CLIP_FILE = /^hero-clip-(\d+)\.mp4$/;
 
 export function resolveHeroMedia(): HeroMedia {
   const directory = path.join(process.cwd(), "public", "hero");
-  const media: HeroMedia = {};
+  if (!existsSync(directory)) return { clips: [] };
 
-  for (const key of Object.keys(CANDIDATES) as Array<keyof HeroMedia>) {
-    const file = CANDIDATES[key];
-    if (existsSync(path.join(directory, file))) {
-      media[key] = `/hero/${file}`;
-    }
+  const entries = readdirSync(directory);
+  const indexes = new Set<number>();
+
+  for (const entry of entries) {
+    const match = CLIP_FILE.exec(entry);
+    if (match) indexes.add(Number(match[1]));
   }
 
-  return media;
-}
+  const clips: HeroClip[] = [];
 
-export function hasHeroMedia(media: HeroMedia): boolean {
-  return Boolean(media.mp4 || media.webm || media.poster || media.still);
+  for (const index of [...indexes].sort((a, b) => a - b)) {
+    const poster = `hero-clip-${index}-poster.jpg`;
+    clips.push({
+      src: `/hero/hero-clip-${index}.mp4`,
+      ...(entries.includes(poster) ? { poster: `/hero/${poster}` } : {}),
+    });
+  }
+
+  return { clips };
 }
