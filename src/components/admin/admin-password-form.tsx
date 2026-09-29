@@ -7,7 +7,7 @@ import { AdminAlert, AdminButton, AdminField } from "./admin-ui";
 import { fetchWithTimeout, requestErrorMessage } from "@/lib/admin/client-fetch";
 import { codeFromSlots, emptySlots, type OtpSlots } from "@/lib/admin/otp-entry";
 
-const MIN_LENGTH = 12;
+const MIN_LENGTH = 8;
 
 export function AdminPasswordForm({ email }: { email: string }) {
   const [step, setStep] = useState<"request" | "code">("request");

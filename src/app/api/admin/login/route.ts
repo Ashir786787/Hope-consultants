@@ -29,7 +29,7 @@ import { isMailConfigured } from "@/lib/email/transporter";
 const GENERIC_FAILURE = "Invalid email or password";
 const DECOY_PASSWORD_HASH = "$2b$12$Hu91QJp1o4SwRmrBfdu7LuwJd9LWYiUTK5.Uzrr7QoKKum/VjmxEe";
 const PASSWORD_BCRYPT_ROUNDS = 12;
-export const MIN_PASSWORD_LENGTH = 12;
+export const MIN_PASSWORD_LENGTH = 8;
 
 export async function POST(request: Request) {
   const body = await request.json().catch(() => null);

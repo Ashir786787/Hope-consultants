@@ -17,7 +17,7 @@ import { clientIp } from "@/lib/request-meta";
 
 const INVALID_CODE = "That code is not right.";
 const PASSWORD_BCRYPT_ROUNDS = 12;
-const MIN_NEW_PASSWORD_LENGTH = 12;
+const MIN_NEW_PASSWORD_LENGTH = 8;
 
 export async function POST(request: Request) {
   const admin = await requireAdminForApi();

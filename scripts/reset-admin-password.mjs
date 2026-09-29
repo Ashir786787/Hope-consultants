@@ -9,7 +9,7 @@ loadEnvConfig(process.cwd());
 const ADMINS = "adminUsers";
 const CHALLENGES = "otpChallenges";
 const BCRYPT_ROUNDS = 12;
-const MIN_PASSWORD_LENGTH = 12;
+const MIN_PASSWORD_LENGTH = 8;
 
 function required(name) {
   const value = process.env[name];

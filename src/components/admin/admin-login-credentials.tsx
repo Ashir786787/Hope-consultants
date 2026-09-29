@@ -10,7 +10,7 @@ import { z } from "zod";
 import { fetchWithTimeout, requestErrorMessage } from "@/lib/admin/client-fetch";
 import { LoginAlert, LoginButton, LoginField } from "./admin-login-card";
 
-const MIN_PASSWORD_LENGTH = 12;
+const MIN_PASSWORD_LENGTH = 8;
 
 const credentialsSchema = z.object({
   email: z.string().trim().email("That email address does not look right."),
