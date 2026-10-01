@@ -1,10 +1,9 @@
 import type { Metadata } from "next";
 
-import { BlogCard } from "@/components/blog/blog-card";
+import { BlogBrowser } from "@/components/blog/blog-browser";
 import { DarkPageHero } from "@/components/sections/dark-page-hero";
 import { DarkSection } from "@/components/sections/dark-section";
 import { Magnetic } from "@/components/motion/magnetic";
-import { Reveal } from "@/components/motion/reveal";
 import { Button } from "@/components/ui/button";
 import { getCollection } from "@/lib/store";
 import type { BlogPost } from "@/lib/data/blog";
@@ -41,12 +40,8 @@ export default async function BlogPage() {
           </p>
         </section>
       ) : (
-        <section className="mx-auto grid w-full max-w-6xl grid-cols-1 gap-6 px-4 py-16 sm:px-6 md:grid-cols-2 lg:grid-cols-3">
-          {posts.map((post, index) => (
-            <Reveal key={post.slug} delay={index * 0.05} className="h-full">
-              <BlogCard post={post} />
-            </Reveal>
-          ))}
+        <section className="mx-auto w-full max-w-6xl px-4 py-16 sm:px-6">
+          <BlogBrowser posts={posts} />
         </section>
       )}
 
