@@ -9,12 +9,9 @@ const OWN_BASENAMES = [
 ] as const;
 const EXTENSIONS = [".jpg", ".jpeg", ".png", ".webp", ".avif"] as const;
 const LIBRARY_CANDIDATES = [
-  "/services/pre-departure-arrival-support.jpg",
-  "/services/university-and-program-selection.jpg",
-  "/services/student-visa-support.jpg",
-  "/services/visa-interview-preparation.jpg",
-  "/services/pre-enrollment-support.jpg",
-  "/services/admission-applications.jpg",
+  "/parents/parents-consultation.jpg",
+  "/parents/parents-consultation.png",
+  "/parents/parents-consultation.webp",
 ] as const;
 
 function exists(candidate: string): boolean {
