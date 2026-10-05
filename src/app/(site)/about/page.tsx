@@ -135,7 +135,7 @@ export default function AboutPage() {
                     <h3 className="font-display text-xl font-semibold text-card-foreground">
                       {member.name}
                     </h3>
-                    <p className="text-sm font-semibold text-primary">{member.role}</p>
+                    <p className="text-sm font-semibold text-card-foreground">{member.role}</p>
                   </div>
                   <blockquote className="border-l-2 border-primary pl-4 text-sm leading-7 text-card-foreground">
                     &ldquo;{member.quote}&rdquo;

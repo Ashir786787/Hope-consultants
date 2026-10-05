@@ -9,7 +9,6 @@ import { Reveal } from "@/components/motion/reveal";
 import { Magnetic } from "@/components/motion/magnetic";
 import { DarkSection } from "@/components/sections/dark-section";
 import { FlightPath } from "@/components/motion/flight-path";
-import { getCostBandLabel } from "@/lib/data/helpers";
 import { getCollection } from "@/lib/store";
 import type { CountryDestination, CountrySection, CountrySlug } from "@/lib/data/types";
 
@@ -39,52 +38,36 @@ export async function generateMetadata({ params }: CountryPageProps): Promise<Me
 function SectionBlock({
   section,
   index,
-  dark,
 }: {
   section: CountrySection;
   index: number;
-  dark: boolean;
 }) {
   return (
     <Reveal delay={index * 0.05} className="w-full">
       <div className="flex flex-col gap-4">
-        <h2
-          className={
-            dark
-              ? "font-display text-2xl font-semibold text-hope-white"
-              : "font-display text-2xl font-semibold text-card-foreground"
-          }
-        >
-          {section.title}
-        </h2>
-        <Separator
-          className={
-            dark ? "max-w-md bg-[rgb(255_255_255/0.10)]" : "max-w-md"
-          }
-        />
-        {section.body ? (
-          <p
-            className={
-              dark
-                ? "max-w-2xl text-sm leading-7 text-hope-white/70"
-                : "max-w-2xl text-sm leading-7 text-muted-foreground"
-            }
+        <div className="flex items-center gap-4">
+          <span
+            aria-hidden="true"
+            className="flex size-10 shrink-0 items-center justify-center rounded-full bg-hope-ember font-display text-sm font-bold text-hope-midnight"
           >
-            {section.body}
-          </p>
+            {String(index + 1).padStart(2, "0")}
+          </span>
+          <h2 className="font-display text-2xl font-semibold text-card-foreground">
+            {section.title}
+          </h2>
+        </div>
+        <Separator className="max-w-md bg-[rgb(var(--hope-ember-rgb)/0.35)]" />
+        {section.body ? (
+          <p className="max-w-2xl text-sm leading-7 text-muted-foreground">{section.body}</p>
         ) : null}
         {section.items ? (
           <ul className="flex flex-col gap-3">
             {section.items.map((item) => (
-              <li
-                key={item}
-                className={
-                  dark
-                    ? "flex items-start gap-3 text-sm leading-6 text-hope-white/70"
-                    : "flex items-start gap-3 text-sm leading-6 text-muted-foreground"
-                }
-              >
-                <span aria-hidden="true" className="mt-0.5 text-primary">
+              <li key={item} className="flex items-start gap-3 text-sm leading-6 text-muted-foreground">
+                <span
+                  aria-hidden="true"
+                  className="mt-0.5 flex size-5 shrink-0 items-center justify-center rounded-full bg-hope-ember text-[0.625rem] font-bold leading-none text-hope-midnight"
+                >
                   ✓
                 </span>
                 <span>{item}</span>
@@ -94,60 +77,22 @@ function SectionBlock({
         ) : null}
         {section.table ? (
           <div className="overflow-x-auto">
-            <table
-              className={
-                dark
-                  ? "w-full min-w-[32rem] divide-y divide-[rgb(255_255_255/0.10)] border border-[rgb(255_255_255/0.10)] text-left text-sm"
-                  : "w-full min-w-[32rem] divide-y divide-border border border-border text-left text-sm"
-              }
-            >
-              <thead className={dark ? "bg-[rgb(255_255_255/0.04)]" : "bg-muted/40"}>
+            <table className="w-full min-w-[32rem] divide-y divide-border border border-border text-left text-sm">
+              <thead className="bg-[rgb(var(--hope-ember-rgb)/0.12)]">
                 <tr>
-                  <th
-                    scope="col"
-                    className={
-                      dark
-                        ? "px-4 py-3 font-display font-semibold text-hope-white"
-                        : "px-4 py-3 font-display font-semibold text-card-foreground"
-                    }
-                  >
+                  <th scope="col" className="px-4 py-3 font-display font-semibold text-card-foreground">
                     {section.table.header[0]}
                   </th>
-                  <th
-                    scope="col"
-                    className={
-                      dark
-                        ? "px-4 py-3 font-display font-semibold text-hope-white"
-                        : "px-4 py-3 font-display font-semibold text-card-foreground"
-                    }
-                  >
+                  <th scope="col" className="px-4 py-3 font-display font-semibold text-card-foreground">
                     {section.table.header[1]}
                   </th>
                 </tr>
               </thead>
-              <tbody
-                className={
-                  dark ? "divide-y divide-[rgb(255_255_255/0.10)]" : "divide-y divide-border"
-                }
-              >
+              <tbody className="divide-y divide-border">
                 {section.table.rows.map((row) => (
                   <tr key={row[0]}>
-                    <td
-                      className={
-                        dark
-                          ? "px-4 py-3 font-medium text-hope-white"
-                          : "px-4 py-3 font-medium text-card-foreground"
-                      }
-                    >
-                      {row[0]}
-                    </td>
-                    <td
-                      className={
-                        dark ? "px-4 py-3 text-hope-white/70" : "px-4 py-3 text-muted-foreground"
-                      }
-                    >
-                      {row[1]}
-                    </td>
+                    <td className="px-4 py-3 font-medium text-card-foreground">{row[0]}</td>
+                    <td className="px-4 py-3 text-muted-foreground">{row[1]}</td>
                   </tr>
                 ))}
               </tbody>
@@ -201,8 +146,10 @@ export default async function CountryPage({ params }: CountryPageProps) {
                 <h1 className="font-display text-4xl font-semibold leading-tight text-hope-white sm:text-5xl">
                   {country.name}
                 </h1>
-                <Badge className="w-fit border-[rgb(var(--hope-ember-rgb)/0.4)] bg-hope-ember text-hope-midnight">
-                  {getCostBandLabel(country.costBand)}
+                <Badge
+                  className="w-fit border-[rgb(var(--hope-ember-rgb)/0.4)] bg-hope-ember text-sm text-hope-midnight"
+                >
+                  Open now
                 </Badge>
               </div>
             </div>
@@ -229,7 +176,7 @@ export default async function CountryPage({ params }: CountryPageProps) {
 
           <Reveal delay={0.2}>
             <div className="hope-card flex max-w-3xl flex-col gap-3 p-6">
-              <p className="text-xs font-medium uppercase tracking-wider text-hope-white/70">
+              <p className="text-sm font-medium uppercase tracking-wider text-hope-white/70">
                 Key financial insight
               </p>
               <p className="text-sm leading-7 text-hope-white">{country.financialInsight}</p>
@@ -263,20 +210,13 @@ export default async function CountryPage({ params }: CountryPageProps) {
         </section>
       ) : null}
 
-      {country.sections.map((section, index) =>
-        index % 2 === 0 ? (
-          <section
-            key={section.title}
-            className="mx-auto flex w-full max-w-6xl flex-col gap-12 px-4 py-14 sm:px-6"
-          >
-            <SectionBlock section={section} index={index} dark={false} />
-          </section>
-        ) : (
-          <DarkSection key={section.title}>
-            <SectionBlock section={section} index={index} dark />
-          </DarkSection>
-        )
-      )}
+      {country.sections.map((section, index) => (
+        <section key={section.title} className="border-b border-border bg-background">
+          <div className="mx-auto flex w-full max-w-6xl flex-col gap-12 px-4 py-14 sm:px-6">
+            <SectionBlock section={section} index={index} />
+          </div>
+        </section>
+      ))}
 
       <DarkSection>
         <div className="flex flex-col items-start gap-6">

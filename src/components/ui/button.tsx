@@ -4,7 +4,7 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "cn";
 
 const buttonVariants = cva(
-  "group/hope-button inline-flex shrink-0 cursor-pointer items-center justify-center gap-2 overflow-hidden rounded-full border border-transparent font-medium whitespace-nowrap transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] select-none outline-none disabled:pointer-events-none disabled:opacity-50 active:scale-[0.98] [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 [&>svg]:transition-transform [&>svg]:duration-300 [&>svg]:ease-[cubic-bezier(0.22,1,0.36,1)] hover:[&>svg]:translate-x-0.5",
+  "group/hope-button inline-flex shrink-0 cursor-pointer items-center justify-center gap-2 overflow-hidden rounded-full border border-transparent font-medium whitespace-nowrap transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] select-none disabled:pointer-events-none disabled:opacity-50 active:scale-[0.98] [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 [&>svg]:transition-transform [&>svg]:duration-300 [&>svg]:ease-[cubic-bezier(0.22,1,0.36,1)] hover:[&>svg]:translate-x-0.5",
   {
     variants: {
       variant: {
@@ -21,12 +21,11 @@ const buttonVariants = cva(
         destructive: "bg-destructive/10 text-destructive hover:bg-destructive/20",
       },
       size: {
-        default: "h-10 px-6 text-sm",
+        default: "h-11 px-6 text-sm",
         xs: "h-8 px-3 text-xs",
-        sm: "h-9 px-4 text-xs",
+        sm: "min-h-11 px-4 text-sm",
         lg: "h-12 px-8 text-base",
-        icon: "size-10",
-        "icon-sm": "size-9",
+        icon: "size-11",
         "icon-lg": "size-12",
       },
     },

@@ -33,18 +33,30 @@ export function CountUp({
     const el = ref.current;
     if (!el) return;
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
     const state = { value: from };
-    const tween = gsap.to(state, {
+    const vars: gsap.TweenVars = {
       value: to,
       duration,
       ease: EASE_OUT,
+      onUpdate: () => {
+        el.textContent = formatNumber(Math.round(state.value), suffix);
+      },
+    };
+
+    if (el.getBoundingClientRect().top < window.innerHeight) {
+      const tween = gsap.to(state, vars);
+      return () => {
+        tween.kill();
+      };
+    }
+
+    const tween = gsap.to(state, {
+      ...vars,
       scrollTrigger: {
         trigger: el,
         start: VIEWPORT.trigger,
         once: true,
-      },
-      onUpdate: () => {
-        el.textContent = formatNumber(Math.round(state.value), suffix);
       },
     });
     return () => {

@@ -88,7 +88,7 @@ export function HeroAurora() {
     <div
       ref={rootRef}
       aria-hidden="true"
-      className="pointer-events-none absolute inset-0 overflow-hidden"
+      className="pointer-events-none absolute inset-0 overflow-hidden bg-hope-midnight"
     >
       <div
         ref={farRef}

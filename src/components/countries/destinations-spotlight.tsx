@@ -1,13 +1,13 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
 import { useCallback, useEffect, useRef, useState, type CSSProperties } from "react";
 
 import { CountryFlag } from "@/components/countries/country-flag";
 import { GlobeMotif } from "@/components/countries/globe-motif";
 import { SpotlightRow } from "@/components/countries/spotlight-row";
 import { Reveal } from "@/components/motion/reveal";
+import { Button } from "@/components/ui/button";
 import { isoFor } from "@/lib/data/country-flags";
 import type { CountryDestination } from "@/lib/data/types";
 
@@ -112,8 +112,8 @@ export function DestinationsSpotlight({ countries }: { countries: CountryDestina
         className="mx-auto flex w-full max-w-6xl flex-col gap-10 px-4 py-20 sm:px-6"
         stagger={0.12}
       >
-        <div className="flex max-w-2xl flex-col gap-4">
-          <p className="text-xs font-bold tracking-[0.18em] text-hope-midnight uppercase">
+        <div className="mx-auto flex max-w-2xl flex-col items-center gap-4 text-center">
+          <p className="text-sm font-bold tracking-[0.18em] text-hope-midnight uppercase">
             Destinations
           </p>
           <h2
@@ -132,7 +132,7 @@ export function DestinationsSpotlight({ countries }: { countries: CountryDestina
           <div {...zoneProps("left", "py-2")}>{list(left, false)}</div>
 
           <div
-            {...zoneProps("middle", "relative min-h-60 border-hope-white/10 p-5 sm:min-h-64 sm:p-6 lg:min-h-0 lg:border-x")}
+            {...zoneProps("middle", "relative min-h-60 border-hope-white/10 p-5 sm:min-h-64 sm:p-6 lg:border-x")}
           >
             <span
               aria-hidden="true"
@@ -153,7 +153,7 @@ export function DestinationsSpotlight({ countries }: { countries: CountryDestina
                     </h3>
                   </div>
                   {selected.images[0] ? (
-                    <div className="relative h-24 w-full overflow-hidden rounded-xl border border-hope-white/10 sm:h-28">
+                    <div className="relative h-48 w-full shrink-0 overflow-hidden rounded-xl border border-hope-white/10 bg-hope-white/5 sm:h-60">
                       <Image
                         src={selected.images[0]}
                         alt={`${selected.name} - study destination`}
@@ -161,18 +161,25 @@ export function DestinationsSpotlight({ countries }: { countries: CountryDestina
                         sizes="(max-width: 1024px) 100vw, 32vw"
                         className="object-cover"
                       />
+                      <Button
+                        href={`/countries/${selected.slug}`}
+                        size="sm"
+                        className="absolute right-3 bottom-3 h-9 overflow-visible gap-1.5 px-3.5 text-sm after:absolute after:-inset-1 after:content-['']"
+                      >
+                        View full page
+                        <span aria-hidden="true">→</span>
+                      </Button>
                     </div>
                   ) : null}
                   <p className="text-base leading-7 text-hope-white/80">
                     {selected.financialInsight}
                   </p>
-                  <Link
-                    href={`/countries/${selected.slug}`}
-                    className="mt-auto inline-flex min-h-11 w-fit items-center gap-2 rounded-xl bg-hope-ember px-5 text-sm font-bold text-hope-midnight transition-[transform,box-shadow] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-0.5 hover:shadow-[0_10px_30px_-12px_rgb(var(--hope-ember-rgb)/0.55)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-hope-ember"
-                  >
-                    View full page
-                    <span aria-hidden="true">→</span>
-                  </Link>
+                  {selected.images[0] ? null : (
+                    <Button href={`/countries/${selected.slug}`} size="sm" className="w-fit gap-1.5 px-4 text-sm">
+                      View full page
+                      <span aria-hidden="true">→</span>
+                    </Button>
+                  )}
                 </div>
               )}
             </div>

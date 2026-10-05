@@ -26,7 +26,6 @@ export function CountryMarquee({ countries }: { countries: CountryDestination[] 
             alt=""
             fill
             sizes="(max-width: 640px) 176px, 216px"
-            loading="eager"
             className="object-cover transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-105"
           />
           <span

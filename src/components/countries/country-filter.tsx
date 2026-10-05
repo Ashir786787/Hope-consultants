@@ -67,7 +67,7 @@ export default function CountryFilter({
               type="button"
               onClick={() => toggleBand(band)}
               className={
-                "text-sm font-medium capitalize transition-colors" +
+                "inline-flex min-h-11 items-center rounded-full px-2 text-sm font-medium capitalize transition-colors" +
                 (bands.has(band)
                   ? " text-foreground underline underline-offset-4"
                   : " text-muted-foreground hover:text-foreground")
@@ -95,7 +95,7 @@ export default function CountryFilter({
             <li key={country.slug}>
               <article className="hope-card hope-card--light flex h-full flex-col gap-4 p-6">
                 {country.images[0] ? (
-                  <div className="relative -mx-6 -mt-6 aspect-16/9 w-[calc(100%+3rem)] overflow-hidden rounded-t-[1.5rem]">
+                  <div className="relative -mx-6 -mt-6 aspect-16/9 shrink-0 overflow-hidden rounded-t-[1.5rem]">
                     <Image
                       src={country.images[0]}
                       alt={`${country.name} — study destination`}
@@ -113,14 +113,9 @@ export default function CountryFilter({
                     {getCostBandLabel(country.costBand)}
                   </Badge>
                 </div>
-                <div>
-                  <h3 className="font-display text-xl font-semibold text-card-foreground">
-                    {country.name}
-                  </h3>
-                  <p className="mt-1 text-xs font-medium uppercase tracking-wider text-muted-foreground">
-                    Homepage position {country.position}
-                  </p>
-                </div>
+                <h2 className="font-display text-xl font-semibold text-card-foreground">
+                  {country.name}
+                </h2>
                 <p className="mt-auto text-sm leading-6 text-muted-foreground">
                   {country.financialInsight}
                 </p>

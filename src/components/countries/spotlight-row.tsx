@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import { useRouter } from "next/navigation";
 
 import { CountryFlag } from "@/components/countries/country-flag";
@@ -19,7 +18,6 @@ export function SpotlightRow({
   onSelect: (country: CountryDestination) => void;
 }) {
   const router = useRouter();
-  const image = country.images[0];
   const iso = isoFor(country.slug);
 
   return (
@@ -51,17 +49,6 @@ export function SpotlightRow({
         ].join(" ")}
       />
       <CountryFlag iso={iso} className="text-base" />
-        {image ? (
-        <span className="relative size-8 shrink-0 overflow-hidden rounded-full border border-hope-white/25">
-          <Image
-            src={image}
-            alt=""
-            fill
-            sizes="32px"
-            className="object-cover transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-110"
-          />
-        </span>
-      ) : null}
       <span
         className={[
           "min-w-0 flex-1 text-sm font-semibold leading-5 transition-colors duration-300",

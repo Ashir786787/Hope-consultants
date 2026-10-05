@@ -129,7 +129,7 @@ export function ContactForm() {
       <Button type="submit" size="lg" disabled={isSubmitting} className="w-fit">
         {isSubmitting ? "Sending…" : "Send message"}
       </Button>
-      <p className="text-xs leading-6 text-muted-foreground">
+      <p className="text-sm leading-6 text-muted-foreground">
         We are a real consultancy, so your message is read by a person — usually within two
         working days. We never share your details, and we will never add you to a list
         without your clear permission.

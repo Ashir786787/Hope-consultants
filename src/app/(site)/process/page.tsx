@@ -26,40 +26,31 @@ export default async function ProcessPage() {
         lede="Seven clear phases, from the first free conversation to the day you arrive. No pressure, no invented timelines, and nothing is promised beyond what we can actually deliver."
       />
 
-      <section className="relative isolate overflow-hidden border-b border-[rgb(255_255_255/0.10)] bg-hope-midnight">
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute inset-x-0 top-0 h-64 opacity-60"
-        >
-          <FlightPath
-            d="M-40 190 C 240 40, 520 250, 780 110 S 1160 30, 1260 120"
-            className="h-full w-full"
-          />
-        </div>
-        <div className="relative mx-auto w-full max-w-6xl px-4 py-16 sm:px-6">
+      <section className="border-b border-border bg-background">
+        <div className="mx-auto w-full max-w-6xl px-4 py-16 sm:px-6">
           <ProcessSequence>
             {processSteps.map((step, index) => (
               <li key={step.step} className="relative pb-10 pl-0 last:pb-0">
                 <Reveal className="w-full" delay={index * 0.03}>
                   <div className="relative flex flex-col gap-3 lg:flex-row lg:items-baseline lg:gap-8">
                     <div className="flex shrink-0 items-center gap-3">
-                      <span className="relative z-10 flex size-10 items-center justify-center rounded-full border border-[rgb(255_255_255/0.15)] bg-hope-midnight font-display text-sm font-bold text-hope-ember">
+                      <span className="relative z-10 flex size-10 items-center justify-center rounded-full border-[rgb(var(--hope-ember-rgb)/0.4)] bg-hope-ember font-display text-sm font-bold text-hope-midnight">
                         {String(step.step).padStart(2, "0")}
                       </span>
                     </div>
                     <div className="flex flex-col gap-2">
-                      <h2 className="font-display text-xl font-semibold text-hope-white">
+                      <h2 className="font-display text-xl font-semibold text-card-foreground">
                         {step.title}
                       </h2>
-                      <p className="max-w-2xl text-sm leading-7 text-hope-white/70">
+                      <p className="max-w-2xl text-sm leading-7 text-muted-foreground">
                         {step.description}
                       </p>
+                    </div>
                   </div>
-                </div>
-              </Reveal>
-            </li>
-          ))}
-        </ProcessSequence>
+                </Reveal>
+              </li>
+            ))}
+          </ProcessSequence>
         </div>
       </section>
 

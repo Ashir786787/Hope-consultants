@@ -2,6 +2,8 @@ import type { ReactNode } from "react";
 
 import { cn } from "@/lib/utils";
 
+import { PlaneMotif } from "@/components/motion/plane-motif";
+
 type DarkSectionProps = {
   children: ReactNode;
   className?: string;
@@ -25,6 +27,7 @@ export function DarkSection({ children, className, id }: DarkSectionProps) {
         aria-hidden="true"
         className="hope-dot-grid pointer-events-none absolute inset-0 opacity-[0.06]"
       />
+      <PlaneMotif className="absolute -bottom-6 right-[-4%] hidden size-[17rem] opacity-[0.14] lg:block xl:right-[1%] xl:size-[21rem]" />
       <div className="relative mx-auto w-full max-w-6xl px-4 py-16 sm:px-6 sm:py-20">
         {children}
       </div>

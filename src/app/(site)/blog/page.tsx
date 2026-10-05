@@ -41,7 +41,8 @@ export default async function BlogPage() {
         </section>
       ) : (
         <section className="mx-auto w-full max-w-6xl px-4 py-16 sm:px-6">
-          <BlogBrowser posts={posts} />
+          <BlogBrowser posts={posts} headingLevel={2} />
+
         </section>
       )}
 

@@ -11,8 +11,8 @@ import { Magnetic } from "@/components/motion/magnetic";
 import { CountryMarquee } from "@/components/countries/country-marquee";
 import { DestinationsSpotlight } from "@/components/countries/destinations-spotlight";
 import { Hero } from "@/components/sections/hero";
+import { HeroBackdrop } from "@/components/motion/hero-backdrop";
 import { ParentsVisual } from "@/components/sections/parents-visual";
-import { ProcessSequence } from "@/components/sections/process-sequence";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { getSite } from "@/lib/site";
 import { getCollection } from "@/lib/store";
@@ -35,12 +35,6 @@ const HERO = {
 const INTRO = {
   title: "Studying abroad shouldn't mean piecing together answers from a dozen sources.",
   body: "Hope Consultants guides Pakistani students through every stage \u2014 choosing where to go, getting in, funding it, and actually arriving \u2014 with honest advice and affordable support.",
-} as const;
-
-const HOW_IT_WORKS = {
-  eyebrow: "How it works",
-  title: "Seven steps, from first call to first day on campus.",
-  lede: "A clear path with a real person alongside you at every stage.",
 } as const;
 
 const OUR_SERVICES = {
@@ -172,17 +166,27 @@ export default async function Home() {
 
   return (
     <main id="main-content" className="min-h-screen bg-background text-foreground">
-      <Hero
-        countries={sortedCountries}
-        services={services}
-        processSteps={processSteps}
-        whatsapp={site.whatsapp ?? ""}
-        media={resolveHeroMedia()}
-      />
+      <div className="relative">
+        <div
+          aria-hidden="true"
+          className="pointer-events-none sticky top-0 z-0 h-svh w-full overflow-hidden"
+        >
+          <HeroBackdrop media={resolveHeroMedia()} />
+        </div>
 
-      <CountryMarquee countries={sortedCountries} />
+        <Hero
+          countries={sortedCountries}
+          services={services}
+          processSteps={processSteps}
+          whatsapp={site.whatsapp ?? ""}
+        />
 
-      <section id="intro" className="border-b border-border">
+        <div className="relative z-10">
+          <CountryMarquee countries={sortedCountries} />
+        </div>
+      </div>
+
+      <section id="intro" className="border-b border-border bg-background">
         <div className="mx-auto grid w-full max-w-6xl grid-cols-1 gap-10 px-4 py-20 sm:px-6 lg:grid-cols-[1.2fr_1fr] lg:gap-16">
           <Reveal className="w-full">
             <h2 className="max-w-2xl font-display text-3xl font-semibold leading-tight tracking-tight text-foreground sm:text-4xl">
@@ -192,42 +196,6 @@ export default async function Home() {
           <Reveal delay={0.1} className="w-full">
             <p className="max-w-xl text-base leading-7 text-muted-foreground">{INTRO.body}</p>
           </Reveal>
-        </div>
-      </section>
-
-      <section id="how-it-works" className="border-b border-border">
-        <div className="mx-auto flex w-full max-w-6xl flex-col gap-12 px-4 py-20 sm:px-6">
-          <Reveal className="w-full">
-            <SectionHeading
-              eyebrow={HOW_IT_WORKS.eyebrow}
-              title={HOW_IT_WORKS.title}
-              lede={HOW_IT_WORKS.lede}
-            />
-          </Reveal>
-          <ProcessSequence>
-            {processSteps.map((step, index) => (
-              <li key={step.step} className="relative pb-8 pl-0 last:pb-0">
-                <Reveal delay={index * 0.04} className="w-full">
-                  <div className="relative flex flex-col gap-3 lg:flex-row lg:items-baseline lg:gap-8">
-                    <div className="flex shrink-0 items-center gap-3">
-                      <span className="relative z-10 flex size-10 items-center justify-center rounded-full border border-border bg-background font-display text-sm font-bold text-hope-ember">
-                        {String(step.step).padStart(2, "0")}
-                      </span>
-                      <h3 className="font-display text-lg font-semibold text-card-foreground lg:hidden">
-                        {step.title}
-                      </h3>
-                    </div>
-                    <div className="flex flex-col gap-2">
-                      <h3 className="hidden font-display text-lg font-semibold text-card-foreground lg:block">
-                        {step.title}
-                      </h3>
-                      <p className="text-sm leading-6 text-muted-foreground">{step.description}</p>
-                    </div>
-                  </div>
-                </Reveal>
-              </li>
-            ))}
-          </ProcessSequence>
         </div>
       </section>
 

@@ -5,6 +5,7 @@ import { CoverImage } from "@/components/ui/cover-image";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import { Magnetic } from "@/components/motion/magnetic";
+import { PlaneMotif } from "@/components/motion/plane-motif";
 import { getCollection } from "@/lib/store";
 import type { BlogPost } from "@/lib/data/blog";
 
@@ -55,9 +56,10 @@ export default async function BlogPostPage({
           aria-hidden="true"
           className="hope-dot-grid pointer-events-none absolute inset-0 opacity-[0.06]"
         />
+        <PlaneMotif className="absolute -top-4 right-[-6%] hidden size-[18rem] opacity-[0.14] lg:block xl:right-[0%] xl:size-[22rem]" />
         <div className="relative mx-auto w-full max-w-3xl px-4 py-16 sm:px-6 sm:py-20">
           <div className="flex flex-col gap-4">
-            <p className="text-xs uppercase tracking-[0.18em] text-hope-ember">Blog</p>
+            <p className="text-sm uppercase tracking-[0.18em] text-hope-ember">Blog</p>
             <h1 className="font-display text-3xl font-semibold leading-tight tracking-tight text-hope-white sm:text-4xl">
               {post.title}
             </h1>

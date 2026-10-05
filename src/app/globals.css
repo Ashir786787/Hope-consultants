@@ -311,7 +311,6 @@
 .hope-marquee__group {
   display: flex;
   align-items: center;
-  margin-right: 2.5rem;
 }
 
 .hope-marquee[data-direction="right"] .hope-marquee__track {

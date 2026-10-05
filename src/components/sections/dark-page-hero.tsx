@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 
 import { Badge } from "@/components/ui/badge";
 import { Reveal } from "@/components/motion/reveal";
+import { PlaneMotif } from "@/components/motion/plane-motif";
 
 export type DarkPageHeroProps = {
   eyebrow: string;
@@ -21,11 +22,12 @@ export function DarkPageHero({ eyebrow, title, lede, children }: DarkPageHeroPro
         aria-hidden="true"
         className="hope-dot-grid pointer-events-none absolute inset-0 opacity-[0.06]"
       />
-      <div className="relative mx-auto flex w-full max-w-6xl flex-col gap-6 px-4 py-16 sm:px-6 sm:py-24">
+      <PlaneMotif className="absolute right-[-3%] top-1/2 hidden size-[20rem] -translate-y-1/2 opacity-[0.14] lg:block xl:right-[2%] xl:size-[24rem]" />
+      <div className="relative mx-auto flex w-full max-w-6xl flex-col gap-6 px-4 pt-24 pb-16 sm:px-6 sm:pt-28 sm:pb-24">
         <Reveal>
           <Badge
             variant="outline"
-            className="w-fit border-[rgb(255_255_255/0.20)] uppercase tracking-widest text-hope-white"
+            className="w-fit border-[rgb(255_255_255/0.20)] bg-transparent uppercase tracking-widest text-hope-white"
           >
             {eyebrow}
           </Badge>

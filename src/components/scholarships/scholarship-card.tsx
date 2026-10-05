@@ -112,7 +112,7 @@ export function SpotlightCard({ program }: ScholarshipCardProps) {
       </div>
       {program.universities && program.universities.length > 0 ? (
         <div className="flex flex-col gap-2">
-          <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
+          <p className="text-sm font-medium uppercase tracking-wider text-muted-foreground">
             Universities we commonly assist students to apply to
           </p>
           <ul className="flex flex-col gap-1.5 text-sm leading-6 text-muted-foreground">

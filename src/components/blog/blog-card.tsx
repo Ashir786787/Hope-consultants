@@ -11,8 +11,15 @@ function formatDate(value: string): string {
   });
 }
 
-export function BlogCard({ post }: { post: BlogPost }) {
+type BlogCardProps = {
+  post: BlogPost;
+  headingLevel?: 2 | 3;
+};
+
+export function BlogCard({ post, headingLevel = 3 }: BlogCardProps) {
   if (!post.coverImage) return null;
+
+  const Heading = headingLevel === 2 ? "h2" : "h3";
 
   return (
     <Link
@@ -29,15 +36,15 @@ export function BlogCard({ post }: { post: BlogPost }) {
         />
       </div>
       <div className="flex flex-1 flex-col gap-3 p-6">
-        <h3 className="font-display text-xl font-semibold text-card-foreground">
+        <Heading className="font-display text-xl font-semibold text-card-foreground">
           {post.title}
-        </h3>
+        </Heading>
         {post.excerpt ? (
           <p className="line-clamp-3 text-sm leading-7 text-muted-foreground">
             {post.excerpt}
           </p>
         ) : null}
-        <div className="mt-auto flex items-center gap-3 pt-2 text-xs text-muted-foreground">
+        <div className="mt-auto flex items-center gap-3 pt-2 text-sm text-muted-foreground">
           <time dateTime={post.publishedAt}>{formatDate(post.publishedAt)}</time>
           {post.author ? (
             <>

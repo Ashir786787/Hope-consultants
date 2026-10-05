@@ -11,9 +11,10 @@ import type { BlogPost } from "@/lib/data/blog";
 
 type BlogBrowserProps = {
   posts: BlogPost[];
+  headingLevel?: 2 | 3;
 };
 
-export function BlogBrowser({ posts }: BlogBrowserProps) {
+export function BlogBrowser({ posts, headingLevel = 3 }: BlogBrowserProps) {
   const [query, setQuery] = useState("");
 
   const results = useMemo(() => {
@@ -51,7 +52,7 @@ export function BlogBrowser({ posts }: BlogBrowserProps) {
         <PreviewGrid
           items={results.map((post) => ({
             key: post.slug,
-            content: <BlogCard post={post} />,
+            content: <BlogCard post={post} headingLevel={headingLevel} />,
           }))}
         />
       )}
