@@ -113,17 +113,6 @@ export const SCHEMAS: readonly CollectionSchema[] = [
     ],
   },
   {
-    key: "resources",
-    label: "Resources",
-    singular: "Resource",
-    titleKey: "title",
-    fields: [
-      { key: "title", label: "Title", kind: "text", required: true },
-      { key: "category", label: "Category", kind: "text" },
-      { key: "description", label: "Description", kind: "textarea" },
-    ],
-  },
-  {
     key: "process",
     label: "Process",
     singular: "Step",

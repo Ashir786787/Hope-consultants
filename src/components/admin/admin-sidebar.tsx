@@ -4,7 +4,6 @@ import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import {
-  BookOpenCheck,
   ChartColumn,
   ChevronDown,
   FileText,
@@ -29,7 +28,6 @@ const COLLECTION_ICONS: Record<string, typeof Layers3> = {
   countries: Globe2,
   testimonials: Quote,
   scholarships: ChartColumn,
-  resources: BookOpenCheck,
   process: ListTree,
   blog: Newspaper,
   site: Settings2,

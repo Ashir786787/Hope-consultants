@@ -1,7 +1,6 @@
 "use client";
 
 import {
-  BookOpenCheck,
   ChartColumn,
   Globe2,
   Layers3,
@@ -19,7 +18,6 @@ const ICONS: Record<string, typeof Layers3> = {
   countries: Globe2,
   testimonials: Quote,
   scholarships: ChartColumn,
-  resources: BookOpenCheck,
   process: ListTree,
   blog: Newspaper,
   site: Settings2,
