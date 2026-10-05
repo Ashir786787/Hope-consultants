@@ -20,7 +20,6 @@ const NAV_LINKS = [
   { label: "Countries", href: "/countries" },
   { label: "Process", href: "/process" },
   { label: "Scholarships", href: "/scholarships" },
-  { label: "Resources", href: "/resources" },
   { label: "Blog", href: "/blog" },
   { label: "About", href: "/about" },
 ] as const;
@@ -72,8 +71,10 @@ export function Navbar() {
         data-tone="dark"
         style={{ zIndex: Z.navbar }}
         className={cn(
-          "sticky top-0 w-full bg-hope-midnight transition-shadow duration-300",
-          scrolled && "shadow-[0_14px_32px_-20px_rgb(var(--hope-obsidian-rgb)/0.8)]"
+          "fixed inset-x-0 top-0 w-full transition-shadow duration-300",
+          scrolled
+            ? "bg-hope-midnight/80 backdrop-blur-xl supports-backdrop-filter:bg-hope-midnight/65 shadow-[0_14px_32px_-20px_rgb(var(--hope-obsidian-rgb)/0.8)]"
+            : "bg-transparent"
         )}
       >
         <div className="mx-auto grid h-[68px] w-full max-w-7xl grid-cols-[auto_1fr_auto] items-center px-5 lg:h-20 lg:px-16">
@@ -81,13 +82,13 @@ export function Navbar() {
             href="/"
             aria-label="Hope Consultants home"
             className={cn(
-              "navbar-logo inline-flex min-h-11 items-center lg:min-h-12",
+              "navbar-logo inline-flex min-h-11 min-w-11 items-center pr-2 lg:min-h-12",
               scrolled && "scale-[0.85]"
             )}
           >
             <span ref={logoRef} className="inline-flex items-center">
               <Logo
-                variant="lockup"
+                variant="lockup-dark"
                 priority
                 className="h-11 w-auto lg:h-[52px]"
               />
@@ -102,7 +103,7 @@ export function Navbar() {
               <Link
                 key={link.href}
                 href={link.href}
-                className="transition-colors duration-300 hover:text-hope-white"
+                className="inline-flex min-h-11 items-center transition-colors duration-300 hover:text-hope-white"
               >
                 {link.label}
               </Link>
@@ -118,7 +119,7 @@ export function Navbar() {
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="text-hope-white lg:hidden"
+                  className="bg-hope-midnight/45 text-hope-white backdrop-blur-sm lg:hidden"
                   aria-label="Open menu"
                 />
               }
@@ -138,7 +139,7 @@ export function Navbar() {
         >
           <div className="flex h-[68px] shrink-0 items-center justify-between border-b border-hope-white/10 px-5">
             <DialogPrimitive.Close render={<Link href="/" aria-label="Hope Consultants home" />}>
-              <Logo variant="lockup" className="h-11 w-auto" />
+              <Logo variant="lockup-dark" className="h-11 w-auto" />
             </DialogPrimitive.Close>
             <DialogPrimitive.Close
               render={

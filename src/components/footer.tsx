@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 import { Logo } from "@/components/ui/logo";
+import { PlaneMotif } from "@/components/motion/plane-motif";
 import { getSite } from "@/lib/site";
 
 const EXPLORE_LINKS = [
@@ -8,7 +9,6 @@ const EXPLORE_LINKS = [
   { label: "Countries", href: "/countries" },
   { label: "Process", href: "/process" },
   { label: "Scholarships", href: "/scholarships" },
-  { label: "Resources", href: "/resources" },
   { label: "Blog", href: "/blog" },
 ] as const;
 
@@ -35,15 +35,15 @@ function FooterColumn({
 }) {
   return (
     <div className="flex flex-col gap-4">
-      <h3 className="font-display text-xs font-semibold tracking-[0.18em] text-hope-ember uppercase">
+      <h3 className="font-display text-sm font-semibold tracking-[0.18em] text-hope-ember uppercase">
         {title}
       </h3>
-      <ul className="flex flex-col gap-3">
+      <ul className="flex flex-col gap-1">
         {links.map((link) => (
           <li key={link.href}>
             <Link
               href={link.href}
-              className="text-sm text-hope-fog transition-colors hover:text-hope-ember"
+              className="inline-flex min-h-11 min-w-11 items-center text-sm text-hope-white/70 transition-colors hover:text-hope-ember"
             >
               {link.label}
             </Link>
@@ -60,14 +60,15 @@ export async function Footer() {
     Boolean(site.email.trim()) || Boolean(site.phone.trim()) || Boolean(site.whatsapp.trim());
 
   return (
-    <footer className="bg-hope-midnight text-hope-white">
-      <div className="mx-auto w-full max-w-6xl px-4 py-16 sm:px-6">
+    <footer className="relative isolate overflow-hidden bg-hope-midnight text-hope-white">
+      <PlaneMotif className="pointer-events-none absolute -bottom-12 right-[-6%] hidden size-[26rem] opacity-[0.10] lg:block" />
+      <div className="relative mx-auto w-full max-w-6xl px-4 py-16 sm:px-6">
         <div className="grid gap-12 md:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr_1.2fr]">
           <div className="flex flex-col items-start gap-5">
             <Link href="/" className="flex items-center" aria-label="Hope Consultants home">
-              <Logo variant="lockup" className="h-14 w-auto" />
+              <Logo variant="lockup-dark" className="h-14 w-auto" />
             </Link>
-            <p className="max-w-xs text-sm leading-6 text-hope-fog">
+            <p className="max-w-xs text-sm leading-6 text-hope-white/70">
               Honest study abroad guidance for Pakistani students — universities, scholarships,
               and student visas across 14 destinations.
             </p>
@@ -76,20 +77,20 @@ export async function Footer() {
           <FooterColumn title="Company" links={COMPANY_LINKS} />
           <FooterColumn title="Legal" links={LEGAL_LINKS} />
           <div className="flex flex-col gap-4">
-            <h3 className="font-display text-xs font-semibold tracking-[0.18em] text-hope-ember uppercase">
+            <h3 className="font-display text-sm font-semibold tracking-[0.18em] text-hope-ember uppercase">
               Contact
             </h3>
-            <ul className="flex flex-col gap-3 text-sm text-hope-fog">
+            <ul className="flex flex-col gap-1 text-sm text-hope-white/70">
               {site.email.trim() ? (
                 <li>
-                  <a href={`mailto:${site.email}`} className="transition-colors hover:text-hope-ember">
+                  <a href={`mailto:${site.email}`} className="inline-flex min-h-11 min-w-11 items-center transition-colors hover:text-hope-ember">
                     {site.email}
                   </a>
                 </li>
               ) : null}
               {site.phone.trim() ? (
                 <li>
-                  <a href={`tel:${site.phoneHref}`} className="transition-colors hover:text-hope-ember">
+                  <a href={`tel:${site.phoneHref}`} className="inline-flex min-h-11 min-w-11 items-center transition-colors hover:text-hope-ember">
                     {site.phone}
                   </a>
                 </li>
@@ -100,7 +101,7 @@ export async function Footer() {
                     href={`https://wa.me/${site.whatsapp}`}
                     target="_blank"
                     rel="noreferrer"
-                    className="transition-colors hover:text-hope-ember"
+                    className="inline-flex min-h-11 min-w-11 items-center transition-colors hover:text-hope-ember"
                   >
                     WhatsApp
                   </a>
@@ -108,7 +109,7 @@ export async function Footer() {
               ) : null}
               {!hasContact ? (
                 <li>
-                  <Link href="/contact" className="transition-colors hover:text-hope-ember">
+                  <Link href="/contact" className="inline-flex min-h-11 min-w-11 items-center transition-colors hover:text-hope-ember">
                     Contact page
                   </Link>
                 </li>
@@ -117,7 +118,7 @@ export async function Footer() {
           </div>
         </div>
         <div className="mt-14 flex flex-col gap-2 border-t border-hope-white/10 pt-6 sm:flex-row sm:items-center sm:justify-between">
-          <p className="text-xs leading-5 text-hope-fog">
+          <p className="text-sm leading-6 text-hope-white/70">
             © {new Date().getFullYear()} Hope Consultants. Study abroad guidance for Pakistani
             students.
           </p>

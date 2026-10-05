@@ -187,11 +187,11 @@ export default function DesignSystemPage() {
           <Eyebrow tone="dark">Logo</Eyebrow>
           <div className="mt-6 grid gap-6 sm:grid-cols-2">
             <div className="flex h-40 flex-col items-center justify-center gap-4 rounded-3xl bg-hope-white p-6">
-              <Logo variant="lockup" className="h-14" />
+              <Logo variant="lockup-light" className="h-14" />
               <p className="text-sm text-hope-fog">Lockup on light</p>
             </div>
             <div className="flex h-40 flex-col items-center justify-center gap-4 rounded-3xl bg-hope-midnight p-6">
-              <Logo variant="lockup" className="h-14" />
+              <Logo variant="lockup-dark" className="h-14" />
               <p className="text-sm text-hope-white/70">Lockup on midnight</p>
             </div>
           </div>
