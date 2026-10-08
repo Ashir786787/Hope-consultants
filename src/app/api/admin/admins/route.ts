@@ -9,6 +9,7 @@ import {
   listAdmins,
   toAdminSummary,
 } from "@/lib/admin/admin-user";
+import { hasSection } from "@/lib/admin/permissions";
 import { requireAdminForApi } from "@/lib/admin/require-admin";
 import { sendAdminInvitationEmail } from "@/lib/email/send-admin-registered";
 import { isMailConfigured } from "@/lib/email/transporter";
@@ -24,6 +25,12 @@ export async function GET() {
   if (!admin) {
     return NextResponse.json({ error: "Not signed in." }, { status: 401 });
   }
+  if (!hasSection(admin, "admins")) {
+    return NextResponse.json(
+      { error: "You do not have access to this section." },
+      { status: 403 }
+    );
+  }
 
   await ensureAdminUserIndexes();
   const admins = await listAdmins();
@@ -34,6 +41,12 @@ export async function POST(request: Request) {
   const admin = await requireAdminForApi();
   if (!admin) {
     return NextResponse.json({ error: "Not signed in." }, { status: 401 });
+  }
+  if (!hasSection(admin, "admins")) {
+    return NextResponse.json(
+      { error: "You do not have access to this section." },
+      { status: 403 }
+    );
   }
 
   const body = await request.json().catch(() => null);

@@ -1,7 +1,5 @@
-import { redirect } from "next/navigation";
-
 import { AdminEditor } from "@/components/admin/admin-editor";
-import { requireAdmin } from "@/lib/admin/require-admin";
+import { requireSection } from "@/lib/admin/require-admin";
 import { SCHEMAS, schemaFor } from "@/lib/content/schemas";
 import { mongoConfigured } from "@/lib/mongo";
 
@@ -17,10 +15,7 @@ export default async function AdminPage({
 }: {
   searchParams: SearchParams;
 }) {
-  const admin = await requireAdmin();
-  if (!admin) {
-    redirect("/admin/login");
-  }
+  await requireSection("content");
 
   const requested = firstValue((await searchParams).collection);
   const collection = schemaFor(requested ?? "")?.key ?? SCHEMAS[0].key;

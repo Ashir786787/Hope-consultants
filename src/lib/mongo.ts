@@ -77,9 +77,10 @@ export async function mongoInsertOne(name: string, doc: Document): Promise<void>
 export async function mongoUpdateOne(
   name: string,
   filter: Filter<Document>,
-  update: UpdateFilter<Document>
+  update: UpdateFilter<Document>,
+  options?: { upsert?: boolean }
 ): Promise<void> {
-  await (await collection(name)).updateOne(filter, update, { upsert: false });
+  await (await collection(name)).updateOne(filter, update, { upsert: options?.upsert ?? false });
 }
 
 export async function mongoDeleteOne(

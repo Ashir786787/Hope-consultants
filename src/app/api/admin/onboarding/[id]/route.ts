@@ -1,14 +1,14 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 
-import { findLeadById, updateLead } from "@/lib/admin/lead";
+import { findSubmissionById, updateSubmission } from "@/lib/onboarding/submission";
 import { hasSection } from "@/lib/admin/permissions";
 import { requireAdminForApi } from "@/lib/admin/require-admin";
-import { LEAD_STATUSES } from "@/lib/admin/types";
+import { ONBOARDING_STATUSES } from "@/lib/onboarding/types";
 
 const patchSchema = z
   .object({
-    status: z.enum(LEAD_STATUSES),
+    status: z.enum(ONBOARDING_STATUSES),
     notes: z.string().trim().max(2000, "That note is too long.").optional(),
   })
   .partial()
@@ -22,7 +22,7 @@ export async function PATCH(
   if (!admin) {
     return NextResponse.json({ error: "Not signed in." }, { status: 401 });
   }
-  if (!hasSection(admin, "leads")) {
+  if (!hasSection(admin, "onboarding")) {
     return NextResponse.json(
       { error: "You do not have access to this section." },
       { status: 403 }
@@ -30,9 +30,9 @@ export async function PATCH(
   }
 
   const { id } = await params;
-  const lead = await findLeadById(id);
-  if (!lead) {
-    return NextResponse.json({ error: "That enquiry no longer exists." }, { status: 404 });
+  const submission = await findSubmissionById(id);
+  if (!submission) {
+    return NextResponse.json({ error: "That submission no longer exists." }, { status: 404 });
   }
 
   const body = await request.json().catch(() => null);
@@ -44,6 +44,6 @@ export async function PATCH(
     );
   }
 
-  await updateLead(id, parsed.data);
+  await updateSubmission(id, parsed.data);
   return NextResponse.json({ ok: true });
 }

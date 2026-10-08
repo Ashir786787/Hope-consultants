@@ -3,6 +3,9 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
+import type { AdminPanelSection } from "@/lib/admin/types";
+
+import { AdminAccessControl } from "./admin-access-control";
 import { AdminAlert, AdminBadge, AdminButton } from "./admin-ui";
 
 export type AdminRow = {
@@ -14,6 +17,7 @@ export type AdminRow = {
   isActive: boolean;
   isAccessRequest: boolean;
   hasCompletedFirstLogin: boolean;
+  permissions: AdminPanelSection[] | null;
   createdLabel: string;
   lastLoginLabel: string;
   verifiedLabel: string | null;
@@ -22,9 +26,11 @@ export type AdminRow = {
 export function AdminUserRow({
   admin,
   isSelf,
+  canManageRoles,
 }: {
   admin: AdminRow;
   isSelf: boolean;
+  canManageRoles: boolean;
 }) {
   const router = useRouter();
   const [error, setError] = useState<string | null>(null);
@@ -102,6 +108,10 @@ export function AdminUserRow({
           <dd className="text-hope-midnight">{admin.verifiedLabel ?? "Not yet"}</dd>
         </div>
       </dl>
+
+      {canManageRoles && !admin.isOwner && !awaitingCode ? (
+        <AdminAccessControl adminId={admin.id} permissions={admin.permissions} />
+      ) : null}
 
       {error ? <AdminAlert tone="error">{error}</AdminAlert> : null}
 

@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 
 import { AdminLeadsList } from "@/components/admin/admin-leads-list";
 import { listLeads } from "@/lib/admin/lead";
-import { requireAdmin } from "@/lib/admin/require-admin";
+import { requireSection } from "@/lib/admin/require-admin";
 
 export const metadata: Metadata = {
   title: "Leads",
@@ -10,10 +10,7 @@ export const metadata: Metadata = {
 };
 
 export default async function AdminLeadsPage() {
-  const current = await requireAdmin();
-  if (!current) {
-    return null;
-  }
+  await requireSection("leads");
 
   const leads = await listLeads();
 

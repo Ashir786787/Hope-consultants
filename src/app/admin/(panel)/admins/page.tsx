@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import { AdminCreateAdminForm } from "@/components/admin/admin-create-admin-form";
 import { AdminUserRow, type AdminRow } from "@/components/admin/admin-user-row";
 import { listAdmins } from "@/lib/admin/admin-user";
-import { requireAdmin } from "@/lib/admin/require-admin";
+import { requireSection } from "@/lib/admin/require-admin";
 
 export const metadata: Metadata = {
   title: "Admin users",
@@ -22,10 +22,7 @@ function label(value: string | null, fallback: string): string {
 }
 
 export default async function AdminUsersPage() {
-  const current = await requireAdmin();
-  if (!current) {
-    return null;
-  }
+  const current = await requireSection("admins");
 
   const admins = await listAdmins();
   const rows: AdminRow[] = admins.map((admin) => ({
@@ -37,6 +34,7 @@ export default async function AdminUsersPage() {
     isActive: admin.isActive === true,
     isAccessRequest: admin.isAccessRequest === true,
     hasCompletedFirstLogin: admin.hasCompletedFirstLogin === true,
+    permissions: admin.permissions ?? null,
     createdLabel: label(admin.createdAt, "Unknown"),
     lastLoginLabel: label(admin.lastLoginAt, "Never"),
     verifiedLabel: admin.firstLoginVerifiedAt
@@ -80,7 +78,12 @@ export default async function AdminUsersPage() {
           {[...rows]
             .sort((a, b) => Number(b.isAccessRequest) - Number(a.isAccessRequest))
             .map((admin) => (
-              <AdminUserRow key={admin.id} admin={admin} isSelf={admin.id === current.id} />
+              <AdminUserRow
+                key={admin.id}
+                admin={admin}
+                isSelf={admin.id === current.id}
+                canManageRoles={current.isOwner === true}
+              />
             ))}
         </ul>
       </section>

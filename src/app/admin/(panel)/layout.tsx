@@ -4,7 +4,10 @@ import { redirect } from "next/navigation";
 import { AdminAutoRefresh } from "@/components/admin/admin-auto-refresh";
 import { AdminSidebar } from "@/components/admin/admin-sidebar";
 import { countLeadsByStatus } from "@/lib/admin/lead";
+import { hasSection } from "@/lib/admin/permissions";
+import { countSubmissionsByStatus } from "@/lib/onboarding/submission";
 import { requireAdmin } from "@/lib/admin/require-admin";
+import { ADMIN_PANEL_SECTIONS } from "@/lib/admin/types";
 
 const SIDEBAR_SURFACE =
   "bg-[linear-gradient(180deg,rgb(var(--hope-midnight-rgb)),rgb(var(--hope-obsidian-rgb)/0.55))]";
@@ -19,7 +22,10 @@ export default async function AdminPanelLayout({ children }: { children: ReactNo
     redirect("/admin/login");
   }
 
-  const byStatus = await countLeadsByStatus();
+  const [byStatus, onboardingByStatus] = await Promise.all([
+    hasSection(admin, "leads") ? countLeadsByStatus() : null,
+    hasSection(admin, "onboarding") ? countSubmissionsByStatus() : null,
+  ]);
 
   return (
     <div className="min-h-dvh bg-hope-white">
@@ -31,7 +37,15 @@ export default async function AdminPanelLayout({ children }: { children: ReactNo
       </a>
       <AdminAutoRefresh />
       <Suspense fallback={<SidebarFallback />}>
-        <AdminSidebar name={admin.name} email={admin.email} newLeads={byStatus.New} />
+        <AdminSidebar
+          name={admin.name}
+          email={admin.email}
+          newLeads={byStatus?.New ?? 0}
+          newOnboarding={onboardingByStatus?.New ?? 0}
+          allowedSections={ADMIN_PANEL_SECTIONS.filter((section) =>
+            hasSection(admin, section),
+          )}
+        />
       </Suspense>
       <div className="lg:pl-64">
         <main className="mx-auto flex w-full max-w-6xl flex-col gap-8 px-4 py-8 sm:px-6 lg:px-10 lg:py-10">

@@ -8,12 +8,19 @@ import {
   toAdminSummary,
   updateAdmin,
 } from "@/lib/admin/admin-user";
+import { hasSection } from "@/lib/admin/permissions";
 import { requireAdminForApi } from "@/lib/admin/require-admin";
+import { ADMIN_PANEL_SECTIONS } from "@/lib/admin/types";
 
 const patchSchema = z
   .object({
     role: z.string().trim().min(1, "Enter a role.").max(40, "That role is too long."),
     isActive: z.boolean(),
+    permissions: z
+      .array(z.enum(ADMIN_PANEL_SECTIONS))
+      .min(1, "Keep at least one section.")
+      .max(ADMIN_PANEL_SECTIONS.length, "That is too many sections.")
+      .nullable(),
   })
   .partial()
   .refine((value) => Object.keys(value).length > 0, "Nothing to change.");
@@ -25,6 +32,12 @@ export async function PATCH(
   const current = await requireAdminForApi();
   if (!current) {
     return NextResponse.json({ error: "Not signed in." }, { status: 401 });
+  }
+  if (!hasSection(current, "admins")) {
+    return NextResponse.json(
+      { error: "You do not have access to this section." },
+      { status: 403 }
+    );
   }
 
   const { id } = await params;
@@ -42,7 +55,14 @@ export async function PATCH(
     );
   }
 
-  const { role, isActive } = parsed.data;
+  if (parsed.data.permissions !== undefined && !current.isOwner) {
+    return NextResponse.json(
+      { error: "Only the owner can change roles." },
+      { status: 403 }
+    );
+  }
+
+  const { role, isActive, permissions } = parsed.data;
   if (target.isOwner && isActive === false) {
     return NextResponse.json(
       { error: "The owner account cannot be deactivated." },
@@ -62,6 +82,9 @@ export async function PATCH(
   if (isActive !== undefined) {
     await setAdminActive(id, isActive);
   }
+  if (permissions !== undefined) {
+    await updateAdmin(id, { permissions });
+  }
 
   const updated = await findAdminById(id);
   return NextResponse.json({ admin: updated ? toAdminSummary(updated) : null });
@@ -74,6 +97,12 @@ export async function DELETE(
   const current = await requireAdminForApi();
   if (!current) {
     return NextResponse.json({ error: "Not signed in." }, { status: 401 });
+  }
+  if (!hasSection(current, "admins")) {
+    return NextResponse.json(
+      { error: "You do not have access to this section." },
+      { status: 403 }
+    );
   }
 
   const { id } = await params;

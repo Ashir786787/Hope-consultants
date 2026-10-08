@@ -6,6 +6,7 @@ import { useState } from "react";
 import {
   ChartColumn,
   ChevronDown,
+  ClipboardList,
   FileText,
   Globe2,
   Layers3,
@@ -20,6 +21,8 @@ import {
   Inbox,
 } from "lucide-react";
 
+import { SECTION_BY_HREF } from "@/lib/admin/permissions";
+import type { AdminPanelSection } from "@/lib/admin/types";
 import { SCHEMAS } from "@/lib/content/schemas";
 import { cn } from "@/lib/utils";
 
@@ -36,6 +39,7 @@ const COLLECTION_ICONS: Record<string, typeof Layers3> = {
 const NAV_ITEMS = [
   { href: "/admin", label: "Dashboard", icon: LayoutDashboard },
   { href: "/admin/leads", label: "Leads", icon: Inbox },
+  { href: "/admin/onboarding", label: "Onboarding forms", icon: ClipboardList },
   { href: "/admin/content", label: "Content editor", icon: FileText },
   { href: "/admin/admins", label: "Admin users", icon: Users },
   { href: "/admin/settings", label: "Settings", icon: Settings },
@@ -45,16 +49,26 @@ export function AdminSidebar({
   name,
   email,
   newLeads,
+  newOnboarding,
+  allowedSections,
 }: {
   name: string;
   email: string;
   newLeads: number;
+  newOnboarding: number;
+  allowedSections: AdminPanelSection[];
 }) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const router = useRouter();
   const [pending, setPending] = useState(false);
   const [collectionsOpen, setCollectionsOpen] = useState(false);
+
+  const allowed = new Set(allowedSections);
+  const visibleItems = NAV_ITEMS.filter((item) => {
+    const section = SECTION_BY_HREF[item.href];
+    return !section || allowed.has(section);
+  });
 
   const onContentPage = pathname.startsWith("/admin/content");
   const activeCollection = onContentPage
@@ -88,10 +102,15 @@ export function AdminSidebar({
         aria-label="Admin"
         className="flex gap-2 overflow-x-auto lg:flex-col lg:gap-1 lg:overflow-x-visible"
       >
-        {NAV_ITEMS.map((item) => {
+        {visibleItems.map((item) => {
           const active = isActive(item.href);
           const Icon = item.icon;
-          const badge = item.href === "/admin/leads" ? newLeads : 0;
+          const badge =
+            item.href === "/admin/leads"
+              ? newLeads
+              : item.href === "/admin/onboarding"
+                ? newOnboarding
+                : 0;
           if (item.href !== "/admin/content") {
             return (
               <Link

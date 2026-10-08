@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 
 import { createLead } from "@/lib/admin/lead";
+import { sendContactConfirmation } from "@/lib/email/send-confirmation";
 import { refererPath } from "@/lib/request-meta";
 import { isMailConfigured, sendContactMail } from "@/lib/mail";
 
@@ -55,6 +56,8 @@ export async function POST(request: Request) {
     message,
     sourcePage: refererPath(request),
   }).catch(() => null);
+
+  await sendContactConfirmation(email).catch(() => null);
 
   return NextResponse.json({ ok: true });
 }

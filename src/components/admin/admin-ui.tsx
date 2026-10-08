@@ -1,4 +1,4 @@
-import type { ButtonHTMLAttributes, InputHTMLAttributes, ReactNode } from "react";
+import type { ButtonHTMLAttributes, InputHTMLAttributes, ReactNode, Ref } from "react";
 
 export function AdminAlert({
   tone,
@@ -24,9 +24,11 @@ export function AdminAlert({
 export function AdminButton({
   variant,
   className = "",
+  ref,
   ...props
 }: ButtonHTMLAttributes<HTMLButtonElement> & {
   variant: "primary" | "secondary";
+  ref?: Ref<HTMLButtonElement>;
 }) {
   const base =
     "inline-flex min-h-11 items-center justify-center gap-2 rounded-lg px-4 text-sm font-semibold transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-hope-ember disabled:cursor-not-allowed disabled:opacity-50";
@@ -34,7 +36,7 @@ export function AdminButton({
     variant === "primary"
       ? "bg-hope-ember text-hope-midnight hover:brightness-105"
       : "border border-hope-midnight/30 text-hope-midnight hover:bg-hope-midnight/5";
-  return <button className={`${base} ${tone} ${className}`} {...props} />;
+  return <button ref={ref} className={`${base} ${tone} ${className}`} {...props} />;
 }
 
 export function AdminField({

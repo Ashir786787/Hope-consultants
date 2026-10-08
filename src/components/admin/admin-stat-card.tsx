@@ -7,12 +7,14 @@ export function AdminStatCard({
   value,
   supporting,
   accent,
+  badge,
   href,
 }: {
   label: string;
   value: number;
   supporting: string;
   accent: "ember" | "midnight";
+  badge?: number;
   href?: string;
 }) {
   const surface =
@@ -27,7 +29,14 @@ export function AdminStatCard({
         }`}
       />
       <h3 className="text-sm font-semibold text-hope-midnight">{label}</h3>
-      <p className="font-display text-4xl font-bold text-hope-midnight">{value}</p>
+      <div className="flex items-center gap-3">
+        <p className="font-display text-4xl font-bold text-hope-midnight">{value}</p>
+        {badge !== undefined && badge > 0 ? (
+          <span className="rounded-full bg-hope-ember px-2.5 py-1 text-xs font-bold text-hope-midnight tabular-nums">
+            {badge} new
+          </span>
+        ) : null}
+      </div>
       <p className="text-sm text-hope-fog">{supporting}</p>
     </>
   );

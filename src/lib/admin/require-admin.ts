@@ -1,6 +1,9 @@
+import { redirect } from "next/navigation";
+
 import { findAdminById } from "@/lib/admin/admin-user";
+import { firstPermittedHref, hasSection } from "@/lib/admin/permissions";
 import { isSessionRevoked, readSession, refreshSession } from "@/lib/admin/session";
-import type { AdminUser } from "@/lib/admin/types";
+import type { AdminPanelSection, AdminUser } from "@/lib/admin/types";
 
 export async function requireAdmin(): Promise<AdminUser | null> {
   const session = await readSession();
@@ -15,5 +18,12 @@ export async function requireAdminForApi(): Promise<AdminUser | null> {
   const admin = await requireAdmin();
   if (!admin) return null;
   await refreshSession();
+  return admin;
+}
+
+export async function requireSection(section: AdminPanelSection): Promise<AdminUser> {
+  const admin = await requireAdmin();
+  if (!admin) redirect("/admin/login");
+  if (!hasSection(admin, section)) redirect(firstPermittedHref(admin));
   return admin;
 }

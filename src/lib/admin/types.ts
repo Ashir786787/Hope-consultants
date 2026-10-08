@@ -4,6 +4,10 @@ export const LEAD_STATUSES = ["New", "Contacted", "Converted", "Lost"] as const;
 
 export type LeadStatus = (typeof LEAD_STATUSES)[number];
 
+export const ADMIN_PANEL_SECTIONS = ["dashboard", "leads", "onboarding", "content", "admins"] as const;
+
+export type AdminPanelSection = (typeof ADMIN_PANEL_SECTIONS)[number];
+
 export interface AdminUser {
   id: string;
   name: string;
@@ -14,6 +18,7 @@ export interface AdminUser {
   isActive: boolean;
   hasCompletedFirstLogin: boolean;
   isAccessRequest: boolean;
+  permissions: AdminPanelSection[] | null;
   createdAt: string;
   lastLoginAt: string | null;
   firstLoginVerifiedAt: string | null;
