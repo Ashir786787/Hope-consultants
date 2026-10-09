@@ -16,11 +16,13 @@ import { useContentEditor } from "@/hooks/use-content-editor";
 export function AdminEditor({
   collection,
   storage,
+  allowedCollections,
 }: {
   collection: string;
   storage: "mongodb" | "json-files";
+  allowedCollections: string[];
 }) {
-  const editor = useContentEditor(collection);
+  const editor = useContentEditor(collection, allowedCollections);
   const {
     schema,
     counts,
@@ -97,6 +99,7 @@ export function AdminEditor({
         active={editor.collection}
         counts={counts}
         onSelect={editor.pickCollection}
+        only={allowedCollections}
       />
 
       {loadError ? <AdminAlert tone="error">{loadError}</AdminAlert> : null}

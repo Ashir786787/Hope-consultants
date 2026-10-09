@@ -138,7 +138,10 @@ export function Navbar() {
           className="fixed inset-x-0 top-0 flex h-dvh flex-col overflow-hidden bg-hope-midnight data-open:animate-in data-open:fade-in data-open:slide-in-from-top data-closed:animate-out data-closed:fade-out data-closed:slide-out-to-top"
         >
           <div className="flex h-[68px] shrink-0 items-center justify-between border-b border-hope-white/10 px-5">
-            <DialogPrimitive.Close render={<Link href="/" aria-label="Hope Consultants home" />}>
+            <DialogPrimitive.Close
+              nativeButton={false}
+              render={<Link href="/" aria-label="Hope Consultants home" />}
+            >
               <Logo variant="lockup-dark" className="h-11 w-auto" />
             </DialogPrimitive.Close>
             <DialogPrimitive.Close
@@ -162,6 +165,7 @@ export function Navbar() {
             {MOBILE_LINKS.map((link) => (
               <DialogPrimitive.Close
                 key={link.href}
+                nativeButton={false}
                 render={<Link href={link.href} />}
               >
                 <span className="flex items-center justify-between border-b border-hope-white/10 py-4 font-display text-2xl font-semibold tracking-tight text-hope-white/90 transition-colors hover:text-hope-white">
@@ -172,7 +176,10 @@ export function Navbar() {
           </nav>
 
           <div className="shrink-0 border-t border-hope-white/10 p-4 sm:px-5">
-            <DialogPrimitive.Close render={<Button href="/contact" size="lg" className="w-full" />}>
+            <DialogPrimitive.Close
+              nativeButton={false}
+              render={<Button href="/contact" size="lg" className="w-full" />}
+            >
               Book a free consultation
             </DialogPrimitive.Close>
           </div>

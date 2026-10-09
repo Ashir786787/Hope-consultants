@@ -5,14 +5,22 @@ import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { getCostBandLabel } from "@/lib/data/helpers";
-import type { CountryDestination, CostBand } from "@/lib/data/types";
+import type { CountryDestination } from "@/lib/data/types";
 
-const bandColors: Record<CostBand, string> = {
-  low: "border-[rgb(var(--hope-ember-rgb)/0.4)] bg-hope-ember text-hope-midnight",
-  medium: "border-[rgb(var(--hope-midnight-rgb)/0.18)] bg-hope-midnight text-hope-white",
-  high: "border-[rgb(var(--hope-obsidian-rgb)/0.18)] bg-hope-obsidian text-hope-white",
-};
+function admissionBadge(open: boolean | undefined) {
+  if (open === undefined) return null;
+  return (
+    <Badge
+      className={
+        open
+          ? "border-[rgb(var(--hope-ember-rgb)/0.4)] bg-hope-ember text-hope-midnight"
+          : "border-[rgb(var(--hope-midnight-rgb)/0.24)] bg-transparent text-hope-midnight"
+      }
+    >
+      {open ? "Admissions open" : "Admissions closed"}
+    </Badge>
+  );
+}
 
 export default function CountryFilter({
   countries,
@@ -20,19 +28,6 @@ export default function CountryFilter({
   countries: CountryDestination[];
 }) {
   const [query, setQuery] = useState("");
-  const [bands, setBands] = useState<Set<CostBand>>(new Set());
-
-  const toggleBand = (band: CostBand) => {
-    setBands((prev) => {
-      const next = new Set(prev);
-      if (next.has(band)) {
-        next.delete(band);
-      } else {
-        next.add(band);
-      }
-      return next;
-    });
-  };
 
   const results = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -43,10 +38,9 @@ export default function CountryFilter({
           const hay = `${c.name} ${c.financialInsight}`.toLowerCase();
           if (!hay.includes(q)) return false;
         }
-        if (bands.size > 0 && !bands.has(c.costBand)) return false;
         return true;
       });
-  }, [countries, query, bands]);
+  }, [countries, query]);
 
   return (
     <div className="flex w-full flex-col gap-8">
@@ -59,25 +53,6 @@ export default function CountryFilter({
           className="h-11 w-full max-w-md"
           aria-label="Search study destinations"
         />
-        <div className="flex flex-wrap items-center gap-4">
-          <span className="text-sm font-medium text-muted-foreground">Filter by cost:</span>
-          {(["low", "medium", "high"] as const).map((band) => (
-            <button
-              key={band}
-              type="button"
-              onClick={() => toggleBand(band)}
-              className={
-                "inline-flex min-h-11 items-center rounded-full px-2 text-sm font-medium capitalize transition-colors" +
-                (bands.has(band)
-                  ? " text-foreground underline underline-offset-4"
-                  : " text-muted-foreground hover:text-foreground")
-              }
-              aria-pressed={bands.has(band)}
-            >
-              {getCostBandLabel(band)}
-            </button>
-          ))}
-        </div>
       </div>
 
       {results.length === 0 ? (
@@ -86,7 +61,7 @@ export default function CountryFilter({
             No countries match those filters yet
           </p>
           <p className="mt-2 text-sm text-muted-foreground">
-            Try clearing the search or a filter — or ask us; we keep this list honest and current.
+            Try clearing the search — or ask us; we keep this list honest and current.
           </p>
         </div>
       ) : (
@@ -109,9 +84,7 @@ export default function CountryFilter({
                   <span className="text-3xl leading-none" aria-hidden="true">
                     {country.flag}
                   </span>
-                  <Badge className={bandColors[country.costBand]}>
-                    {getCostBandLabel(country.costBand)}
-                  </Badge>
+                  {admissionBadge(country.admissionOpen)}
                 </div>
                 <h2 className="font-display text-xl font-semibold text-card-foreground">
                   {country.name}

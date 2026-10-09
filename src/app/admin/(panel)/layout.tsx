@@ -8,6 +8,7 @@ import { hasSection } from "@/lib/admin/permissions";
 import { countSubmissionsByStatus } from "@/lib/onboarding/submission";
 import { requireAdmin } from "@/lib/admin/require-admin";
 import { ADMIN_PANEL_SECTIONS } from "@/lib/admin/types";
+import { CONTENT_KEYS } from "@/lib/content/schemas";
 
 const SIDEBAR_SURFACE =
   "bg-[linear-gradient(180deg,rgb(var(--hope-midnight-rgb)),rgb(var(--hope-obsidian-rgb)/0.55))]";
@@ -27,6 +28,11 @@ export default async function AdminPanelLayout({ children }: { children: ReactNo
     hasSection(admin, "onboarding") ? countSubmissionsByStatus() : null,
   ]);
 
+  const allowedContentCollections =
+    admin.contentCollections === null || admin.contentCollections === undefined
+      ? null
+      : CONTENT_KEYS.filter((key) => admin.contentCollections!.includes(key));
+
   return (
     <div className="min-h-dvh bg-hope-white">
       <a
@@ -45,6 +51,7 @@ export default async function AdminPanelLayout({ children }: { children: ReactNo
           allowedSections={ADMIN_PANEL_SECTIONS.filter((section) =>
             hasSection(admin, section),
           )}
+          allowedCollections={allowedContentCollections}
         />
       </Suspense>
       <div className="lg:pl-64">

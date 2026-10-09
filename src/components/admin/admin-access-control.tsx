@@ -3,22 +3,31 @@
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 
-import { SECTION_LABELS, accessSummary } from "@/lib/admin/permissions";
+import {
+  CONTENT_CATEGORY_LABELS,
+  SECTION_LABELS,
+  accessSummary,
+  contentAccessSummary,
+} from "@/lib/admin/permissions";
 import { ADMIN_PANEL_SECTIONS } from "@/lib/admin/types";
 import type { AdminPanelSection } from "@/lib/admin/types";
+import { CONTENT_KEYS } from "@/lib/content/schemas";
 
 import { AdminAlert, AdminButton } from "./admin-ui";
 
 export function AdminAccessControl({
   adminId,
   permissions,
+  contentCollections,
 }: {
   adminId: string;
   permissions: AdminPanelSection[] | null;
+  contentCollections: string[] | null;
 }) {
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [draft, setDraft] = useState<AdminPanelSection[] | null>(permissions);
+  const [draftContent, setDraftContent] = useState<string[] | null>(contentCollections);
   const [pending, setPending] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const wrapperRef = useRef<HTMLDivElement>(null);
@@ -49,6 +58,7 @@ export function AdminAccessControl({
 
   function openPanel() {
     setDraft(permissions);
+    setDraftContent(contentCollections);
     setError(null);
     setOpen(true);
   }
@@ -72,14 +82,36 @@ export function AdminAccessControl({
     setError(null);
   }
 
+  function toggleCategory(category: string) {
+    const current = draftContent ?? [...CONTENT_KEYS];
+    const next = current.includes(category)
+      ? current.filter((value) => value !== category)
+      : [...current, category];
+    if (next.length === 0) {
+      setError("Keep at least one content category.");
+      return;
+    }
+    setDraftContent(next);
+    setError(null);
+  }
+
   async function save() {
+    const sections = draft ?? [...ADMIN_PANEL_SECTIONS];
+    if (
+      sections.includes("content") &&
+      draftContent !== null &&
+      draftContent.length === 0
+    ) {
+      setError("Keep at least one content category.");
+      return;
+    }
     setError(null);
     setPending(true);
     try {
       const response = await fetch(`/api/admin/admins/${adminId}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ permissions: draft }),
+        body: JSON.stringify({ permissions: draft, contentCollections: draftContent }),
       });
       const payload = (await response.json().catch(() => null)) as { error?: string } | null;
       if (!response.ok) {
@@ -93,6 +125,8 @@ export function AdminAccessControl({
     }
   }
 
+  const contentGranted = draft === null || draft.includes("content");
+
   const panelId = `access-panel-${adminId}`;
 
   return (
@@ -100,7 +134,12 @@ export function AdminAccessControl({
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div className="flex flex-col gap-0.5">
           <p className="text-sm font-semibold text-hope-midnight">Access</p>
-          <p className="text-sm text-hope-fog">{accessSummary(permissions)}</p>
+          <p className="text-sm text-hope-fog">
+            {accessSummary(permissions)}
+            {permissions === null || permissions.includes("content")
+              ? ` · Content: ${contentAccessSummary(contentCollections)}`
+              : ""}
+          </p>
         </div>
         <AdminButton
           ref={triggerRef}
@@ -119,9 +158,10 @@ export function AdminAccessControl({
           <AdminButton
             type="button"
             variant="primary"
-            disabled={pending || draft === null}
+            disabled={pending || (draft === null && draftContent === null)}
             onClick={() => {
               setDraft(null);
+              setDraftContent(null);
               setError(null);
             }}
           >
@@ -151,6 +191,37 @@ export function AdminAccessControl({
               );
             })}
           </fieldset>
+
+          {contentGranted ? (
+            <fieldset className="flex flex-col gap-1 rounded-lg bg-hope-midnight/5 p-3">
+              <legend className="mb-1 px-1 text-sm font-semibold text-hope-midnight">
+                Content categories
+              </legend>
+              <p className="px-1 pb-1 text-sm text-hope-fog">
+                Choose which parts of the content editor this admin may open.
+              </p>
+              {CONTENT_KEYS.map((key) => {
+                const checked = draftContent === null || draftContent.includes(key);
+                const id = `content-${adminId}-${key}`;
+                return (
+                  <label
+                    key={key}
+                    htmlFor={id}
+                    className="flex min-h-11 cursor-pointer items-center gap-3 px-1 text-sm text-hope-midnight"
+                  >
+                    <input
+                      id={id}
+                      type="checkbox"
+                      checked={checked}
+                      onChange={() => toggleCategory(key)}
+                      className="size-4 shrink-0 accent-hope-ember"
+                    />
+                    {CONTENT_CATEGORY_LABELS[key] ?? key}
+                  </label>
+                );
+              })}
+            </fieldset>
+          ) : null}
 
           {error ? <AdminAlert tone="error">{error}</AdminAlert> : null}
 

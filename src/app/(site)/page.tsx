@@ -8,7 +8,7 @@ import { BlogCard } from "@/components/blog/blog-card";
 import { TestimonialCard } from "@/components/testimonials/testimonial-card";
 import { Reveal } from "@/components/motion/reveal";
 import { Magnetic } from "@/components/motion/magnetic";
-import { CountryMarquee } from "@/components/countries/country-marquee";
+import { UniversityMarquee } from "@/components/universities/university-marquee";
 import { DestinationsSpotlight } from "@/components/countries/destinations-spotlight";
 import { Hero } from "@/components/sections/hero";
 import { HeroBackdrop } from "@/components/motion/hero-backdrop";
@@ -182,7 +182,7 @@ export default async function Home() {
         />
 
         <div className="relative z-10">
-          <CountryMarquee countries={sortedCountries} />
+          <UniversityMarquee />
         </div>
       </div>
 

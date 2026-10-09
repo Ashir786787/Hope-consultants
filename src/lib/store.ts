@@ -11,7 +11,9 @@ export type DataCollection =
   | "scholarships"
   | "process"
   | "blog"
-  | "site";
+  | "site"
+  | "about"
+  | "team";
 
 export const COLLECTIONS: readonly DataCollection[] = [
   "services",
@@ -21,6 +23,8 @@ export const COLLECTIONS: readonly DataCollection[] = [
   "process",
   "blog",
   "site",
+  "about",
+  "team",
 ];
 
 export function isCollection(value: string): value is DataCollection {
@@ -58,6 +62,10 @@ async function seed(collection: DataCollection): Promise<unknown> {
       return (await import("@/lib/data/blog")).blogPosts;
     case "site":
       return defaultSite;
+    case "about":
+      return (await import("@/lib/data/about")).defaultAbout;
+    case "team":
+      return (await import("@/lib/data/team")).team;
   }
 }
 

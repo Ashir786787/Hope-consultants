@@ -1,6 +1,9 @@
+import { redirect } from "next/navigation";
+
 import { AdminEditor } from "@/components/admin/admin-editor";
+import { firstPermittedHref } from "@/lib/admin/permissions";
 import { requireSection } from "@/lib/admin/require-admin";
-import { SCHEMAS, schemaFor } from "@/lib/content/schemas";
+import { CONTENT_KEYS } from "@/lib/content/schemas";
 import { mongoConfigured } from "@/lib/mongo";
 
 type SearchParams = Promise<Record<string, string | string[] | undefined>>;
@@ -15,15 +18,28 @@ export default async function AdminPage({
 }: {
   searchParams: SearchParams;
 }) {
-  await requireSection("content");
+  const admin = await requireSection("content");
+
+  const contentCollections = admin.contentCollections;
+  const allowedKeys =
+    contentCollections === null || contentCollections === undefined
+      ? [...CONTENT_KEYS]
+      : CONTENT_KEYS.filter((key) => contentCollections.includes(key));
+
+  if (allowedKeys.length === 0) {
+    redirect(firstPermittedHref(admin));
+  }
 
   const requested = firstValue((await searchParams).collection);
-  const collection = schemaFor(requested ?? "")?.key ?? SCHEMAS[0].key;
+  const collection = allowedKeys.includes(requested ?? "")
+    ? (requested ?? "")
+    : allowedKeys[0];
 
   return (
     <AdminEditor
       collection={collection}
       storage={mongoConfigured() ? "mongodb" : "json-files"}
+      allowedCollections={allowedKeys}
     />
   );
 }

@@ -21,8 +21,14 @@ export function Preloader() {
     const arc = arcRef.current;
     const plane = planeRef.current;
     if (!root || !mark || !arc || !plane) return;
+
+    const finishIntro = () => {
+      window.dispatchEvent(new Event("hope:intro-complete"));
+      setHidden(true);
+    };
+
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      gsap.delayedCall(0.001, () => setHidden(true));
+      gsap.delayedCall(0.001, finishIntro);
       return;
     }
     let repeat = false;
@@ -32,7 +38,7 @@ export function Preloader() {
       repeat = false;
     }
     if (repeat) {
-      gsap.delayedCall(0.001, () => setHidden(true));
+      gsap.delayedCall(0.001, finishIntro);
       return;
     }
 
@@ -59,7 +65,7 @@ export function Preloader() {
       defaults: { ease: EASE_OUT },
       onComplete: () => {
         sessionStorage.setItem(SESSION_KEY, "1");
-        setHidden(true);
+        finishIntro();
       },
     });
 

@@ -9,6 +9,7 @@ import {
   ClipboardList,
   FileText,
   Globe2,
+  Info,
   Layers3,
   LayoutDashboard,
   ListTree,
@@ -34,6 +35,8 @@ const COLLECTION_ICONS: Record<string, typeof Layers3> = {
   process: ListTree,
   blog: Newspaper,
   site: Settings2,
+  about: Info,
+  team: Users,
 };
 
 const NAV_ITEMS = [
@@ -51,18 +54,21 @@ export function AdminSidebar({
   newLeads,
   newOnboarding,
   allowedSections,
+  allowedCollections,
 }: {
   name: string;
   email: string;
   newLeads: number;
   newOnboarding: number;
   allowedSections: AdminPanelSection[];
+  allowedCollections: string[] | null;
 }) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const router = useRouter();
+  const onContentPage = pathname.startsWith("/admin/content");
   const [pending, setPending] = useState(false);
-  const [collectionsOpen, setCollectionsOpen] = useState(false);
+  const [collectionsOpen, setCollectionsOpen] = useState(onContentPage);
 
   const allowed = new Set(allowedSections);
   const visibleItems = NAV_ITEMS.filter((item) => {
@@ -70,11 +76,19 @@ export function AdminSidebar({
     return !section || allowed.has(section);
   });
 
-  const onContentPage = pathname.startsWith("/admin/content");
+  const visibleCollections =
+    allowedCollections === null
+      ? SCHEMAS
+      : SCHEMAS.filter((entry) => allowedCollections.includes(entry.key));
+
+  const defaultCollection =
+    allowedCollections === null
+      ? SCHEMAS[0].key
+      : allowedCollections[0] ?? visibleCollections[0]?.key ?? "";
   const activeCollection = onContentPage
-    ? (searchParams.get("collection") ?? SCHEMAS[0].key)
+    ? (searchParams.get("collection") ?? defaultCollection)
     : null;
-  const showCollections = collectionsOpen || onContentPage;
+  const showCollections = collectionsOpen;
 
   function isActive(href: string): boolean {
     return href === "/admin" ? pathname === href : pathname.startsWith(href);
@@ -92,7 +106,7 @@ export function AdminSidebar({
   }
 
   return (
-    <aside className="flex w-full shrink-0 flex-col gap-6 bg-[linear-gradient(180deg,rgb(var(--hope-midnight-rgb)),rgb(var(--hope-obsidian-rgb)/0.55))] px-4 py-6 text-hope-white lg:fixed lg:inset-y-0 lg:left-0 lg:w-64 lg:px-5">
+    <aside className="flex w-full shrink-0 flex-col gap-6 bg-[linear-gradient(180deg,rgb(var(--hope-midnight-rgb)),rgb(var(--hope-obsidian-rgb)/0.55))] px-4 py-6 text-hope-white lg:fixed lg:inset-y-0 lg:left-0 lg:w-64 lg:min-h-0 lg:px-5 lg:overflow-hidden">
       <div className="flex flex-col gap-1 px-3">
         <p className="text-sm font-bold">Hope Consultants</p>
         <p className="text-xs text-hope-white/70">Admin panel</p>
@@ -100,7 +114,10 @@ export function AdminSidebar({
 
       <nav
         aria-label="Admin"
-        className="flex gap-2 overflow-x-auto lg:flex-col lg:gap-1 lg:overflow-x-visible"
+        className={cn(
+          "flex gap-2 overflow-x-auto lg:flex-col lg:gap-1 lg:overflow-x-visible",
+          showCollections && "lg:min-h-0 lg:flex-1 lg:overflow-y-auto lg:overscroll-contain",
+        )}
       >
         {visibleItems.map((item) => {
           const active = isActive(item.href);
@@ -194,7 +211,7 @@ export function AdminSidebar({
                   id="admin-content-collections"
                   className="mt-1 flex flex-col gap-0.5 lg:pb-1"
                 >
-                  {SCHEMAS.map((entry) => {
+                  {visibleCollections.map((entry) => {
                     const EntryIcon = COLLECTION_ICONS[entry.key];
                     const selected = activeCollection === entry.key;
                     return (

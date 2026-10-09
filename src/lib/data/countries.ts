@@ -7,7 +7,6 @@ export const countries: CountryDestination[] = [
     flag: "🇮🇹",
     position: 1,
     group: "one",
-    costBand: "low",
     financialInsight:
       "Public-university tuition can be relatively low and is often income-based; regional scholarships such as DSU/ER.GO/LazioDiSCo are important. Visa financial proof must be checked against current consular rules.",
     intro:
@@ -107,7 +106,6 @@ export const countries: CountryDestination[] = [
     flag: "🇩🇪",
     position: 2,
     group: "one",
-    costBand: "low",
     financialInsight:
       "Many public universities have no general tuition fee for consecutive programmes, but semester contributions apply. Student visas generally require proof of funds; blocked accounts are a common route.",
     intro:
@@ -188,7 +186,6 @@ export const countries: CountryDestination[] = [
     flag: "🇸🇪",
     position: 3,
     group: "one",
-    costBand: "high",
     financialInsight:
       "Tuition varies by programme; non-EU students pay tuition at Swedish universities, and study costs are among the highest in our list to prove.",
     intro:
@@ -266,7 +263,6 @@ export const countries: CountryDestination[] = [
     flag: "🇫🇮",
     position: 4,
     group: "one",
-    costBand: "high",
     financialInsight:
       "Tuition applies to non-EU students and most universities award university-specific tuition waivers or scholarships; Finland does not have a general government scholarship for new international students.",
     intro:
@@ -344,7 +340,6 @@ export const countries: CountryDestination[] = [
     flag: "🇹🇷",
     position: 5,
     group: "one",
-    costBand: "low",
     financialInsight:
       "Türkiye Scholarships can cover tuition, accommodation, health insurance, language course, airfare and monthly stipend.",
     intro:
@@ -422,7 +417,6 @@ export const countries: CountryDestination[] = [
     flag: "🇵🇹",
     position: 6,
     group: "one",
-    costBand: "medium",
     financialInsight:
       "Public-university tuition varies; international tuition is programme and institution specific. Proof of financial means and accommodation are important for residence and visa.",
     intro:
@@ -491,7 +485,6 @@ export const countries: CountryDestination[] = [
     flag: "🇭🇺",
     position: 7,
     group: "one",
-    costBand: "medium",
     financialInsight:
       "Tuition varies significantly by programme; Stipendium Hungaricum can provide tuition-free study plus stipend and accommodation support.",
     intro:
@@ -568,7 +561,6 @@ export const countries: CountryDestination[] = [
     flag: "🇧🇪",
     position: 8,
     group: "two",
-    costBand: "medium",
     financialInsight:
       "Tuition and visa financial requirements vary by community and institution. French-speaking and Flemish systems should be treated separately.",
     intro:
@@ -638,7 +630,6 @@ export const countries: CountryDestination[] = [
     flag: "🇳🇱",
     position: 9,
     group: "two",
-    costBand: "high",
     financialInsight:
       "Non-EU tuition varies widely; university-specific financial proof and immigration procedures apply.",
     intro:
@@ -708,7 +699,6 @@ export const countries: CountryDestination[] = [
     flag: "🇱🇹",
     position: 10,
     group: "two",
-    costBand: "low",
     financialInsight:
       "Tuition varies by institution and programme; non-EU students generally need a Temporary Residence Permit for full-time study.",
     intro:
@@ -785,7 +775,6 @@ export const countries: CountryDestination[] = [
     flag: "🇨🇾",
     position: 11,
     group: "two",
-    costBand: "medium",
     financialInsight:
       "For the Republic of Cyprus, student visa and residence financial documentation and bank history are important; tuition is institution and programme specific.",
     intro:
@@ -853,7 +842,6 @@ export const countries: CountryDestination[] = [
     flag: "🇲🇹",
     position: 12,
     group: "two",
-    costBand: "high",
     financialInsight:
       "English-language programmes are widely available; non-EU students need the appropriate visa and residence route.",
     intro:
@@ -919,7 +907,6 @@ export const countries: CountryDestination[] = [
     flag: "🇯🇵",
     position: 13,
     group: "two",
-    costBand: "medium",
     financialInsight:
       "Financial capacity is assessed for the Certificate of Eligibility (COE) and visa; there is no single nationwide fixed bank-balance amount applicable to every student.",
     intro:
@@ -997,7 +984,6 @@ export const countries: CountryDestination[] = [
     flag: "🇨🇳",
     position: 14,
     group: "two",
-    costBand: "low",
     financialInsight:
       "Chinese Government Scholarships can provide substantial or full funding depending on programme and award category.",
     intro:

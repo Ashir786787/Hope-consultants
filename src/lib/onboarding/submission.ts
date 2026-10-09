@@ -23,7 +23,19 @@ const DRAFTS = "onboardingDrafts";
 
 const DRAFT_TTL_SECONDS = 60 * 60 * 24 * 30;
 
+let indexesPromise: Promise<void> | null = null;
+
 export async function ensureOnboardingIndexes(): Promise<void> {
+  if (!indexesPromise) {
+    indexesPromise = buildIndexes().catch((error) => {
+      indexesPromise = null;
+      throw error;
+    });
+  }
+  return indexesPromise;
+}
+
+async function buildIndexes(): Promise<void> {
   await mongoEnsureIndex(SUBMISSIONS, { submittedAt: -1 });
   await mongoEnsureIndex(SUBMISSIONS, { status: 1 });
   await mongoEnsureIndex(DRAFTS, { updatedAt: -1 });

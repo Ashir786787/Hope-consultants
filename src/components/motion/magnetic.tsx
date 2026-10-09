@@ -28,6 +28,7 @@ export function Magnetic({ children, className, strength = 12, range = 80 }: Mag
       const xTo = gsap.quickTo(el, "x", { duration: DURATIONS.base, ease: EASE_OUT });
       const yTo = gsap.quickTo(el, "y", { duration: DURATIONS.base, ease: EASE_OUT });
       const onPointerMove = (event: PointerEvent) => {
+        gsap.set(el, { willChange: "transform" });
         const rect = el.getBoundingClientRect();
         const dx = event.clientX - (rect.left + rect.width / 2);
         const dy = event.clientY - (rect.top + rect.height / 2);
@@ -44,6 +45,7 @@ export function Magnetic({ children, className, strength = 12, range = 80 }: Mag
       const onPointerLeave = () => {
         xTo(0);
         yTo(0);
+        gsap.set(el, { willChange: "auto" });
       };
       el.addEventListener("pointermove", onPointerMove);
       el.addEventListener("pointerleave", onPointerLeave);
@@ -56,7 +58,7 @@ export function Magnetic({ children, className, strength = 12, range = 80 }: Mag
   );
 
   return (
-    <div ref={ref} className={cn("inline-block will-change-transform", className)}>
+    <div ref={ref} className={cn("inline-block", className)}>
       {children}
     </div>
   );

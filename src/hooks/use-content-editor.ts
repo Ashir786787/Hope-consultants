@@ -32,7 +32,7 @@ function fingerprint(value: FieldMap): string {
   return JSON.stringify(Object.keys(value).sort().map((key) => [key, value[key]]));
 }
 
-export function useContentEditor(initialCollection: string) {
+export function useContentEditor(initialCollection: string, allowedKeys?: string[]) {
   const router = useRouter();
   const [collection, setCollection] = useState<string>(initialCollection);
   const [counts, setCounts] = useState<Record<string, number | null>>({});
@@ -77,7 +77,11 @@ export function useContentEditor(initialCollection: string) {
 
   useEffect(() => {
     let cancelled = false;
-    const keys = primed.current ? [collection] : SCHEMAS.map((item) => item.key);
+    const keys = primed.current
+      ? [collection]
+      : allowedKeys && allowedKeys.length > 0
+        ? allowedKeys
+        : SCHEMAS.map((item) => item.key);
 
     async function load() {
       const results = await Promise.all(
@@ -110,7 +114,7 @@ export function useContentEditor(initialCollection: string) {
     return () => {
       cancelled = true;
     };
-  }, [collection, applyRecords]);
+  }, [collection, applyRecords, allowedKeys]);
 
   const dirty = useMemo(
     () => fingerprint(form) !== fingerprint(baseline),

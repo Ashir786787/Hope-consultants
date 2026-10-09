@@ -3,11 +3,13 @@
 import {
   ChartColumn,
   Globe2,
+  Info,
   Layers3,
   ListTree,
   Newspaper,
   Quote,
   Settings2,
+  Users,
 } from "lucide-react";
 
 import { SCHEMAS } from "@/lib/content/schemas";
@@ -21,21 +23,26 @@ const ICONS: Record<string, typeof Layers3> = {
   process: ListTree,
   blog: Newspaper,
   site: Settings2,
+  about: Info,
+  team: Users,
 };
 
 export function AdminCollectionNav({
   active,
   counts,
   onSelect,
+  only,
 }: {
   active: string;
   counts: Record<string, number | null>;
   onSelect: (key: string) => void;
+  only?: string[];
 }) {
+  const items = only ? SCHEMAS.filter((item) => only.includes(item.key)) : SCHEMAS;
   return (
     <nav aria-label="Content collections" className="-mx-4 overflow-x-auto px-4 sm:mx-0 sm:px-0">
       <ul className="flex w-max gap-2 pb-1 sm:w-full sm:flex-wrap sm:pb-0">
-        {SCHEMAS.map((item) => {
+        {items.map((item) => {
           const Icon = ICONS[item.key];
           const selected = active === item.key;
           const count = counts[item.key];

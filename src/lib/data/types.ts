@@ -16,8 +16,6 @@ export type CountrySlug =
 
 export type CountryGroup = "one" | "two";
 
-export type CostBand = "low" | "medium" | "high";
-
 export interface CountryTable {
   header: [string, string];
   rows: Array<[string, string]>;
@@ -36,7 +34,7 @@ export interface CountryDestination {
   flag: string;
   position: number;
   group: CountryGroup;
-  costBand: CostBand;
+  admissionOpen?: boolean;
   financialInsight: string;
   intro: string;
   sections: CountrySection[];
@@ -67,4 +65,5 @@ export interface TeamMember {
   quote: string;
   bioShort: string;
   bioLong: string;
+  image?: string;
 }

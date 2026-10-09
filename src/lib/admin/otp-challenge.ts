@@ -39,7 +39,19 @@ export async function verifyOtpCode(code: string, codeHash: string): Promise<boo
   }
 }
 
+let indexesPromise: Promise<void> | null = null;
+
 export async function ensureOtpIndexes(): Promise<void> {
+  if (!indexesPromise) {
+    indexesPromise = buildIndexes().catch((error) => {
+      indexesPromise = null;
+      throw error;
+    });
+  }
+  return indexesPromise;
+}
+
+async function buildIndexes(): Promise<void> {
   await mongoEnsureIndex(
     COLLECTION,
     { adminUserId: 1, purpose: 1 },

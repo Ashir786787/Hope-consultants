@@ -2,6 +2,7 @@ import Link from "next/link";
 
 import { Logo } from "@/components/ui/logo";
 import { PlaneMotif } from "@/components/motion/plane-motif";
+import { FacebookIcon, InstagramIcon, TikTokIcon } from "@/components/ui/social-icons";
 import { getSite } from "@/lib/site";
 
 const EXPLORE_LINKS = [
@@ -58,6 +59,7 @@ export async function Footer() {
   const site = await getSite();
   const hasContact =
     Boolean(site.email.trim()) || Boolean(site.phone.trim()) || Boolean(site.whatsapp.trim());
+  const tiktok = (site.tiktok ?? "").trim();
 
   return (
     <footer className="relative isolate overflow-hidden bg-hope-midnight text-hope-white">
@@ -117,11 +119,62 @@ export async function Footer() {
             </ul>
           </div>
         </div>
-        <div className="mt-14 flex flex-col gap-2 border-t border-hope-white/10 pt-6 sm:flex-row sm:items-center sm:justify-between">
+        <div className="mt-14 flex flex-col gap-4 border-t border-hope-white/10 pt-6 sm:flex-row sm:items-center sm:justify-between">
           <p className="text-sm leading-6 text-hope-white/70">
             © {new Date().getFullYear()} Hope Consultants. Study abroad guidance for Pakistani
             students.
           </p>
+          <nav aria-label="Social media">
+            <ul className="flex items-center gap-2">
+              <li>
+                <a
+                  href="https://www.instagram.com/hopeconsultants.pk"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Instagram"
+                  className="flex size-11 items-center justify-center rounded-full border border-hope-white/15 text-hope-white/70 transition-colors hover:border-hope-ember/50 hover:text-hope-ember"
+                >
+                  <InstagramIcon className="size-5" />
+                </a>
+              </li>
+              <li>
+                <a
+                  href="https://www.facebook.com/profile.php?id=61594400921050"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Facebook"
+                  className="flex size-11 items-center justify-center rounded-full border border-hope-white/15 text-hope-white/70 transition-colors hover:border-hope-ember/50 hover:text-hope-ember"
+                >
+                  <FacebookIcon className="size-5" />
+                </a>
+              </li>
+              {tiktok ? (
+                <li>
+                  <a
+                    href={tiktok}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label="TikTok"
+                    className="flex size-11 items-center justify-center rounded-full border border-hope-white/15 text-hope-white/70 transition-colors hover:border-hope-ember/50 hover:text-hope-ember"
+                  >
+                    <TikTokIcon className="size-5" />
+                  </a>
+                </li>
+              ) : (
+                <li>
+                  <button
+                    type="button"
+                    disabled
+                    aria-disabled="true"
+                    aria-label="TikTok (coming soon)"
+                    className="flex size-11 cursor-not-allowed items-center justify-center rounded-full border border-hope-white/15 text-hope-white/50 transition-colors disabled:text-hope-white/50 disabled:hover:border-hope-white/15 disabled:hover:text-hope-white/50"
+                  >
+                    <TikTokIcon className="size-5" />
+                  </button>
+                </li>
+              )}
+            </ul>
+          </nav>
         </div>
       </div>
     </footer>

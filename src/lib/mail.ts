@@ -1,4 +1,4 @@
-import nodemailer from "nodemailer";
+import nodemailer, { type Transporter } from "nodemailer";
 
 export interface ContactMail {
   to: string;
@@ -17,15 +17,23 @@ export function isMailConfigured(): boolean {
   );
 }
 
+let transporter: Transporter | null = null;
+
+function getTransporter(): Transporter {
+  if (!transporter) {
+    transporter = nodemailer.createTransport({
+      host: process.env.SMTP_HOST ?? "",
+      port: Number(process.env.SMTP_PORT ?? 587),
+      secure: process.env.SMTP_SECURE === "true",
+      auth: {
+        user: process.env.SMTP_USER ?? "",
+        pass: process.env.SMTP_PASS ?? "",
+      },
+    });
+  }
+  return transporter;
+}
+
 export async function sendContactMail(mail: ContactMail): Promise<void> {
-  const transporter = nodemailer.createTransport({
-    host: process.env.SMTP_HOST ?? "",
-    port: Number(process.env.SMTP_PORT ?? 587),
-    secure: process.env.SMTP_SECURE === "true",
-    auth: {
-      user: process.env.SMTP_USER ?? "",
-      pass: process.env.SMTP_PASS ?? "",
-    },
-  });
-  await transporter.sendMail(mail);
+  await getTransporter().sendMail(mail);
 }

@@ -4,6 +4,7 @@ export const team: TeamMember[] = [
   {
     name: "Abdul Hanan Raza",
     role: "Founder",
+    image: "/team/abdul-hanan-raza.jpg",
     quote:
       "Our job is to tell you the truth about study abroad — and to stay with you until you actually arrive.",
     bioShort:
@@ -14,6 +15,7 @@ export const team: TeamMember[] = [
   {
     name: "Gloria Marchitelli",
     role: "Head of Research and Processing",
+    image: "/team/gloria-marchitelli.jpg",
     quote:
       "Every university, every scholarship, every visa rule is checked against its official source before it reaches a student.",
     bioShort:
@@ -24,6 +26,7 @@ export const team: TeamMember[] = [
   {
     name: "Moaz Farooq",
     role: "Head of Marketing",
+    image: "/team/moaz-farooq.jpg",
     quote:
       "We would rather under-promise and deliver, than over-promise and disappear.",
     bioShort:

@@ -19,6 +19,7 @@ export interface AdminUser {
   hasCompletedFirstLogin: boolean;
   isAccessRequest: boolean;
   permissions: AdminPanelSection[] | null;
+  contentCollections: string[] | null;
   createdAt: string;
   lastLoginAt: string | null;
   firstLoginVerifiedAt: string | null;

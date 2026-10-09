@@ -146,11 +146,17 @@ export default async function CountryPage({ params }: CountryPageProps) {
                 <h1 className="font-display text-4xl font-semibold leading-tight text-hope-white sm:text-5xl">
                   {country.name}
                 </h1>
-                <Badge
-                  className="w-fit border-[rgb(var(--hope-ember-rgb)/0.4)] bg-hope-ember text-sm text-hope-midnight"
-                >
-                  Open now
-                </Badge>
+                {country.admissionOpen === undefined ? null : (
+                  <Badge
+                    className={
+                      country.admissionOpen
+                        ? "w-fit border-[rgb(var(--hope-ember-rgb)/0.4)] bg-hope-ember text-sm text-hope-midnight"
+                        : "w-fit border-[rgb(255_255_255/0.3)] bg-transparent text-sm text-hope-white/70"
+                    }
+                  >
+                    {country.admissionOpen ? "Admissions open" : "Admissions closed"}
+                  </Badge>
+                )}
               </div>
             </div>
           </Reveal>
@@ -210,7 +216,7 @@ export default async function CountryPage({ params }: CountryPageProps) {
         </section>
       ) : null}
 
-      {country.sections.map((section, index) => (
+      {(country.sections ?? []).map((section, index) => (
         <section key={section.title} className="border-b border-border bg-background">
           <div className="mx-auto flex w-full max-w-6xl flex-col gap-12 px-4 py-14 sm:px-6">
             <SectionBlock section={section} index={index} />

@@ -17,6 +17,8 @@ export interface FieldDef {
   placeholder?: string;
   options?: string[];
   help?: string;
+  /** Optional heading that groups related fields in the edit form. */
+  group?: string;
 }
 
 export interface CollectionSchema {
@@ -59,15 +61,13 @@ export const SCHEMAS: readonly CollectionSchema[] = [
         help: "Group decides the order the country appears in listings.",
       },
       {
-        key: "costBand",
-        label: "Cost band",
-        kind: "select",
-        options: ["low", "medium", "high"],
-        help: "Used by the cost filter on /countries.",
+        key: "admissionOpen",
+        label: "Admissions open",
+        kind: "boolean",
+        help: "Shown as the admission badge on /countries cards and the country page.",
       },
       { key: "financialInsight", label: "Key financial insight", kind: "textarea" },
       { key: "intro", label: "Intro", kind: "textarea", required: true },
-      { key: "sections", label: "Sections (advanced JSON)", kind: "json", help: "Optional. Leave blank unless you know the data shape." },
     ],
   },
   {
@@ -146,16 +146,57 @@ export const SCHEMAS: readonly CollectionSchema[] = [
     titleKey: "email",
     singleton: true,
     fields: [
-      { key: "email", label: "Contact email", kind: "text" },
-      { key: "phone", label: "Phone (displayed)", kind: "text" },
-      { key: "phoneHref", label: "Phone (for tel: links)", kind: "text" },
-      { key: "whatsapp", label: "WhatsApp number", kind: "text" },
+      { key: "email", label: "Contact email", kind: "text", group: "Contact details" },
+      { key: "phone", label: "Phone (displayed)", kind: "text", group: "Contact details" },
+      { key: "phoneHref", label: "Phone (for tel: links)", kind: "text", group: "Contact details" },
+      { key: "whatsapp", label: "WhatsApp number", kind: "text", group: "Contact details" },
+      { key: "tiktok", label: "TikTok profile URL", kind: "text", group: "Social media", help: "The footer TikTok button links here once a URL is saved." },
+    ],
+  },
+  {
+    key: "about",
+    label: "About page",
+    singular: "About page",
+    titleKey: "heroTitle",
+    singleton: true,
+    fields: [
+      { key: "heroEyebrow", label: "Hero eyebrow", kind: "text", group: "Hero" },
+      { key: "heroTitle", label: "Hero heading", kind: "text", group: "Hero" },
+      { key: "heroLede", label: "Hero paragraph", kind: "textarea", group: "Hero" },
+      { key: "story", label: "Our story", kind: "textarea", group: "Story" },
+      { key: "mission", label: "Our mission", kind: "textarea", group: "Story" },
+      { key: "journey", label: "Our journey", kind: "textarea", group: "Story" },
+      { key: "parentsTitle", label: "Parents note heading", kind: "text", group: "Note for parents" },
+      { key: "parentsBody", label: "Parents note", kind: "textarea", group: "Note for parents" },
+      { key: "ctaTitle", label: "Final CTA heading", kind: "text", group: "Closing call to action" },
+      { key: "ctaBody", label: "Final CTA message", kind: "textarea", group: "Closing call to action" },
+      { key: "ctaLabel", label: "CTA button label", kind: "text", group: "Closing call to action" },
+    ],
+  },
+  {
+    key: "team",
+    label: "Team members",
+    singular: "Team member",
+    titleKey: "name",
+    fields: [
+      { key: "name", label: "Name", kind: "text", required: true, group: "Identity" },
+      { key: "role", label: "Role", kind: "text", group: "Identity" },
+      { key: "image", label: "Photo", kind: "image", group: "Identity", help: "Max ~1.5 MB, JPG/PNG/WebP. Upload a file, or paste a /public path like /team/your-file.jpg." },
+      { key: "quote", label: "Quote", kind: "textarea", group: "Bio" },
+      { key: "bioShort", label: "Short bio", kind: "textarea", group: "Bio" },
+      { key: "bioLong", label: "Long bio", kind: "textarea", group: "Bio", help: "The fuller profile shown in the team list." },
     ],
   },
 ];
 
 export function schemaFor(key: string): CollectionSchema | undefined {
   return SCHEMAS.find((schema) => schema.key === key);
+}
+
+export const CONTENT_KEYS: readonly string[] = SCHEMAS.map((schema) => schema.key);
+
+export function isContentKey(value: string): boolean {
+  return CONTENT_KEYS.includes(value);
 }
 
 export function defaultValue(field: FieldDef): unknown {

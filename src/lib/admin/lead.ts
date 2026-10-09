@@ -12,7 +12,19 @@ import type { Lead, LeadStatus } from "@/lib/admin/types";
 
 const COLLECTION = "leads";
 
+let indexesPromise: Promise<void> | null = null;
+
 export async function ensureLeadIndexes(): Promise<void> {
+  if (!indexesPromise) {
+    indexesPromise = buildIndexes().catch((error) => {
+      indexesPromise = null;
+      throw error;
+    });
+  }
+  return indexesPromise;
+}
+
+async function buildIndexes(): Promise<void> {
   await mongoEnsureIndex(COLLECTION, { submittedAt: -1 });
   await mongoEnsureIndex(COLLECTION, { status: 1 });
 }

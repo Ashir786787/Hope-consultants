@@ -3,6 +3,7 @@ export interface SiteFields {
   phone: string;
   phoneHref: string;
   whatsapp: string;
+  tiktok: string;
 }
 
 export const defaultSite: SiteFields = {
@@ -10,6 +11,7 @@ export const defaultSite: SiteFields = {
   phone: "",
   phoneHref: "",
   whatsapp: "",
+  tiktok: "",
 };
 
 export async function getSite(): Promise<SiteFields> {

@@ -1,5 +1,6 @@
 "use client";
 
+import { useMemo } from "react";
 import type { RefObject } from "react";
 import { Loader2, RotateCcw, Save } from "lucide-react";
 
@@ -43,6 +44,20 @@ export function AdminRecordForm({
   onDiscard: () => void;
   onToast: (text: string) => void;
 }) {
+  const grouped = useMemo(() => {
+    const sections: { title: string; fields: FieldDef[] }[] = [];
+    for (const field of schema.fields) {
+      const title = field.group ?? "";
+      const current = sections[sections.length - 1];
+      if (!current || current.title !== title) {
+        sections.push({ title, fields: [field] });
+      } else {
+        current.fields.push(field);
+      }
+    }
+    return sections;
+  }, [schema]);
+
   return (
     <div className="flex flex-col gap-5">
       <div className="rounded-2xl border border-hope-midnight/10 bg-hope-white p-5 shadow-[0_1px_2px_rgb(var(--hope-midnight-rgb)/0.06),0_24px_48px_-32px_rgb(var(--hope-midnight-rgb)/0.2)] sm:p-6">
@@ -63,83 +78,97 @@ export function AdminRecordForm({
           )}
         </div>
 
-        <div className="mt-6 grid grid-cols-1 gap-x-5 gap-y-5 md:grid-cols-2">
-          {schema.fields.map((field) => {
-            const value = form[field.key];
-            const error = errors[field.key];
-            const note = fieldFootnote(field, value);
-            const helpId = `help-${field.key}`;
-            const errorId = `error-${field.key}`;
-            const noteId = `note-${field.key}`;
-            const describedBy =
-              [error ? errorId : null, field.help ? helpId : null, note ? noteId : null]
-                .filter(Boolean)
-                .join(" ") || undefined;
+        <div className="mt-6 flex flex-col gap-7">
+          {grouped.map((section, sectionIndex) => (
+            <div key={`${sectionIndex}-${section.title}`} className="flex flex-col gap-4">
+              {section.title ? (
+                <div className="flex items-center gap-3">
+                  <h3 className="font-display text-sm font-semibold tracking-[0.14em] text-hope-midnight uppercase">
+                    {section.title}
+                  </h3>
+                  <span aria-hidden="true" className="h-px flex-1 bg-hope-midnight/10" />
+                </div>
+              ) : null}
+              <div className="grid grid-cols-1 gap-x-5 gap-y-5 md:grid-cols-2">
+                {section.fields.map((field) => {
+                  const value = form[field.key];
+                  const error = errors[field.key];
+                  const note = fieldFootnote(field, value);
+                  const helpId = `help-${field.key}`;
+                  const errorId = `error-${field.key}`;
+                  const noteId = `note-${field.key}`;
+                  const describedBy =
+                    [error ? errorId : null, field.help ? helpId : null, note ? noteId : null]
+                      .filter(Boolean)
+                      .join(" ") || undefined;
 
-            return (
-              <div
-                key={field.key}
-                className={`flex flex-col gap-2 ${WIDE.has(field.kind) ? "md:col-span-2" : ""}`}
-              >
-                <label htmlFor={`field-${field.key}`} className={adminLabelClass()}>
-                  {field.label}
-                  {field.required ? (
-                    <>
-                      <span aria-hidden="true" className="ml-0.5">
-                        *
-                      </span>
-                      <span className="sr-only"> (required)</span>
-                    </>
-                  ) : null}
-                </label>
+                  return (
+                    <div
+                      key={field.key}
+                      className={`flex flex-col gap-2 ${WIDE.has(field.kind) ? "md:col-span-2" : ""}`}
+                    >
+                      <label htmlFor={`field-${field.key}`} className={adminLabelClass()}>
+                        {field.label}
+                        {field.required ? (
+                          <>
+                            <span aria-hidden="true" className="ml-0.5">
+                              *
+                            </span>
+                            <span className="sr-only"> (required)</span>
+                          </>
+                        ) : null}
+                      </label>
 
-                {field.kind === "image" ? (
-                  <AdminImageField
-                    id={`field-${field.key}`}
-                    value={typeof value === "string" ? value : ""}
-                    onPick={(file) => onPickImage(field, file)}
-                    onChange={(next) => onField(field, next)}
-                    onClear={() => onField(field, "")}
-                    onError={(message) => onToast(message)}
-                  />
-                ) : field.kind === "boolean" ? (
-                  <AdminSwitch
-                    id={`field-${field.key}`}
-                    checked={Boolean(value)}
-                    label={field.help ?? "Enabled"}
-                    onChange={(next) => onField(field, next)}
-                  />
-                ) : (
-                  <AdminFieldInput
-                    field={field}
-                    value={value}
-                    error={error}
-                    describedBy={describedBy}
-                    onChange={(next) => onField(field, next)}
-                  />
-                )}
+                      {field.kind === "image" ? (
+                        <AdminImageField
+                          id={`field-${field.key}`}
+                          value={typeof value === "string" ? value : ""}
+                          onPick={(file) => onPickImage(field, file)}
+                          onChange={(next) => onField(field, next)}
+                          onClear={() => onField(field, "")}
+                          onError={(message) => onToast(message)}
+                        />
+                      ) : field.kind === "boolean" ? (
+                        <AdminSwitch
+                          id={`field-${field.key}`}
+                          checked={Boolean(value)}
+                          label={field.help ?? "Enabled"}
+                          onChange={(next) => onField(field, next)}
+                        />
+                      ) : (
+                        <AdminFieldInput
+                          field={field}
+                          value={value}
+                          error={error}
+                          describedBy={describedBy}
+                          onChange={(next) => onField(field, next)}
+                        />
+                      )}
 
-                {error ? (
-                  <p id={errorId} role="alert" className="text-sm font-semibold text-hope-midnight">
-                    <span aria-hidden="true" className="mr-1.5">
-                      !
-                    </span>
-                    {error}
-                  </p>
-                ) : null}
-                {field.help && field.kind !== "boolean" ? (
-                  <p id={helpId} className={adminHelpClass()}>
-                    {field.help}
-                  </p>
-                ) : null}
-                {note ? (
-                  <p id={noteId} className="text-xs text-hope-fog tabular-nums">
-                    {note}
-                  </p>
-                ) : null}
+                      {error ? (
+                        <p id={errorId} role="alert" className="text-sm font-semibold text-hope-midnight">
+                          <span aria-hidden="true" className="mr-1.5">
+                            !
+                          </span>
+                          {error}
+                        </p>
+                      ) : null}
+                      {field.help && field.kind !== "boolean" ? (
+                        <p id={helpId} className={adminHelpClass()}>
+                          {field.help}
+                        </p>
+                      ) : null}
+                      {note ? (
+                        <p id={noteId} className="text-xs text-hope-fog tabular-nums">
+                          {note}
+                        </p>
+                      ) : null}
+                    </div>
+                  );
+                })}
               </div>
-            );
-          })}
+            </div>
+          ))}
         </div>
       </div>
 

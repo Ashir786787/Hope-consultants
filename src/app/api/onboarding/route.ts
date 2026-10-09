@@ -79,7 +79,7 @@ export async function POST(request: Request) {
   }
 
   if (isMailConfigured()) {
-    await sendContactMail({
+    sendContactMail({
       to: process.env.CONTACT_TO ?? "",
       from: process.env.CONTACT_FROM ?? process.env.SMTP_USER ?? FROM_FALLBACK,
       replyTo: parsed.data.personal.email,
@@ -88,7 +88,7 @@ export async function POST(request: Request) {
     }).catch(() => null);
   }
 
-  await sendOnboardingConfirmation(parsed.data.personal.email).catch(() => null);
+  sendOnboardingConfirmation(parsed.data.personal.email).catch(() => null);
 
   return NextResponse.json(
     { ok: true },

@@ -16,7 +16,7 @@ export const legalPages: LegalPage[] = [
   {
     slug: "privacy",
     title: "Privacy Policy",
-    lastUpdated: "[Date]",
+    lastUpdated: "9 October 2026",
     sections: [
       {
         heading: "Who we are",
@@ -40,7 +40,7 @@ export const legalPages: LegalPage[] = [
       },
       {
         heading: "Your rights",
-        body: "You have the right to access, correct, delete or restrict our use of your personal information, and to withdraw consent at any time. To exercise any of these rights, contact us at [Official Email].",
+        body: "You have the right to access, correct, delete or restrict our use of your personal information, and to withdraw consent at any time. To exercise any of these rights, contact us at hopeconsultants.pk@gmail.com.",
       },
       {
         heading: "Security",
@@ -52,14 +52,14 @@ export const legalPages: LegalPage[] = [
       },
       {
         heading: "Contact",
-        body: "If you have any questions about this Privacy Policy, contact us at [Official Email].",
+        body: "If you have any questions about this Privacy Policy, contact us at hopeconsultants.pk@gmail.com.",
       },
     ],
   },
   {
     slug: "terms",
     title: "Terms of Service",
-    lastUpdated: "[Date]",
+    lastUpdated: "9 October 2026",
     sections: [
       {
         heading: "Agreement",
@@ -103,14 +103,14 @@ export const legalPages: LegalPage[] = [
       },
       {
         heading: "Contact",
-        body: "If you have any questions about these Terms of Service, contact us at [Official Email].",
+        body: "If you have any questions about these Terms of Service, contact us at hopeconsultants.pk@gmail.com.",
       },
     ],
   },
   {
     slug: "refunds",
     title: "Refund & Fee Policy",
-    lastUpdated: "[Date]",
+    lastUpdated: "9 October 2026",
     sections: [
       {
         heading: "Our fee principle",
@@ -134,7 +134,7 @@ export const legalPages: LegalPage[] = [
       },
       {
         heading: "How to request a refund",
-        body: "Send your request in writing to [Official Email], including your name, the service paid for, the date of payment, and the reason for the request. We will respond within 14 working days.",
+        body: "Send your request in writing to hopeconsultants.pk@gmail.com, including your name, the service paid for, the date of payment, and the reason for the request. We will respond within 14 working days.",
       },
       {
         heading: "Changes to this policy",
@@ -142,14 +142,14 @@ export const legalPages: LegalPage[] = [
       },
       {
         heading: "Contact",
-        body: "If you have any questions about this Refund & Fee Policy, contact us at [Official Email].",
+        body: "If you have any questions about this Refund & Fee Policy, contact us at hopeconsultants.pk@gmail.com.",
       },
     ],
   },
   {
     slug: "disclaimer",
     title: "Disclaimer",
-    lastUpdated: "[Date]",
+    lastUpdated: "9 October 2026",
     sections: [
       {
         heading: "General information",
@@ -177,14 +177,14 @@ export const legalPages: LegalPage[] = [
       },
       {
         heading: "Contact",
-        body: "If you have any questions about this Disclaimer, contact us at [Official Email].",
+        body: "If you have any questions about this Disclaimer, contact us at hopeconsultants.pk@gmail.com.",
       },
     ],
   },
   {
     slug: "cookies",
     title: "Cookie Notice",
-    lastUpdated: "[Date]",
+    lastUpdated: "9 October 2026",
     sections: [
       {
         heading: "What are cookies",
@@ -212,7 +212,7 @@ export const legalPages: LegalPage[] = [
       },
       {
         heading: "Contact",
-        body: "If you have any questions about this Cookie Notice, contact us at [Official Email].",
+        body: "If you have any questions about this Cookie Notice, contact us at hopeconsultants.pk@gmail.com.",
       },
     ],
   },

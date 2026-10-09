@@ -35,6 +35,7 @@ export default async function AdminUsersPage() {
     isAccessRequest: admin.isAccessRequest === true,
     hasCompletedFirstLogin: admin.hasCompletedFirstLogin === true,
     permissions: admin.permissions ?? null,
+    contentCollections: admin.contentCollections ?? null,
     createdLabel: label(admin.createdAt, "Unknown"),
     lastLoginLabel: label(admin.lastLoginAt, "Never"),
     verifiedLabel: admin.firstLoginVerifiedAt

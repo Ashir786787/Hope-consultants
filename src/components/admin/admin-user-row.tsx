@@ -18,6 +18,7 @@ export type AdminRow = {
   isAccessRequest: boolean;
   hasCompletedFirstLogin: boolean;
   permissions: AdminPanelSection[] | null;
+  contentCollections: string[] | null;
   createdLabel: string;
   lastLoginLabel: string;
   verifiedLabel: string | null;
@@ -110,7 +111,11 @@ export function AdminUserRow({
       </dl>
 
       {canManageRoles && !admin.isOwner && !awaitingCode ? (
-        <AdminAccessControl adminId={admin.id} permissions={admin.permissions} />
+        <AdminAccessControl
+          adminId={admin.id}
+          permissions={admin.permissions}
+          contentCollections={admin.contentCollections}
+        />
       ) : null}
 
       {error ? <AdminAlert tone="error">{error}</AdminAlert> : null}

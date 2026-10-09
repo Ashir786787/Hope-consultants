@@ -251,6 +251,16 @@
   }
 }
 
+.hope-card.hope-card--radius-lg {
+  border-radius: 2rem;
+}
+
+@media (min-width: 640px) {
+  .hope-card.hope-card--radius-lg {
+    border-radius: 2.5rem;
+  }
+}
+
 @media (hover: hover) and (pointer: fine) {
   .hope-card:hover {
     transform: translateY(-6px);
@@ -271,6 +281,16 @@
 @media (hover: hover) and (pointer: fine) {
 .hope-card.hope-card--light:hover {
   border-color: rgb(var(--hope-midnight-rgb) / 0.18);
+  }
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .hope-card:hover .team-photo {
+    transform: scale(1.05);
+  }
+
+  .team-photo {
+    transition: transform 0.7s var(--ease-out);
   }
 }
 

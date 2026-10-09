@@ -1,35 +1,41 @@
 "use client";
 
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { useGSAP } from "@gsap/react";
 
 import { Z } from "@/lib/motion";
-
-gsap.registerPlugin(ScrollTrigger, useGSAP);
 
 export function ScrollProgress() {
   const barRef = useRef<HTMLDivElement>(null);
 
-  useGSAP(() => {
+  useEffect(() => {
     const el = barRef.current;
     if (!el) return;
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    gsap.fromTo(
-      el,
-      { scaleX: 0 },
-      {
-        scaleX: 1,
-        ease: "none",
-        scrollTrigger: {
-          start: 0,
-          end: "max",
-          scrub: 0.3,
-        },
-      }
-    );
-  });
+
+    const setProgress = gsap.quickTo(el, "scaleX", {
+      duration: 0.3,
+      ease: "none",
+      overwrite: "auto",
+    });
+
+    const update = () => {
+      const doc = document.documentElement;
+      const max = doc.scrollHeight - window.innerHeight;
+      const progress = max > 0 ? window.scrollY / max : 0;
+      setProgress(Math.min(Math.max(progress, 0), 1));
+    };
+
+    update();
+    window.addEventListener("scroll", update, { passive: true });
+    window.addEventListener("resize", update);
+
+    return () => {
+      window.removeEventListener("scroll", update);
+      window.removeEventListener("resize", update);
+      gsap.killTweensOf(el);
+    };
+  }, []);
 
   return (
     <div

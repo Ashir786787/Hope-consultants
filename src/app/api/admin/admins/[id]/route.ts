@@ -11,6 +11,7 @@ import {
 import { hasSection } from "@/lib/admin/permissions";
 import { requireAdminForApi } from "@/lib/admin/require-admin";
 import { ADMIN_PANEL_SECTIONS } from "@/lib/admin/types";
+import { CONTENT_KEYS, isContentKey } from "@/lib/content/schemas";
 
 const patchSchema = z
   .object({
@@ -20,6 +21,11 @@ const patchSchema = z
       .array(z.enum(ADMIN_PANEL_SECTIONS))
       .min(1, "Keep at least one section.")
       .max(ADMIN_PANEL_SECTIONS.length, "That is too many sections.")
+      .nullable(),
+    contentCollections: z
+      .array(z.string().refine(isContentKey, "Unknown content category."))
+      .min(1, "Keep at least one content category.")
+      .max(CONTENT_KEYS.length, "That is too many content categories.")
       .nullable(),
   })
   .partial()
@@ -55,14 +61,18 @@ export async function PATCH(
     );
   }
 
-  if (parsed.data.permissions !== undefined && !current.isOwner) {
+  if (
+    (parsed.data.permissions !== undefined ||
+      parsed.data.contentCollections !== undefined) &&
+    !current.isOwner
+  ) {
     return NextResponse.json(
       { error: "Only the owner can change roles." },
       { status: 403 }
     );
   }
 
-  const { role, isActive, permissions } = parsed.data;
+  const { role, isActive, permissions, contentCollections } = parsed.data;
   if (target.isOwner && isActive === false) {
     return NextResponse.json(
       { error: "The owner account cannot be deactivated." },
@@ -84,6 +94,9 @@ export async function PATCH(
   }
   if (permissions !== undefined) {
     await updateAdmin(id, { permissions });
+  }
+  if (contentCollections !== undefined) {
+    await updateAdmin(id, { contentCollections });
   }
 
   const updated = await findAdminById(id);

@@ -24,7 +24,19 @@ export function normalizeEmail(email: string): string {
   return email.trim().toLowerCase();
 }
 
+let indexesPromise: Promise<void> | null = null;
+
 export async function ensureAdminUserIndexes(): Promise<void> {
+  if (!indexesPromise) {
+    indexesPromise = buildIndexes().catch((error) => {
+      indexesPromise = null;
+      throw error;
+    });
+  }
+  return indexesPromise;
+}
+
+async function buildIndexes(): Promise<void> {
   await mongoEnsureIndex(COLLECTION, { email: 1 }, { unique: true });
   await mongoEnsureIndex(COLLECTION, { purgeAt: 1 }, { expireAfterSeconds: 0 });
 }
@@ -62,6 +74,7 @@ export async function createAdmin(input: {
     isActive: true,
     isAccessRequest: false,
     permissions: null,
+    contentCollections: null,
     createdAt: new Date().toISOString(),
     lastLoginAt: null,
     firstLoginVerifiedAt: null,
@@ -103,6 +116,7 @@ export async function requestAdminAccess(input: {
     isActive: false,
     isAccessRequest: true,
     permissions: null,
+    contentCollections: null,
     createdAt: now.toISOString(),
     lastLoginAt: null,
     firstLoginVerifiedAt: null,
@@ -145,6 +159,7 @@ export function toAdminSummary(admin: AdminUser): AdminUserSummary {
     hasCompletedFirstLogin: admin.hasCompletedFirstLogin,
     isActive: admin.isActive,
     permissions: admin.permissions ?? null,
+    contentCollections: admin.contentCollections ?? null,
     createdAt: admin.createdAt,
     lastLoginAt: admin.lastLoginAt,
     firstLoginVerifiedAt: admin.firstLoginVerifiedAt,

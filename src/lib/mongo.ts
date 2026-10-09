@@ -17,7 +17,7 @@ async function client(): Promise<MongoClient> {
   }
   const globals = globalThis as unknown as MongoGlobals;
   if (globals.__hopeMongoClient) return globals.__hopeMongoClient;
-  const instance = new MongoClient(MONGO_URI, { serverSelectionTimeoutMS: 5000 });
+  const instance = new MongoClient(MONGO_URI, { serverSelectionTimeoutMS: 10000 });
   await instance.connect();
   globals.__hopeMongoClient = instance;
   return instance;
