@@ -24,8 +24,7 @@ function isAcceptableIdNumber(value: string): boolean {
 export const GENDER_OPTIONS = ["Male", "Female"] as const;
 
 export const QUALIFICATION_OPTIONS = [
-  "Matric",
-  "Intermediate",
+  "Intermediate / Diploma",
   "Bachelors",
   "Masters",
 ] as const;
@@ -160,6 +159,8 @@ export interface SectionIssue {
   message: string;
 }
 
+const ACTIVE_ENGLISH_TESTS = ["IELTS", "TOEFL", "PTE"] as const;
+
 export function collectSectionIssues(
   section: OnboardingSectionKey,
   values: unknown
@@ -167,6 +168,16 @@ export function collectSectionIssues(
   const record =
     typeof values === "object" && values !== null ? (values as Record<string, unknown>) : {};
   const issues: SectionIssue[] = [];
+  if (
+    section === "education" &&
+    (ACTIVE_ENGLISH_TESTS as readonly string[]).includes(String(record.englishTest ?? "")) &&
+    String(record.englishTestScore ?? "").trim() === ""
+  ) {
+    issues.push({
+      field: "englishTestScore",
+      message: "Enter your test score.",
+    });
+  }
   if (
     section === "education" &&
     String(record.englishTest ?? "") === "Other" &&

@@ -7,6 +7,8 @@ import { ScrollProgress } from "@/components/scroll-progress";
 import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/footer";
 
+export const dynamic = "force-dynamic";
+
 const SITE_URL = "https://www.hopeconsultants.pk";
 
 const organizationJsonLd = {

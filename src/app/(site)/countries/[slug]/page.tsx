@@ -5,6 +5,8 @@ import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import { CountryFlag } from "@/components/countries/country-flag";
+import { isoFor } from "@/lib/data/country-flags";
 import { Reveal } from "@/components/motion/reveal";
 import { Magnetic } from "@/components/motion/magnetic";
 import { DarkSection } from "@/components/sections/dark-section";
@@ -16,13 +18,7 @@ type CountryPageProps = {
   params: Promise<{ slug: CountrySlug }>;
 };
 
-export const dynamicParams = false;
-export const revalidate = false;
-
-export async function generateStaticParams() {
-  const countries = await getCollection<CountryDestination[]>("countries");
-  return countries.map((country) => ({ slug: country.slug }));
-}
+export const dynamic = "force-dynamic";
 
 export async function generateMetadata({ params }: CountryPageProps): Promise<Metadata> {
   const { slug } = await params;
@@ -110,8 +106,8 @@ export default async function CountryPage({ params }: CountryPageProps) {
   const country = countries.find((item) => item.slug === slug);
   if (!country) notFound();
 
-  const heroImage = country.images[0] ?? null;
-  const galleryImages = country.images.slice(1);
+  const heroImage = (country.images ?? [])[0] ?? null;
+  const galleryImages = (country.images ?? []).slice(1);
 
   return (
     <main id="main-content" className="w-full">
@@ -136,8 +132,8 @@ export default async function CountryPage({ params }: CountryPageProps) {
         <div className="relative mx-auto flex w-full max-w-6xl flex-col gap-10 px-4 py-14 sm:px-6 sm:py-20">
           <Reveal>
             <div className="flex items-center gap-6">
-              <span aria-hidden="true" className="text-6xl sm:text-7xl">
-                {country.flag}
+              <span aria-hidden="true" className="inline-flex">
+                <CountryFlag iso={isoFor(country.slug)} className="text-6xl sm:text-7xl" />
               </span>
               <div className="flex flex-col gap-3">
                 <p className="text-sm font-medium uppercase tracking-wider text-hope-white/70">

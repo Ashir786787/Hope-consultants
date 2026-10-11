@@ -82,15 +82,16 @@ export function EducationForm() {
               error={errors.englishTestOther}
             />
           ) : null}
-          <TextField
-            id="englishTestScore"
-            label="Test score"
-            required={false}
-            hint="Leave blank if you have not taken the test yet."
-            value={text("englishTestScore")}
-            onChange={(value) => setValue("englishTestScore", value)}
-            error={errors.englishTestScore}
-          />
+          {text("englishTest") !== "" && text("englishTest") !== "None" ? (
+            <TextField
+              id="englishTestScore"
+              label="Test score"
+              hint="For example IELTS 6.5, TOEFL 90, or PTE 62."
+              value={text("englishTestScore")}
+              onChange={(value) => setValue("englishTestScore", value)}
+              error={errors.englishTestScore}
+            />
+          ) : null}
         </>
       )}
     </OnboardingSectionForm>

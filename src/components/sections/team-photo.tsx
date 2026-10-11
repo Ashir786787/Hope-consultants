@@ -1,10 +1,10 @@
 "use client";
 
 import { useRef } from "react";
-import Image from "next/image";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
+import { SiteImage } from "@/components/ui/site-image";
 import { DURATIONS, VIEWPORT } from "@/lib/motion";
 
 gsap.registerPlugin(ScrollTrigger, useGSAP);
@@ -39,21 +39,12 @@ export function TeamPhoto({ src, alt }: { src: string; alt: string }) {
 
   return (
     <div ref={ref} className="team-photo relative aspect-square w-full overflow-hidden">
-      {src.startsWith("data:") ? (
-        <div
-          aria-hidden="true"
-          className="absolute inset-0 bg-cover bg-top"
-          style={{ backgroundImage: `url(${src})` }}
-        />
-      ) : (
-        <Image
-          src={src}
-          alt={alt}
-          fill
-          sizes="(min-width:1024px) 33vw, 100vw"
-          className="object-cover object-top"
-        />
-      )}
+      <SiteImage
+        src={src}
+        alt={alt}
+        sizes="(min-width:1024px) 33vw, 100vw"
+        className="object-cover object-top"
+      />
     </div>
   );
 }

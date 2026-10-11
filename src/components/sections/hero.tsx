@@ -2,6 +2,8 @@
 import { Button } from "@/components/ui/button";
 import { Magnetic } from "@/components/motion/magnetic";
 import { CountUp } from "@/components/motion/count-up";
+import { CountryFlag } from "@/components/countries/country-flag";
+import { isoFor } from "@/lib/data/country-flags";
 import type { CountryDestination } from "@/lib/data/types";
 import type { Service } from "@/lib/data/services";
 import type { ProcessStep } from "@/lib/data/process";
@@ -40,8 +42,8 @@ export function Hero({ countries, services, processSteps, whatsapp }: HeroProps)
                 key={country.slug}
                 className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1.5 text-sm font-medium text-white/80 transition-colors duration-300 hover:border-white/30 hover:text-white"
               >
-                <span aria-hidden="true" className="text-base leading-none">
-                  {country.flag}
+                <span aria-hidden="true" className="inline-flex">
+                  <CountryFlag iso={isoFor(country.slug)} />
                 </span>
                 {country.name}
               </li>

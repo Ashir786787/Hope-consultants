@@ -14,13 +14,7 @@ type ServicePageProps = {
   params: Promise<{ slug: string }>;
 };
 
-export const dynamicParams = false;
-export const revalidate = false;
-
-export async function generateStaticParams() {
-  const services = await getCollection<Service[]>("services");
-  return services.map((service) => ({ slug: service.slug }));
-}
+export const dynamic = "force-dynamic";
 
 export async function generateMetadata({ params }: ServicePageProps): Promise<Metadata> {
   const { slug } = await params;

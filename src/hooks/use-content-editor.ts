@@ -212,11 +212,10 @@ export function useContentEditor(initialCollection: string, allowedKeys?: string
     setForm((previous) => {
       const next = { ...previous, [field.key]: value };
       if (collection === "blog" && field.key === "title" && typeof value === "string") {
-        const currentSlug = next.slug;
-        next.slug =
-          typeof currentSlug === "string" && currentSlug.trim()
-            ? currentSlug
-            : slugify(value);
+        const currentSlug = typeof next.slug === "string" ? next.slug.trim() : "";
+        const previousTitle = typeof previous.title === "string" ? previous.title : "";
+        const inSync = currentSlug === "" || currentSlug === slugify(previousTitle);
+        if (inSync) next.slug = slugify(value);
       }
       return next;
     });
@@ -252,6 +251,9 @@ export function useContentEditor(initialCollection: string, allowedKeys?: string
     }
 
     const record = unflattenRecord(schema, form);
+    if (typeof record.slug === "string") {
+      record.slug = slugify(record.slug);
+    }
     const next = records.slice();
     const adding = editing === "new";
     if (adding) {

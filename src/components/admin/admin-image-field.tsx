@@ -87,7 +87,7 @@ export function AdminImageField({
             onError={() => onError("That file could not be read. Try another one.")}
           />
           <p className="text-xs text-hope-fog">
-            Upload a file, or use the URL field below to link an existing image.
+            Upload a file, or paste a link below — it is downloaded and stored with your page.
           </p>
         </div>
       </div>
@@ -106,7 +106,8 @@ export function AdminImageField({
           className="w-full rounded-lg border border-hope-midnight/20 bg-hope-white px-4 py-2.5 text-sm text-hope-midnight shadow-[0_1px_2px_rgb(var(--hope-midnight-rgb)/0.04)] transition-colors placeholder:text-hope-fog/70 focus:border-hope-ember focus:outline-2 focus:outline-offset-2 focus:outline-hope-ember"
         />
         <p className="text-xs text-hope-fog">
-          If you paste a URL, it will be used as-is. For local files in <code className="rounded bg-hope-midnight/5 px-1">/public</code>, use a path like
+          A pasted link is downloaded and saved with the page, so it keeps working even if the
+          original link disappears. For files in <code className="rounded bg-hope-midnight/5 px-1">/public</code>, use a path like
           <code className="rounded bg-hope-midnight/5 px-1">/services/cover.jpg</code>.
         </p>
       </div>

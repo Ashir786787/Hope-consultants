@@ -1,6 +1,6 @@
-import Image from "next/image";
 import Link from "next/link";
 
+import { SiteImage } from "@/components/ui/site-image";
 import type { BlogPost } from "@/lib/data/blog";
 
 function formatDate(value: string): string {
@@ -27,12 +27,11 @@ export function BlogCard({ post, headingLevel = 3 }: BlogCardProps) {
       className="hope-card hope-card--light group flex h-full flex-col"
     >
       <div className="relative aspect-video w-full overflow-hidden">
-        <Image
+        <SiteImage
           src={post.coverImage}
           alt={post.title}
-          fill
           sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-          className="object-cover transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-105"
+          className="transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-105"
         />
       </div>
       <div className="flex flex-1 flex-col gap-3 p-6">

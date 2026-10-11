@@ -5,6 +5,8 @@ import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { CountryFlag } from "@/components/countries/country-flag";
+import { isoFor } from "@/lib/data/country-flags";
 import type { CountryDestination } from "@/lib/data/types";
 
 function admissionBadge(open: boolean | undefined) {
@@ -69,7 +71,7 @@ export default function CountryFilter({
           {results.map((country) => (
             <li key={country.slug}>
               <article className="hope-card hope-card--light flex h-full flex-col gap-4 p-6">
-                {country.images[0] ? (
+                {country.images?.[0] ? (
                   <div className="relative -mx-6 -mt-6 aspect-16/9 shrink-0 overflow-hidden rounded-t-[1.5rem]">
                     <Image
                       src={country.images[0]}
@@ -81,8 +83,8 @@ export default function CountryFilter({
                   </div>
                 ) : null}
                 <div className="flex items-start justify-between gap-3">
-                  <span className="text-3xl leading-none" aria-hidden="true">
-                    {country.flag}
+                  <span aria-hidden="true" className="inline-flex">
+                    <CountryFlag iso={isoFor(country.slug)} className="text-2xl" />
                   </span>
                   {admissionBadge(country.admissionOpen)}
                 </div>

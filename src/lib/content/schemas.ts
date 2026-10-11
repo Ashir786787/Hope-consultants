@@ -133,7 +133,7 @@ export const SCHEMAS: readonly CollectionSchema[] = [
       { key: "slug", label: "Slug", kind: "text", help: "Auto-filled from the title." },
       { key: "excerpt", label: "Excerpt (shown on the blog list)", kind: "textarea" },
       { key: "content", label: "Content", kind: "textarea", required: true, help: "Paragraphs separated by a blank line." },
-      { key: "coverImage", label: "Cover image", kind: "image", help: "Max ~1.5 MB, JPG/PNG/WebP." },
+      { key: "coverImage", label: "Cover image", kind: "image", help: "Max ~1.5 MB, JPG/PNG/WebP. Upload a file or paste an image link — links are downloaded and stored automatically." },
       { key: "author", label: "Author", kind: "text" },
       { key: "publishedAt", label: "Publish date", kind: "date" },
       { key: "published", label: "Visible on the site", kind: "boolean" },
@@ -181,7 +181,7 @@ export const SCHEMAS: readonly CollectionSchema[] = [
     fields: [
       { key: "name", label: "Name", kind: "text", required: true, group: "Identity" },
       { key: "role", label: "Role", kind: "text", group: "Identity" },
-      { key: "image", label: "Photo", kind: "image", group: "Identity", help: "Max ~1.5 MB, JPG/PNG/WebP. Upload a file, or paste a /public path like /team/your-file.jpg." },
+      { key: "image", label: "Photo", kind: "image", group: "Identity", help: "Max ~1.5 MB, JPG/PNG/WebP. Upload a file, paste an image link, or use a /public path like /team/your-file.jpg." },
       { key: "quote", label: "Quote", kind: "textarea", group: "Bio" },
       { key: "bioShort", label: "Short bio", kind: "textarea", group: "Bio" },
       { key: "bioLong", label: "Long bio", kind: "textarea", group: "Bio", help: "The fuller profile shown in the team list." },
