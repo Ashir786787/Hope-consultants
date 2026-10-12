@@ -11,7 +11,7 @@ export const defaultSite: SiteFields = {
   phone: "",
   phoneHref: "",
   whatsapp: "",
-  tiktok: "",
+  tiktok: "https://www.tiktok.com/@hope.consultants",
 };
 
 export async function getSite(): Promise<SiteFields> {
