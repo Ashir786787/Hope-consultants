@@ -54,6 +54,8 @@ const LABELS: Record<SectionKey, { field: string; label: string }[]> = {
     { field: "motivation", label: "Why study abroad" },
     { field: "partTimeWork", label: "Willing to work part-time" },
     { field: "longTermPlan", label: "Long-term plan" },
+    { field: "contactSource", label: "How they contacted us" },
+    { field: "contactUsername", label: "Username they contacted from" },
   ],
   consent: [
     { field: "confirmAccuracy", label: "Confirmed answers are correct" },

@@ -58,6 +58,8 @@ export interface OnboardingCareer {
   motivation: string;
   partTimeWork: string;
   longTermPlan: string;
+  contactSource: string;
+  contactUsername: string;
 }
 
 export interface OnboardingConsent {

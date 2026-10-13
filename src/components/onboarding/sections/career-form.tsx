@@ -6,8 +6,13 @@ import { OnboardingRadioField } from "@/components/onboarding/onboarding-choice-
 import {
   SelectField,
   TextAreaField,
+  TextField,
 } from "@/components/onboarding/onboarding-inputs";
-import { LONG_TERM_PLAN_OPTIONS, YES_NO_MAYBE_OPTIONS } from "@/lib/onboarding/schema";
+import {
+  CONTACT_SOURCE_OPTIONS,
+  LONG_TERM_PLAN_OPTIONS,
+  YES_NO_MAYBE_OPTIONS,
+} from "@/lib/onboarding/schema";
 import { sectionHref } from "@/lib/onboarding/sections";
 
 export function CareerForm() {
@@ -43,6 +48,21 @@ export function CareerForm() {
             value={text("longTermPlan")}
             onChange={(value) => setValue("longTermPlan", value)}
             error={errors.longTermPlan}
+          />
+          <SelectField
+            id="contactSource"
+            label="How did you contacted us"
+            options={CONTACT_SOURCE_OPTIONS}
+            value={text("contactSource")}
+            onChange={(value) => setValue("contactSource", value)}
+            error={errors.contactSource}
+          />
+          <TextField
+            id="contactUsername"
+            label="Provide us your username from which you have contacted us"
+            value={text("contactUsername")}
+            onChange={(value) => setValue("contactUsername", value)}
+            error={errors.contactUsername}
           />
         </>
       )}

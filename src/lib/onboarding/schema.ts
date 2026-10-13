@@ -45,6 +45,15 @@ export const LONG_TERM_PLAN_OPTIONS = [
   "Migrate to another country",
 ] as const;
 
+export const CONTACT_SOURCE_OPTIONS = [
+  "Facebook",
+  "Instagram",
+  "Tiktok",
+  "Youtube",
+  "Whatsapp",
+  "Referral & Friends",
+] as const;
+
 export const COUNTRY_OPTIONS = countries.map((country) => country.name);
 
 const COUNTRY_VALUES = new Set<string>(COUNTRY_OPTIONS);
@@ -125,6 +134,10 @@ export const careerSchema = z.object({
     .max(4000, "That answer is too long."),
   partTimeWork: z.enum(YES_NO_MAYBE_OPTIONS, { error: "Please choose an answer." }),
   longTermPlan: z.enum(LONG_TERM_PLAN_OPTIONS, { error: "Please choose an answer." }),
+  contactSource: z.enum(CONTACT_SOURCE_OPTIONS, {
+    error: "Please choose how you contacted us.",
+  }),
+  contactUsername: requiredText("Username"),
 });
 
 export const consentSchema = z.object({
