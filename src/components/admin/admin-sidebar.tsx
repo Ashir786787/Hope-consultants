@@ -115,7 +115,7 @@ export function AdminSidebar({
       <nav
         aria-label="Admin"
         className={cn(
-          "flex gap-2 overflow-x-auto lg:flex-col lg:gap-1 lg:overflow-x-visible",
+          "no-scrollbar flex gap-2 overflow-x-auto lg:flex-col lg:gap-1 lg:overflow-x-visible",
           showCollections && "lg:min-h-0 lg:flex-1 lg:overflow-y-auto lg:overscroll-contain",
         )}
       >
