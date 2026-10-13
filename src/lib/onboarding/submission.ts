@@ -1,4 +1,4 @@
-import { randomBytes, randomUUID } from "node:crypto";
+import { randomBytes, randomInt, randomUUID } from "node:crypto";
 
 import {
   mongoCount,
@@ -38,6 +38,7 @@ export async function ensureOnboardingIndexes(): Promise<void> {
 async function buildIndexes(): Promise<void> {
   await mongoEnsureIndex(SUBMISSIONS, { submittedAt: -1 });
   await mongoEnsureIndex(SUBMISSIONS, { status: 1 });
+  await mongoEnsureIndex(SUBMISSIONS, { caseNumber: 1 });
   await mongoEnsureIndex(DRAFTS, { updatedAt: -1 });
   await mongoEnsureIndex(
     DRAFTS,
@@ -53,6 +54,7 @@ export function createDraftToken(): string {
 function toSummary(submission: OnboardingSubmission): OnboardingSummary {
   return {
     id: submission.id,
+    caseNumber: submission.caseNumber,
     fullName: submission.personal.fullName,
     email: submission.personal.email,
     contactNumber: submission.personal.contactNumber,
@@ -63,6 +65,23 @@ function toSummary(submission: OnboardingSubmission): OnboardingSummary {
     status: submission.status,
     submittedAt: submission.submittedAt,
   };
+}
+
+const CASE_NUMBER_PREFIX = "HC";
+
+async function nextCaseNumber(): Promise<string> {
+  const year = new Date().getFullYear();
+  for (let attempt = 0; attempt < 12; attempt += 1) {
+    const digits = String(randomInt(0, 1_000_000)).padStart(6, "0");
+    const candidate = `${CASE_NUMBER_PREFIX}-${year}-${digits}`;
+    const existing = await mongoFindOne<{ id: string }>(SUBMISSIONS, { caseNumber: candidate });
+    if (!existing) return candidate;
+  }
+  return `${CASE_NUMBER_PREFIX}-${year}-${randomBytes(4).toString("hex").toUpperCase()}`;
+}
+
+function escapeRegExp(value: string): string {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
 
 export async function createSubmission(input: {
@@ -77,10 +96,12 @@ export async function createSubmission(input: {
   }
 
   const id = randomUUID();
+  const caseNumber = await nextCaseNumber();
 
   const submission: OnboardingSubmission = {
     ...parsed.data,
     id,
+    caseNumber,
     status: "New",
     notes: "",
     sourcePage: input.sourcePage,
@@ -92,8 +113,19 @@ export async function createSubmission(input: {
   return submission;
 }
 
-export async function listSubmissions(): Promise<OnboardingSummary[]> {
-  const rows = await mongoFind<OnboardingSubmission>(SUBMISSIONS, {}, { sort: { submittedAt: -1 } });
+export async function listSubmissions(query?: string): Promise<OnboardingSummary[]> {
+  const trimmed = query?.trim() ?? "";
+  const filter = trimmed
+    ? {
+        $or: [
+          { "personal.fullName": { $regex: escapeRegExp(trimmed), $options: "i" } },
+          { caseNumber: { $regex: escapeRegExp(trimmed), $options: "i" } },
+        ],
+      }
+    : {};
+  const rows = await mongoFind<OnboardingSubmission>(SUBMISSIONS, filter, {
+    sort: { submittedAt: -1 },
+  });
   return rows.map(toSummary);
 }
 

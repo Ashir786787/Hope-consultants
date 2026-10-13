@@ -41,6 +41,9 @@ export function AdminOnboardingList({ submissions }: { submissions: OnboardingSu
                 {submission.email}
               </a>
               <p className="truncate text-sm text-hope-fog">{submission.contactNumber}</p>
+              <p className="truncate text-sm font-semibold text-hope-midnight">
+                Case no. {submission.caseNumber || "—"}
+              </p>
             </div>
             <AdminBadge tone={BADGE_TONE[submission.status]}>{submission.status}</AdminBadge>
           </div>

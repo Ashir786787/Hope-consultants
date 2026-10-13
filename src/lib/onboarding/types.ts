@@ -79,6 +79,7 @@ export interface OnboardingAnswers {
 
 export interface OnboardingSubmission extends OnboardingAnswers {
   id: string;
+  caseNumber: string;
   status: OnboardingStatus;
   notes: string;
   sourcePage: string;
@@ -87,6 +88,7 @@ export interface OnboardingSubmission extends OnboardingAnswers {
 
 export interface OnboardingSummary {
   id: string;
+  caseNumber: string;
   fullName: string;
   email: string;
   contactNumber: string;

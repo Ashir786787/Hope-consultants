@@ -38,6 +38,9 @@ export default async function AdminOnboardingDetailPage({
         <h1 className="font-display text-3xl font-bold text-hope-midnight">
           {submission.personal.fullName}
         </h1>
+        <p className="text-sm font-semibold text-hope-midnight">
+          Case number: {submission.caseNumber || "—"}
+        </p>
         <p className="text-hope-fog">
           Submitted {formatSubmittedAt(submission.submittedAt)} · from {submission.sourcePage}
         </p>
