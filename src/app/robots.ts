@@ -6,7 +6,7 @@ export default function robots(): MetadataRoute.Robots {
       {
         userAgent: "*",
         allow: "/",
-        disallow: ["/admin", "/api/", "/onboarding"],
+        disallow: ["/admin", "/api/", "/onboarding", "/documents"],
       },
     ],
     sitemap: "https://www.hopeconsultants.pk/sitemap.xml",

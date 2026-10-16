@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Search } from "lucide-react";
+import { Pencil, Search } from "lucide-react";
 
 import { AdminButton } from "@/components/admin/admin-ui";
 import { AdminCopyLink } from "@/components/admin/admin-copy-link";
 import { AdminOnboardingList } from "@/components/admin/admin-onboarding-list";
 import { listSubmissions } from "@/lib/onboarding/submission";
+import { hasSection } from "@/lib/admin/permissions";
 import { requireSection } from "@/lib/admin/require-admin";
 
 export const metadata: Metadata = {
@@ -27,19 +28,31 @@ export default async function AdminOnboardingPage({
 }: {
   searchParams: SearchParams;
 }) {
-  await requireSection("onboarding");
+  const admin = await requireSection("onboarding");
+  const canEditForm = hasSection(admin, "forms");
 
   const query = (firstValue((await searchParams).q) ?? "").trim();
   const submissions = await listSubmissions(query);
 
   return (
     <>
-      <header className="flex flex-col gap-2">
-        <h1 className="font-display text-3xl font-bold text-hope-midnight">Onboarding forms</h1>
-        <p className="text-hope-fog">
-          Every student who completed the eight-page onboarding form, newest first. Status and
-          notes stay inside this panel.
-        </p>
+      <header className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+        <div className="flex flex-col gap-2">
+          <h1 className="font-display text-3xl font-bold text-hope-midnight">Onboarding forms</h1>
+          <p className="text-hope-fog">
+            Every student who completed the eight-page onboarding form, newest first. Status and
+            notes stay inside this panel.
+          </p>
+        </div>
+        {canEditForm ? (
+          <Link
+            href="/admin/forms/onboarding"
+            className="inline-flex min-h-11 shrink-0 items-center justify-center gap-2 rounded-lg border border-hope-midnight/30 px-4 text-sm font-semibold text-hope-midnight transition-colors hover:bg-hope-midnight/5 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-hope-ember"
+          >
+            <Pencil className="size-4 shrink-0" strokeWidth={1.75} aria-hidden="true" />
+            Edit form
+          </Link>
+        ) : null}
       </header>
 
       <section className="flex flex-col gap-5 rounded-2xl border border-hope-midnight/10 bg-hope-white p-6">

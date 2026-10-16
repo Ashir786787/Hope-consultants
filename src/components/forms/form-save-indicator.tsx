@@ -1,6 +1,6 @@
 "use client";
 
-import { useOnboardingDraft } from "@/components/onboarding/onboarding-draft";
+import { useFormDraft } from "@/components/forms/form-draft";
 
 const COPY = {
   idle: "Autosave is on.",
@@ -9,8 +9,8 @@ const COPY = {
   error: "We could not save just now. Your answers stay on this page until they save.",
 } as const;
 
-export function OnboardingSaveIndicator() {
-  const { saveState } = useOnboardingDraft();
+export function FormSaveIndicator() {
+  const { saveState } = useFormDraft();
 
   return (
     <p

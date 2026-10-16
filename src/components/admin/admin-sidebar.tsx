@@ -8,6 +8,7 @@ import {
   ChevronDown,
   ClipboardList,
   FileText,
+  FolderOpen,
   Globe2,
   Info,
   Layers3,
@@ -18,6 +19,7 @@ import {
   Quote,
   Settings,
   Settings2,
+  SlidersHorizontal,
   Users,
   Inbox,
 } from "lucide-react";
@@ -43,6 +45,8 @@ const NAV_ITEMS = [
   { href: "/admin", label: "Dashboard", icon: LayoutDashboard },
   { href: "/admin/leads", label: "Leads", icon: Inbox },
   { href: "/admin/onboarding", label: "Onboarding forms", icon: ClipboardList },
+  { href: "/admin/documents", label: "Document submissions", icon: FolderOpen },
+  { href: "/admin/forms", label: "Form builder", icon: SlidersHorizontal },
   { href: "/admin/content", label: "Content editor", icon: FileText },
   { href: "/admin/admins", label: "Admin users", icon: Users },
   { href: "/admin/settings", label: "Settings", icon: Settings },
@@ -53,6 +57,7 @@ export function AdminSidebar({
   email,
   newLeads,
   newOnboarding,
+  newDocuments,
   allowedSections,
   allowedCollections,
 }: {
@@ -60,6 +65,7 @@ export function AdminSidebar({
   email: string;
   newLeads: number;
   newOnboarding: number;
+  newDocuments: number;
   allowedSections: AdminPanelSection[];
   allowedCollections: string[] | null;
 }) {
@@ -127,7 +133,9 @@ export function AdminSidebar({
               ? newLeads
               : item.href === "/admin/onboarding"
                 ? newOnboarding
-                : 0;
+                : item.href === "/admin/documents"
+                  ? newDocuments
+                  : 0;
           if (item.href !== "/admin/content") {
             return (
               <Link

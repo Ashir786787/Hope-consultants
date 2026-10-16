@@ -11,45 +11,46 @@ import {
 } from "react";
 import type { ReactNode } from "react";
 
-import { toDraftAnswers, type DraftAnswers, type FieldValue } from "@/lib/onboarding/answers";
-import type { OnboardingSectionKey } from "@/lib/onboarding/sections";
+import { toDraftAnswers, type DraftAnswers, type FieldValue } from "@/lib/forms/answers";
+import type { FormDefinition } from "@/lib/forms/types";
 
 export type SaveState = "idle" | "saving" | "saved" | "error";
 
 const AUTOSAVE_DELAY_MS = 1000;
 
-interface SessionSnapshot {
-  answers: DraftAnswers;
+const sessionSnapshots = new Map<string, DraftAnswers>();
+
+export function clearSessionSnapshot(formKey: string): void {
+  sessionSnapshots.delete(formKey);
 }
 
-let sessionSnapshot: SessionSnapshot | null = null;
-
-export function clearSessionSnapshot(): void {
-  sessionSnapshot = null;
-}
-
-interface OnboardingDraftContextValue {
+interface FormDraftContextValue {
   answers: DraftAnswers;
   saveState: SaveState;
-  section: OnboardingSectionKey;
-  setField: (section: OnboardingSectionKey, field: string, value: FieldValue) => void;
-  setFieldAndSave: (section: OnboardingSectionKey, field: string, value: FieldValue) => void;
+  section: string;
+  setField: (section: string, field: string, value: FieldValue) => void;
+  setFieldAndSave: (section: string, field: string, value: FieldValue) => void;
   flush: () => Promise<void>;
 }
 
-const OnboardingDraftContext = createContext<OnboardingDraftContextValue | null>(null);
+const FormDraftContext = createContext<FormDraftContextValue | null>(null);
 
-export function OnboardingDraftProvider({
+export function FormDraftProvider({
+  definition,
   section,
+  draftEndpoint,
   initialDraft,
   children,
 }: {
-  section: OnboardingSectionKey;
+  definition: FormDefinition;
+  section: string;
+  draftEndpoint: string;
   initialDraft?: unknown;
   children: ReactNode;
 }) {
+  const formKey = definition.key;
   const [answers, setAnswers] = useState<DraftAnswers>(
-    () => sessionSnapshot?.answers ?? toDraftAnswers(initialDraft)
+    () => sessionSnapshots.get(formKey) ?? toDraftAnswers(definition, initialDraft)
   );
   const [saveState, setSaveState] = useState<SaveState>("idle");
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -62,7 +63,7 @@ export function OnboardingDraftProvider({
 
   const persist = useCallback(
     (payload: DraftAnswers) => {
-      return fetch("/api/onboarding/draft", {
+      return fetch(draftEndpoint, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ currentSection: section, answers: payload }),
@@ -70,7 +71,7 @@ export function OnboardingDraftProvider({
         .then((response) => setSaveState(response.ok ? "saved" : "error"))
         .catch(() => setSaveState("error"));
     },
-    [section]
+    [draftEndpoint, section]
   );
 
   const persistRef = useRef(persist);
@@ -90,20 +91,17 @@ export function OnboardingDraftProvider({
     return persistRef.current(answersRef.current);
   }, []);
 
-  const setField = useCallback(
-    (sectionKey: OnboardingSectionKey, field: string, value: FieldValue) => {
-      dirty.current = true;
-      setSaveState("saving");
-      setAnswers((current) => ({
-        ...current,
-        [sectionKey]: { ...current[sectionKey], [field]: value },
-      }));
-    },
-    []
-  );
+  const setField = useCallback((sectionKey: string, field: string, value: FieldValue) => {
+    dirty.current = true;
+    setSaveState("saving");
+    setAnswers((current) => ({
+      ...current,
+      [sectionKey]: { ...current[sectionKey], [field]: value },
+    }));
+  }, []);
 
   const setFieldAndSave = useCallback(
-    (sectionKey: OnboardingSectionKey, field: string, value: FieldValue) => {
+    (sectionKey: string, field: string, value: FieldValue) => {
       const next: DraftAnswers = {
         ...answersRef.current,
         [sectionKey]: { ...answersRef.current[sectionKey], [field]: value },
@@ -129,8 +127,8 @@ export function OnboardingDraftProvider({
   }, [answers]);
 
   useEffect(() => {
-    sessionSnapshot = { answers };
-  });
+    sessionSnapshots.set(formKey, answers);
+  }, [formKey, answers]);
 
   useEffect(() => {
     return () => {
@@ -148,35 +146,37 @@ export function OnboardingDraftProvider({
     [answers, saveState, section, setField, setFieldAndSave, flush]
   );
 
-  return <OnboardingDraftContext.Provider value={value}>{children}</OnboardingDraftContext.Provider>;
+  return <FormDraftContext.Provider value={value}>{children}</FormDraftContext.Provider>;
 }
 
-export function useOnboardingDraft(): OnboardingDraftContextValue {
-  const context = useContext(OnboardingDraftContext);
+export function useFormDraft(): FormDraftContextValue {
+  const context = useContext(FormDraftContext);
   if (!context) {
-    throw new Error("useOnboardingDraft must be used inside OnboardingDraftProvider");
+    throw new Error("useFormDraft must be used inside FormDraftProvider");
   }
   return context;
 }
 
-export function useSectionValues<Section extends OnboardingSectionKey>(section: Section) {
-  const { answers, setField, setFieldAndSave } = useOnboardingDraft();
-  const values = answers[section];
+export function useFormSectionValues(section: string) {
+  const { answers, setField, setFieldAndSave } = useFormDraft();
+  const values = useMemo(() => answers[section] ?? {}, [answers, section]);
 
   const setValue = useCallback(
-    (field: string, value: string | boolean) => setField(section, field, value),
+    (field: string, value: FieldValue) => setField(section, field, value),
     [section, setField]
   );
 
   const saveValue = useCallback(
-    (field: string, value: string | boolean) => setFieldAndSave(section, field, value),
+    (field: string, value: FieldValue) => setFieldAndSave(section, field, value),
     [section, setFieldAndSave]
   );
 
   const toggleValue = useCallback(
     (field: string, option: string) => {
-      const current = answers[section][field];
-      const list = Array.isArray(current) ? current : [];
+      const current = answers[section]?.[field];
+      const list = Array.isArray(current)
+        ? current.filter((entry): entry is string => typeof entry === "string")
+        : [];
       const next = list.includes(option)
         ? list.filter((entry) => entry !== option)
         : [...list, option];
@@ -201,10 +201,7 @@ export function useSectionValues<Section extends OnboardingSectionKey>(section: 
     [values]
   );
 
-  const flag = useCallback(
-    (field: string) => values[field] === true,
-    [values]
-  );
+  const flag = useCallback((field: string) => values[field] === true, [values]);
 
-  return { text, list, flag, setValue, saveValue, toggleValue };
+  return { values, text, list, flag, setValue, saveValue, toggleValue };
 }

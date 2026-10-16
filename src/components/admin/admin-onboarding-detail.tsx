@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 
 import { AdminAlert, AdminBadge, AdminButton } from "@/components/admin/admin-ui";
-import type { OnboardingAnswerGroup } from "@/lib/onboarding/labels";
+import type { AnswerGroup } from "@/lib/forms/summary";
 import type { OnboardingStatus } from "@/lib/onboarding/types";
 import { ONBOARDING_STATUSES } from "@/lib/onboarding/types";
 
@@ -24,7 +24,7 @@ export function AdminOnboardingDetail({
   id: string;
   initialStatus: OnboardingStatus;
   initialNotes: string;
-  groups: OnboardingAnswerGroup[];
+  groups: AnswerGroup[];
 }) {
   const router = useRouter();
   const [status, setStatus] = useState<OnboardingStatus>(initialStatus);

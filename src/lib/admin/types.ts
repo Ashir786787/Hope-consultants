@@ -4,7 +4,15 @@ export const LEAD_STATUSES = ["New", "Contacted", "Converted", "Lost"] as const;
 
 export type LeadStatus = (typeof LEAD_STATUSES)[number];
 
-export const ADMIN_PANEL_SECTIONS = ["dashboard", "leads", "onboarding", "content", "admins"] as const;
+export const ADMIN_PANEL_SECTIONS = [
+  "dashboard",
+  "leads",
+  "onboarding",
+  "documents",
+  "forms",
+  "content",
+  "admins",
+] as const;
 
 export type AdminPanelSection = (typeof ADMIN_PANEL_SECTIONS)[number];
 

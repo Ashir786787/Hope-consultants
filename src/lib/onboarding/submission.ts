@@ -9,12 +9,13 @@ import {
   mongoInsertOne,
   mongoUpdateOne,
 } from "@/lib/mongo";
-import { onboardingSchema } from "@/lib/onboarding/schema";
+import { getFormDefinition } from "@/lib/forms/store";
+import { validateForm } from "@/lib/forms/validate";
+import type { DraftAnswers } from "@/lib/forms/answers";
 import type {
   OnboardingAnswers,
   OnboardingDraft,
   OnboardingStatus,
-  OnboardingSubmission,
   OnboardingSummary,
 } from "@/lib/onboarding/types";
 
@@ -51,19 +52,37 @@ export function createDraftToken(): string {
   return randomBytes(24).toString("hex");
 }
 
-function toSummary(submission: OnboardingSubmission): OnboardingSummary {
+type LooseSubmission = Record<string, unknown>;
+
+function pickText(source: unknown, key: string): string {
+  if (typeof source === "object" && source !== null) {
+    const value = (source as Record<string, unknown>)[key];
+    if (typeof value === "string") return value;
+  }
+  return "";
+}
+
+function pickList(source: unknown, key: string): string[] {
+  if (typeof source === "object" && source !== null) {
+    const value = (source as Record<string, unknown>)[key];
+    if (Array.isArray(value)) return value.filter((entry): entry is string => typeof entry === "string");
+  }
+  return [];
+}
+
+function toSummary(row: LooseSubmission): OnboardingSummary {
   return {
-    id: submission.id,
-    caseNumber: submission.caseNumber,
-    fullName: submission.personal.fullName,
-    email: submission.personal.email,
-    contactNumber: submission.personal.contactNumber,
-    countryNames: submission.preferences.interestedCountries,
-    desiredLevel: submission.preferences.desiredLevel,
-    studyBudget: submission.preferences.studyBudget,
-    lookingForScholarships: submission.preferences.lookingForScholarships,
-    status: submission.status,
-    submittedAt: submission.submittedAt,
+    id: typeof row.id === "string" ? row.id : "",
+    caseNumber: typeof row.caseNumber === "string" ? row.caseNumber : "",
+    fullName: pickText(row.personal, "fullName"),
+    email: pickText(row.personal, "email"),
+    contactNumber: pickText(row.personal, "contactNumber"),
+    countryNames: pickList(row.preferences, "interestedCountries"),
+    desiredLevel: pickText(row.preferences, "desiredLevel"),
+    studyBudget: pickText(row.preferences, "studyBudget"),
+    lookingForScholarships: pickText(row.preferences, "lookingForScholarships"),
+    status: row.status as OnboardingStatus,
+    submittedAt: typeof row.submittedAt === "string" ? row.submittedAt : "",
   };
 }
 
@@ -85,21 +104,22 @@ function escapeRegExp(value: string): string {
 }
 
 export async function createSubmission(input: {
-  answers: OnboardingAnswers;
+  answers: DraftAnswers;
   draftToken: string;
   sourcePage: string;
-}): Promise<OnboardingSubmission> {
+}): Promise<void> {
   await ensureOnboardingIndexes();
-  const parsed = onboardingSchema.safeParse(input.answers);
-  if (!parsed.success) {
+  const definition = await getFormDefinition("onboarding");
+  const errors = validateForm(definition, input.answers);
+  if (Object.keys(errors).length > 0) {
     throw new Error("The onboarding answers are incomplete.");
   }
 
   const id = randomUUID();
   const caseNumber = await nextCaseNumber();
 
-  const submission: OnboardingSubmission = {
-    ...parsed.data,
+  const submission: LooseSubmission = {
+    ...input.answers,
     id,
     caseNumber,
     status: "New",
@@ -108,9 +128,8 @@ export async function createSubmission(input: {
     submittedAt: new Date().toISOString(),
   };
 
-  await mongoInsertOne(SUBMISSIONS, { ...submission });
+  await mongoInsertOne(SUBMISSIONS, submission);
   await deleteDraft(input.draftToken);
-  return submission;
 }
 
 export async function listSubmissions(query?: string): Promise<OnboardingSummary[]> {
@@ -123,7 +142,7 @@ export async function listSubmissions(query?: string): Promise<OnboardingSummary
         ],
       }
     : {};
-  const rows = await mongoFind<OnboardingSubmission>(SUBMISSIONS, filter, {
+  const rows = await mongoFind<LooseSubmission>(SUBMISSIONS, filter, {
     sort: { submittedAt: -1 },
   });
   return rows.map(toSummary);
@@ -133,8 +152,8 @@ export async function countSubmissions(): Promise<number> {
   return mongoCount(SUBMISSIONS, {});
 }
 
-export async function findSubmissionById(id: string): Promise<OnboardingSubmission | null> {
-  return mongoFindOne<OnboardingSubmission>(SUBMISSIONS, { id });
+export async function findSubmissionById(id: string): Promise<LooseSubmission | null> {
+  return mongoFindOne<LooseSubmission>(SUBMISSIONS, { id });
 }
 
 export async function countSubmissionsByStatus(): Promise<Record<OnboardingStatus, number>> {
@@ -157,7 +176,7 @@ export async function countSubmissionsByStatus(): Promise<Record<OnboardingStatu
 
 export async function updateSubmission(
   id: string,
-  patch: Partial<Pick<OnboardingSubmission, "status" | "notes">>
+  patch: Partial<{ status: OnboardingStatus; notes: string }>
 ): Promise<void> {
   await mongoUpdateOne(SUBMISSIONS, { id }, { $set: patch });
 }

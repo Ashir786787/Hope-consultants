@@ -6,6 +6,8 @@ export const SECTION_LABELS: Record<AdminPanelSection, string> = {
   dashboard: "Dashboard",
   leads: "Leads",
   onboarding: "Onboarding forms",
+  documents: "Document submissions",
+  forms: "Form builder",
   content: "Content editor",
   admins: "Admin users",
 };
@@ -14,6 +16,8 @@ export const SECTION_HREFS: Record<AdminPanelSection, string> = {
   dashboard: "/admin",
   leads: "/admin/leads",
   onboarding: "/admin/onboarding",
+  documents: "/admin/documents",
+  forms: "/admin/forms",
   content: "/admin/content",
   admins: "/admin/admins",
 };
@@ -22,6 +26,8 @@ export const SECTION_BY_HREF: Partial<Record<string, AdminPanelSection>> = {
   "/admin": "dashboard",
   "/admin/leads": "leads",
   "/admin/onboarding": "onboarding",
+  "/admin/documents": "documents",
+  "/admin/forms": "forms",
   "/admin/content": "content",
   "/admin/admins": "admins",
 };

@@ -1,4 +1,4 @@
-import { MongoClient, type Collection, type Document, type Filter, type FindOptions, type UpdateFilter } from "mongodb";
+import { MongoClient, type Collection, type Db, type Document, type Filter, type FindOptions, type UpdateFilter } from "mongodb";
 
 const MONGO_URI = process.env.MONGODB_URI;
 const MONGO_DB = process.env.MONGODB_DB || "hope-consultants";
@@ -46,6 +46,10 @@ export async function mongoPing(): Promise<boolean> {
 
 async function collection(name: string): Promise<Collection<Document>> {
   return (await client()).db(MONGO_DB).collection(name);
+}
+
+export async function mongoDb(): Promise<Db> {
+  return (await client()).db(MONGO_DB);
 }
 
 function withoutMongoId(options?: FindOptions): FindOptions {

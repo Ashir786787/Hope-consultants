@@ -2,16 +2,17 @@ import { NextResponse } from "next/server";
 
 import { isMailConfigured, sendContactMail } from "@/lib/mail";
 import { sendOnboardingConfirmation } from "@/lib/email/send-confirmation";
-import { onboardingSchema, normaliseFullAnswers } from "@/lib/onboarding/schema";
 import {
   createDraftToken,
   createSubmission,
   ensureOnboardingIndexes,
 } from "@/lib/onboarding/submission";
+import { getFormDefinition } from "@/lib/forms/store";
+import { validateForm } from "@/lib/forms/validate";
 import { clearedDraftCookieHeader, readDraftToken } from "@/lib/onboarding/draft-cookie";
 import { clientIp, refererPath } from "@/lib/request-meta";
 import { rateLimit } from "@/lib/rate-limit";
-import type { OnboardingAnswers } from "@/lib/onboarding/types";
+import type { DraftAnswers } from "@/lib/forms/answers";
 
 const SUBMIT_LIMIT = 6;
 const SUBMIT_WINDOW_MS = 60 * 60 * 1000;
@@ -22,15 +23,23 @@ function isPlainObject(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
 }
 
-function summaryText(answers: OnboardingAnswers): string {
+function text(value: unknown): string {
+  return typeof value === "string" ? value : "";
+}
+
+function summaryText(answers: DraftAnswers): string {
   return [
-    `Full name: ${answers.personal.fullName}`,
-    `Email: ${answers.personal.email}`,
-    `Contact: ${answers.personal.contactNumber}`,
-    `Level: ${answers.preferences.desiredLevel}`,
-    `Countries: ${answers.preferences.interestedCountries.join(", ")}`,
-    `Budget: ${answers.preferences.studyBudget}`,
-    `Scholarships: ${answers.preferences.lookingForScholarships}`,
+    `Full name: ${text(answers.personal?.fullName)}`,
+    `Email: ${text(answers.personal?.email)}`,
+    `Contact: ${text(answers.personal?.contactNumber)}`,
+    `Level: ${text(answers.preferences?.desiredLevel)}`,
+    `Countries: ${
+      Array.isArray(answers.preferences?.interestedCountries)
+        ? (answers.preferences?.interestedCountries as string[]).join(", ")
+        : ""
+    }`,
+    `Budget: ${text(answers.preferences?.studyBudget)}`,
+    `Scholarships: ${text(answers.preferences?.lookingForScholarships)}`,
   ].join("\n");
 }
 
@@ -55,11 +64,15 @@ export async function POST(request: Request) {
     );
   }
 
-  const parsed = onboardingSchema.safeParse(normaliseFullAnswers(body));
-  if (!parsed.success) {
-    const firstError = parsed.error.issues[0]?.message ?? "Please complete every section.";
+  const definition = await getFormDefinition("onboarding");
+  const answers = body as DraftAnswers;
+  const errors = validateForm(definition, answers);
+  if (Object.keys(errors).length > 0) {
+    const firstError = Object.values(errors)[0] ?? "Please complete every section.";
     return NextResponse.json({ error: firstError }, { status: 400 });
   }
+
+  const applicantEmail = text(answers.personal?.email);
 
   const existingToken = await readDraftToken();
   const draftToken = existingToken ?? createDraftToken();
@@ -67,7 +80,7 @@ export async function POST(request: Request) {
   try {
     await ensureOnboardingIndexes();
     await createSubmission({
-      answers: parsed.data,
+      answers,
       draftToken,
       sourcePage: refererPath(request),
     });
@@ -82,13 +95,15 @@ export async function POST(request: Request) {
     sendContactMail({
       to: process.env.CONTACT_TO ?? "",
       from: process.env.CONTACT_FROM ?? process.env.SMTP_USER ?? FROM_FALLBACK,
-      replyTo: parsed.data.personal.email,
+      replyTo: applicantEmail || undefined,
       subject: "[Hope Consultants] New student onboarding form",
-      text: summaryText(parsed.data),
+      text: summaryText(answers),
     }).catch(() => null);
   }
 
-  sendOnboardingConfirmation(parsed.data.personal.email).catch(() => null);
+  if (applicantEmail) {
+    sendOnboardingConfirmation(applicantEmail).catch(() => null);
+  }
 
   return NextResponse.json(
     { ok: true },

@@ -6,6 +6,7 @@ import { AdminSidebar } from "@/components/admin/admin-sidebar";
 import { countLeadsByStatus } from "@/lib/admin/lead";
 import { hasSection } from "@/lib/admin/permissions";
 import { countSubmissionsByStatus } from "@/lib/onboarding/submission";
+import { countDocumentByStatus } from "@/lib/forms/submissions";
 import { requireAdmin } from "@/lib/admin/require-admin";
 import { ADMIN_PANEL_SECTIONS } from "@/lib/admin/types";
 import { CONTENT_KEYS } from "@/lib/content/schemas";
@@ -23,9 +24,10 @@ export default async function AdminPanelLayout({ children }: { children: ReactNo
     redirect("/admin/login");
   }
 
-  const [byStatus, onboardingByStatus] = await Promise.all([
+  const [byStatus, onboardingByStatus, documentByStatus] = await Promise.all([
     hasSection(admin, "leads") ? countLeadsByStatus() : null,
     hasSection(admin, "onboarding") ? countSubmissionsByStatus() : null,
+    hasSection(admin, "documents") ? countDocumentByStatus() : null,
   ]);
 
   const allowedContentCollections =
@@ -48,6 +50,7 @@ export default async function AdminPanelLayout({ children }: { children: ReactNo
           email={admin.email}
           newLeads={byStatus?.New ?? 0}
           newOnboarding={onboardingByStatus?.New ?? 0}
+          newDocuments={documentByStatus?.New ?? 0}
           allowedSections={ADMIN_PANEL_SECTIONS.filter((section) =>
             hasSection(admin, section),
           )}
