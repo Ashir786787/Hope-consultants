@@ -116,7 +116,7 @@ export function AdminLoginCard({ children }: { children: ReactNode }) {
       style={PALETTE}
       className="flex min-h-dvh items-center justify-center bg-[var(--admin-login-bg)] px-4 py-12"
     >
-      <main className="w-full max-w-md rounded-3xl border border-[var(--admin-login-border)] bg-[var(--admin-login-card)] p-8">
+      <main className="w-full max-w-md rounded-3xl border border-[var(--admin-login-border)] bg-[var(--admin-login-card)] p-6 sm:p-8">
         <div className="mb-6 flex flex-col items-center gap-3 text-center">
           <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-[var(--admin-login-accent)]">
             <Lock className="h-5 w-5 text-white" strokeWidth={1.75} aria-hidden="true" />

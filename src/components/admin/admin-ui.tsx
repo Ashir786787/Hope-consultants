@@ -60,7 +60,7 @@ export function AdminField({
         id={id}
         aria-invalid={error ? true : undefined}
         aria-describedby={error ? `${id}-error` : hint ? `${id}-hint` : undefined}
-        className={`min-h-11 rounded-lg border bg-hope-white px-3 text-base text-hope-midnight transition-colors placeholder:text-hope-fog focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-hope-ember ${
+        className={`min-h-11 w-full rounded-lg border bg-hope-white px-3 text-base text-hope-midnight transition-colors placeholder:text-hope-fog focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-hope-ember ${
           error ? "border-hope-ember" : "border-hope-midnight/20"
         }`}
         {...props}

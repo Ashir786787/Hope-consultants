@@ -84,13 +84,13 @@ export function AdminUserRow({
   return (
     <li className="flex flex-col gap-4 rounded-2xl border border-hope-midnight/10 bg-hope-white p-5">
       <div className="flex flex-wrap items-start justify-between gap-3">
-        <div className="flex flex-col gap-1">
-          <p className="font-semibold text-hope-midnight">
+        <div className="flex min-w-0 flex-col gap-1">
+          <p className="font-semibold break-words text-hope-midnight">
             {admin.name}
             {isSelf ? " (you)" : ""}
           </p>
-          <p className="text-sm text-hope-fog">{admin.email}</p>
-          <p className="text-sm text-hope-fog">{admin.role}</p>
+          <p className="text-sm break-words text-hope-fog">{admin.email}</p>
+          <p className="text-sm break-words text-hope-fog">{admin.role}</p>
         </div>
         <AdminBadge tone={status}>{statusLabel}</AdminBadge>
       </div>
