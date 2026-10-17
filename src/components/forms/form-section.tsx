@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
@@ -11,7 +11,7 @@ import {
 } from "@/components/forms/form-draft";
 import { FormFieldView } from "@/components/forms/form-field";
 import { focusFieldControl } from "@/components/onboarding/onboarding-field";
-import { isFieldVisible, validateForm, validateSection } from "@/lib/forms/validate";
+import { conditionContext, isFieldVisible, validateForm, validateSection } from "@/lib/forms/validate";
 import type { FormDefinition, FormSection as FormSectionModel } from "@/lib/forms/types";
 
 export function FormSection({
@@ -34,13 +34,14 @@ export function FormSection({
   const router = useRouter();
   const { answers, flush } = useFormDraft();
   const { values, setValue, toggleValue } = useFormSectionValues(section.key);
+  const context = useMemo(() => conditionContext(answers), [answers]);
   const [flagged, setFlagged] = useState<string[]>([]);
   const [message, setMessage] = useState<string | null>(null);
   const [pending, setPending] = useState(false);
 
   const errorsFor = useCallback(
-    () => validateSection(section, answers[section.key] ?? {}),
-    [answers, section]
+    () => validateSection(section, context),
+    [section, context]
   );
 
   const errors: Record<string, string> = {};
@@ -101,7 +102,7 @@ export function FormSection({
   return (
     <form onSubmit={onSubmit} noValidate className="flex flex-col gap-6">
       {section.fields.map((field) =>
-        isFieldVisible(field, values) ? (
+        isFieldVisible(field, context) ? (
           <FormFieldView
             key={field.key}
             field={field}

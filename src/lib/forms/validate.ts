@@ -28,6 +28,16 @@ function matchesCondition(
   return condition.equals.includes(asText(values[condition.field]));
 }
 
+export function conditionContext(answers: DraftAnswers): Record<string, unknown> {
+  const context: Record<string, unknown> = {};
+  for (const section of Object.values(answers)) {
+    for (const [key, value] of Object.entries(section)) {
+      context[key] = value;
+    }
+  }
+  return context;
+}
+
 export function isFieldVisible(field: FormField, values: Record<string, unknown>): boolean {
   if (field.archived) return false;
   if (!field.showWhen) return true;
@@ -120,8 +130,9 @@ export function validateForm(
   answers: DraftAnswers
 ): Record<string, string> {
   const errors: Record<string, string> = {};
+  const context = conditionContext(answers);
   for (const section of definition.sections) {
-    const sectionErrors = validateSection(section, answers[section.key] ?? {});
+    const sectionErrors = validateSection(section, context);
     for (const [key, message] of Object.entries(sectionErrors)) {
       errors[`${section.key}.${key}`] = message;
     }

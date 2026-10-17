@@ -38,6 +38,11 @@ export function AdminDocumentDetail({
   const [saved, setSaved] = useState(false);
   const [pending, setPending] = useState(false);
 
+  const fileCount = groups.reduce(
+    (total, group) => total + group.rows.reduce((count, row) => count + row.files.length, 0),
+    0
+  );
+
   async function save() {
     setPending(true);
     setError(null);
@@ -68,6 +73,16 @@ export function AdminDocumentDetail({
         <div className="flex flex-wrap items-center gap-3">
           <h2 className="text-lg font-bold text-hope-midnight">Status</h2>
           <AdminBadge tone={BADGE_TONE[status]}>{status}</AdminBadge>
+          {fileCount > 0 ? (
+            <a
+              href={`/api/admin/documents/${id}/files`}
+              download
+              className="ml-auto inline-flex min-h-11 items-center justify-center gap-2 rounded-lg border border-hope-midnight/30 px-4 text-sm font-semibold text-hope-midnight transition-colors hover:bg-hope-midnight/5 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-hope-ember"
+            >
+              <Download className="size-4 shrink-0" strokeWidth={1.75} aria-hidden="true" />
+              Download all documents ({fileCount})
+            </a>
+          ) : null}
         </div>
 
         <div className="flex flex-col gap-1.5">
