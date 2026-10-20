@@ -9,7 +9,7 @@ import { rateLimit } from "@/lib/rate-limit";
 
 export const runtime = "nodejs";
 
-export const UPLOADS_BUCKET = "uploads";
+const UPLOADS_BUCKET = "uploads";
 
 const UPLOAD_LIMIT = 120;
 const UPLOAD_WINDOW_MS = 60 * 60 * 1000;
