@@ -34,34 +34,42 @@ export function Cursor() {
       gsap.to(ring, { scale: target, duration: 0.3, ease: "power3.out" });
     };
 
+    let rafId = 0;
+    let lastEvent: MouseEvent | null = null;
+
     const move = (event: MouseEvent) => {
-      dotX(event.clientX);
-      dotY(event.clientY);
-      ringX(event.clientX);
-      ringY(event.clientY);
-      const target = event.target as Element | null;
-      const interactive = target?.closest(
-        "a, button, [role='button'], input, textarea, select, [data-cursor]"
-      );
-      const isField = Boolean(
-        target?.closest("input, textarea, select")
-      );
-      if (isField) {
-        gsap.to([dot, ring, label], { opacity: 0, duration: 0.2 });
-        return;
-      }
-      gsap.to([dot, ring], { opacity: 1, duration: 0.2 });
-      const isView = Boolean(target?.closest('[data-cursor="view"]'));
-      if (isView) {
-        gsap.to(label, { opacity: 1 });
-        setScale(OVERRIDE_SCALE);
-      } else if (interactive) {
-        gsap.to(label, { opacity: 0 });
-        setScale(OVERRIDE_SCALE);
-      } else {
-        gsap.to(label, { opacity: 0 });
-        setScale(1);
-      }
+      lastEvent = event;
+      if (rafId) return;
+      rafId = window.requestAnimationFrame(() => {
+        rafId = 0;
+        const ev = lastEvent;
+        if (!ev) return;
+        dotX(ev.clientX);
+        dotY(ev.clientY);
+        ringX(ev.clientX);
+        ringY(ev.clientY);
+        const target = ev.target as Element | null;
+        const interactive = target?.closest(
+          "a, button, [role='button'], input, textarea, select, [data-cursor]"
+        );
+        const isField = Boolean(target?.closest("input, textarea, select"));
+        if (isField) {
+          gsap.to([dot, ring, label], { opacity: 0, duration: 0.2 });
+          return;
+        }
+        gsap.to([dot, ring], { opacity: 1, duration: 0.2 });
+        const isView = Boolean(target?.closest('[data-cursor="view"]'));
+        if (isView) {
+          gsap.to(label, { opacity: 1 });
+          setScale(OVERRIDE_SCALE);
+        } else if (interactive) {
+          gsap.to(label, { opacity: 0 });
+          setScale(OVERRIDE_SCALE);
+        } else {
+          gsap.to(label, { opacity: 0 });
+          setScale(1);
+        }
+      });
     };
 
     const press = () => {
@@ -78,6 +86,7 @@ export function Cursor() {
       window.removeEventListener("mousemove", move);
       window.removeEventListener("mousedown", press);
       window.removeEventListener("mouseup", release);
+      if (rafId) window.cancelAnimationFrame(rafId);
     };
   });
 
