@@ -44,6 +44,8 @@ export function CountUp({
       },
     };
 
+    requestAnimationFrame(() => ScrollTrigger.refresh());
+
     if (el.getBoundingClientRect().top < window.innerHeight) {
       const tween = gsap.to(state, vars);
       return () => {

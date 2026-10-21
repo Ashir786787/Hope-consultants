@@ -35,10 +35,13 @@ export function SmoothScroll({ children }: { children: ReactNode }) {
     gsap.ticker.add(tick);
     gsap.ticker.lagSmoothing(0);
     document.fonts?.ready.then(() => ScrollTrigger.refresh());
+    const onIntroComplete = () => ScrollTrigger.refresh();
+    window.addEventListener("hope:intro-complete", onIntroComplete, { once: true });
     return () => {
       gsap.ticker.remove(tick);
       lenis.destroy();
       lenisRef.current = null;
+      window.removeEventListener("hope:intro-complete", onIntroComplete);
     };
   }, []);
 

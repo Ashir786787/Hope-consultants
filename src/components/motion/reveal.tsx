@@ -27,7 +27,7 @@ export function Reveal({ children, className, delay = 0, y = 32, stagger }: Reve
       if (!el) return;
       if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
       const targets = stagger ? Array.from(el.children) : el;
-      gsap.fromTo(
+      const tween = gsap.fromTo(
         targets,
         { y, autoAlpha: 0 },
         {
@@ -44,6 +44,11 @@ export function Reveal({ children, className, delay = 0, y = 32, stagger }: Reve
           },
         }
       );
+      requestAnimationFrame(() => ScrollTrigger.refresh());
+      return () => {
+        tween.scrollTrigger?.kill();
+        tween.kill();
+      };
     },
     { scope: ref }
   );
