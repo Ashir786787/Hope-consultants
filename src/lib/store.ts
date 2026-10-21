@@ -1,6 +1,8 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 
+import { revalidateTag, unstable_cache } from "next/cache";
+
 import { mongoConfigured, mongoRead, mongoWrite } from "@/lib/mongo";
 import { defaultSite } from "@/lib/site";
 
@@ -69,7 +71,7 @@ async function seed(collection: DataCollection): Promise<unknown> {
   }
 }
 
-export async function getCollection<T>(collection: DataCollection): Promise<T> {
+async function readCollection<T>(collection: DataCollection): Promise<T> {
   if (mongoConfigured()) {
     const existing = await mongoRead(collection);
     if (existing !== null) return existing as T;
@@ -82,18 +84,37 @@ export async function getCollection<T>(collection: DataCollection): Promise<T> {
   return (await seed(collection)) as T;
 }
 
+const cachedReaders = new Map<DataCollection, () => Promise<unknown>>();
+
+function cachedReader(collection: DataCollection): () => Promise<unknown> {
+  const cached = cachedReaders.get(collection);
+  if (cached) return cached;
+  const reader = unstable_cache(
+    () => readCollection(collection),
+    ["content", collection],
+    { tags: [`content:${collection}`] }
+  );
+  cachedReaders.set(collection, reader);
+  return reader;
+}
+
+export async function getCollection<T>(collection: DataCollection): Promise<T> {
+  return (await cachedReader(collection)()) as T;
+}
+
 export async function saveCollection(
   collection: DataCollection,
   value: unknown
 ): Promise<void> {
   if (mongoConfigured()) {
     await mongoWrite(collection, value);
-    return;
+  } else {
+    await fs.mkdir(DATA_DIR, { recursive: true });
+    await fs.writeFile(
+      collectionFile(collection),
+      JSON.stringify(value, null, 2),
+      "utf8"
+    );
   }
-  await fs.mkdir(DATA_DIR, { recursive: true });
-  await fs.writeFile(
-    collectionFile(collection),
-    JSON.stringify(value, null, 2),
-    "utf8"
-  );
+  revalidateTag(`content:${collection}`, { expire: 0 });
 }

@@ -23,7 +23,27 @@ async function client(): Promise<MongoClient> {
   return instance;
 }
 
+let contentIndexReady: Promise<void> | null = null;
+
+async function ensureContentIndex(): Promise<void> {
+  if (!contentIndexReady) {
+    contentIndexReady = (async () => {
+      const collection = (await client()).db(MONGO_DB).collection("content");
+      try {
+        await collection.createIndex({ key: 1 }, { unique: true });
+      } catch {
+        await collection.createIndex({ key: 1 });
+      }
+    })().catch((error: unknown) => {
+      contentIndexReady = null;
+      throw error;
+    });
+  }
+  await contentIndexReady;
+}
+
 export async function mongoRead(collection: string): Promise<unknown | null> {
+  await ensureContentIndex();
   const doc = await (await client()).db(MONGO_DB).collection("content").findOne({ key: collection });
   return doc?.data ?? null;
 }

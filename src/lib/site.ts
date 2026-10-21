@@ -1,3 +1,5 @@
+import { cache } from "react";
+
 export interface SiteFields {
   email: string;
   phone: string;
@@ -14,7 +16,7 @@ export const defaultSite: SiteFields = {
   tiktok: "https://www.tiktok.com/@hope.consultants",
 };
 
-export async function getSite(): Promise<SiteFields> {
+export const getSite = cache(async (): Promise<SiteFields> => {
   const { getCollection } = await import("@/lib/store");
   return getCollection<SiteFields>("site");
-}
+});
