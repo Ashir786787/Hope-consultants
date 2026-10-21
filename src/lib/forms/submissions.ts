@@ -51,8 +51,10 @@ export async function ensureDocumentIndexes(): Promise<void> {
 }
 
 async function buildIndexes(): Promise<void> {
+  await mongoEnsureIndex(DOCUMENT_SUBMISSIONS, { id: 1 }, { unique: true });
   await mongoEnsureIndex(DOCUMENT_SUBMISSIONS, { submittedAt: -1 });
   await mongoEnsureIndex(DOCUMENT_SUBMISSIONS, { status: 1 });
+  await mongoEnsureIndex(DOCUMENT_SUBMISSIONS, { status: 1, submittedAt: -1 });
   await mongoEnsureIndex(DOCUMENT_SUBMISSIONS, { studentId: 1 });
 }
 

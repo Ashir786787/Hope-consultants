@@ -25,8 +25,10 @@ export async function ensureLeadIndexes(): Promise<void> {
 }
 
 async function buildIndexes(): Promise<void> {
+  await mongoEnsureIndex(COLLECTION, { id: 1 }, { unique: true });
   await mongoEnsureIndex(COLLECTION, { submittedAt: -1 });
   await mongoEnsureIndex(COLLECTION, { status: 1 });
+  await mongoEnsureIndex(COLLECTION, { status: 1, submittedAt: -1 });
 }
 
 export async function createLead(input: {
@@ -65,7 +67,11 @@ export async function findLeadById(id: string): Promise<Lead | null> {
 }
 
 export async function countLeadsByStatus(): Promise<Record<LeadStatus, number>> {
-  const rows = await mongoFind<{ status: LeadStatus }>(COLLECTION, {}, { projection: { status: 1 } });
+  const rows = await mongoFind<{ status: LeadStatus }>(
+    COLLECTION,
+    {},
+    { projection: { status: 1 }, sort: { submittedAt: -1 } }
+  );
   const counts: Record<LeadStatus, number> = {
     New: 0,
     Contacted: 0,

@@ -38,7 +38,10 @@ export async function ensureAdminUserIndexes(): Promise<void> {
 
 async function buildIndexes(): Promise<void> {
   await mongoEnsureIndex(COLLECTION, { email: 1 }, { unique: true });
+  await mongoEnsureIndex(COLLECTION, { id: 1 }, { unique: true });
   await mongoEnsureIndex(COLLECTION, { purgeAt: 1 }, { expireAfterSeconds: 0 });
+  await mongoEnsureIndex(COLLECTION, { isOwner: 1 });
+  await mongoEnsureIndex(COLLECTION, { isActive: 1 });
 }
 
 export async function findAdminByEmail(email: string): Promise<AdminUser | null> {

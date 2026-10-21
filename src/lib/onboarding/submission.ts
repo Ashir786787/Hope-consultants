@@ -37,8 +37,10 @@ export async function ensureOnboardingIndexes(): Promise<void> {
 }
 
 async function buildIndexes(): Promise<void> {
+  await mongoEnsureIndex(SUBMISSIONS, { id: 1 }, { unique: true });
   await mongoEnsureIndex(SUBMISSIONS, { submittedAt: -1 });
   await mongoEnsureIndex(SUBMISSIONS, { status: 1 });
+  await mongoEnsureIndex(SUBMISSIONS, { status: 1, submittedAt: -1 });
   await mongoEnsureIndex(SUBMISSIONS, { caseNumber: 1 });
   await mongoEnsureIndex(DRAFTS, { updatedAt: -1 });
   await mongoEnsureIndex(

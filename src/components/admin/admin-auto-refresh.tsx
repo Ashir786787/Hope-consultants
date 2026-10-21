@@ -3,7 +3,7 @@
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 
-const REFRESH_INTERVAL_MS = 20_000;
+const REFRESH_INTERVAL_MS = 30_000;
 
 export function AdminAutoRefresh() {
   const router = useRouter();

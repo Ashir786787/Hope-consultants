@@ -5,6 +5,7 @@ const MONGO_DB = process.env.MONGODB_DB || "hope-consultants";
 
 type MongoGlobals = {
   __hopeMongoClient?: MongoClient;
+  __hopeMongoClientPromise?: Promise<MongoClient>;
 };
 
 export function mongoConfigured(): boolean {
@@ -17,10 +18,20 @@ async function client(): Promise<MongoClient> {
   }
   const globals = globalThis as unknown as MongoGlobals;
   if (globals.__hopeMongoClient) return globals.__hopeMongoClient;
+  if (globals.__hopeMongoClientPromise) return globals.__hopeMongoClientPromise;
   const instance = new MongoClient(MONGO_URI, { serverSelectionTimeoutMS: 10000 });
-  await instance.connect();
-  globals.__hopeMongoClient = instance;
-  return instance;
+  globals.__hopeMongoClientPromise = instance
+    .connect()
+    .then(() => {
+      globals.__hopeMongoClient = instance;
+      globals.__hopeMongoClientPromise = undefined;
+      return instance;
+    })
+    .catch((error) => {
+      globals.__hopeMongoClientPromise = undefined;
+      throw error;
+    });
+  return globals.__hopeMongoClientPromise;
 }
 
 let contentIndexReady: Promise<void> | null = null;
