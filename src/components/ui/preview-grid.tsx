@@ -22,13 +22,21 @@ export function PreviewGrid({
 
   const columnClass = columns === 2 ? "sm:grid-cols-2" : "sm:grid-cols-2 lg:grid-cols-3";
 
+  const seen = new Set<string>();
+  const keyed = items.map((item, index) => {
+    const base = item.key.trim();
+    const key = base && !seen.has(base) ? base : `item-${index}`;
+    seen.add(key);
+    return { key, content: item.content, index };
+  });
+
   return (
     <div className="flex w-full flex-col gap-10">
       <ul className={`grid w-full grid-cols-1 gap-5 ${columnClass}`}>
-        {items.map((item, index) => (
-          <li key={item.key} className="h-full">
+        {keyed.map(({ key, content, index }) => (
+          <li key={key} className="h-full">
             <Reveal delay={index * 0.05} className="h-full">
-              {item.content}
+              {content}
             </Reveal>
           </li>
         ))}
