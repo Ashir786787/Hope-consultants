@@ -1,6 +1,11 @@
 import type { OtpPurpose } from "@/lib/admin/types";
 import { OTP_TTL_MINUTES } from "@/lib/admin/otp-challenge";
-import { MAIL_BRAND, sendAdminMail } from "@/lib/email/transporter";
+import {
+  MAIL_BRAND,
+  MailDeliveryError,
+  sendAdminMail,
+  type MailFailureReason,
+} from "@/lib/email/transporter";
 
 const SUBJECT_LINE: Record<OtpPurpose, string> = {
   first_login: `${MAIL_BRAND} admin access code`,
@@ -47,26 +52,40 @@ function buildText(input: OtpDelivery): string {
 
 export async function sendOtpEmail(input: OtpDelivery): Promise<void> {
   if (!/^\d{6}$/.test(input.code)) {
-    throw new Error("OTP email requires a six digit code.");
+    throw new MailDeliveryError("rejected", "OTP email requires a six digit code.");
   }
   if (input.approverEmails.length === 0) {
-    throw new Error("OTP email requires at least one owner address to deliver to.");
+    throw new MailDeliveryError(
+      "not_configured",
+      "OTP email requires at least one owner address to deliver to."
+    );
   }
 
-  const failures: string[] = [];
-  for (const to of input.approverEmails) {
-    try {
-      await sendAdminMail({
+  const results = await Promise.allSettled(
+    input.approverEmails.map((to) =>
+      sendAdminMail({
         to,
         subject: SUBJECT_LINE[input.purpose],
         text: buildText(input),
-      });
-    } catch (error) {
-      failures.push(`${to}: ${error instanceof Error ? error.message : String(error)}`);
-    }
-  }
+      })
+    )
+  );
+
+  const failures: { to: string; reason: MailFailureReason; detail: string }[] = [];
+  results.forEach((result, index) => {
+    if (result.status === "fulfilled") return;
+    const error = result.reason;
+    failures.push({
+      to: input.approverEmails[index],
+      reason: error instanceof MailDeliveryError ? error.reason : "unknown",
+      detail: error instanceof Error ? error.message : String(error),
+    });
+  });
 
   if (failures.length === input.approverEmails.length) {
-    throw new Error(`No approver received the code. ${failures.join(" | ")}`);
+    throw new MailDeliveryError(
+      failures[0]?.reason ?? "unknown",
+      failures.map((failure) => `${failure.to}: ${failure.detail}`).join(" | ")
+    );
   }
 }

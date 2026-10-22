@@ -8,13 +8,17 @@ import { LoginAlert, LoginButton, LoginLink } from "./admin-login-card";
 import { fetchWithTimeout, requestErrorMessage } from "@/lib/admin/client-fetch";
 import { codeFromSlots, emptySlots, type OtpSlots } from "@/lib/admin/otp-entry";
 
+const OTP_TIMEOUT_MS = 45_000;
+
 export function AdminLoginOtp({
   email,
   initialCooldown,
+  alreadySent = false,
   onBack,
 }: {
   email: string;
   initialCooldown: number;
+  alreadySent?: boolean;
   onBack: () => void;
 }) {
   const router = useRouter();
@@ -49,11 +53,15 @@ export function AdminLoginOtp({
     setFormError(null);
     setPending(true);
     try {
-      const response = await fetchWithTimeout("/api/admin/verify-otp", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, code }),
-      });
+      const response = await fetchWithTimeout(
+        "/api/admin/verify-otp",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, code }),
+        },
+        OTP_TIMEOUT_MS
+      );
       const payload = (await response.json().catch(() => null)) as {
         error?: string;
       } | null;
@@ -85,11 +93,15 @@ export function AdminLoginOtp({
     setFormError(null);
     setResending(true);
     try {
-      const response = await fetchWithTimeout("/api/admin/resend-otp", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email }),
-      });
+      const response = await fetchWithTimeout(
+        "/api/admin/resend-otp",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email }),
+        },
+        OTP_TIMEOUT_MS
+      );
       const payload = (await response.json().catch(() => null)) as {
         error?: string;
         retryAfter?: number;
@@ -126,8 +138,9 @@ export function AdminLoginOtp({
           Enter your code
         </h2>
         <p className="text-sm text-[var(--admin-login-muted)]">
-          We emailed a 6-digit code to the panel owner for {email}. Ask them for it and enter
-          it here. It expires in 10 minutes.
+          {alreadySent
+            ? "A code was already sent to the panel owner for this email address. Ask them for the most recent one and enter it here."
+            : `We emailed a 6-digit code to the panel owner for ${email}. Ask them for it and enter it here. It expires in 10 minutes.`}
         </p>
       </div>
       <AdminOtpInput

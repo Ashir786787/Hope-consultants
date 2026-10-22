@@ -14,7 +14,7 @@ export const metadata: Metadata = {
     "Honest, plain-language writing from Hope Consultants on studying abroad — universities, scholarships, visas, and student life.",
 };
 
-export const dynamic = "force-dynamic";
+export const revalidate = 3600;
 
 export default async function BlogPage() {
   const posts = (await getCollection<BlogPost[]>("blog"))

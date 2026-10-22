@@ -1,7 +1,7 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 
-import { revalidateTag, unstable_cache } from "next/cache";
+import { revalidatePath, revalidateTag, unstable_cache } from "next/cache";
 
 import { mongoConfigured, mongoRead, mongoWrite } from "@/lib/mongo";
 import { defaultSite } from "@/lib/site";
@@ -117,4 +117,5 @@ export async function saveCollection(
     );
   }
   revalidateTag(`content:${collection}`, { expire: 0 });
+  revalidatePath("/", "layout");
 }

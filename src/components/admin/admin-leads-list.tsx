@@ -2,7 +2,9 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { Trash2 } from "lucide-react";
 
+import { AdminConfirmDialog } from "@/components/admin/admin-confirm-dialog";
 import { AdminAlert, AdminBadge, AdminButton } from "./admin-ui";
 import type { Lead, LeadStatus } from "@/lib/admin/types";
 import { LEAD_STATUSES } from "@/lib/admin/types";
@@ -28,6 +30,9 @@ export function AdminLeadsList({ leads }: { leads: Lead[] }) {
   const [error, setError] = useState<string | null>(null);
   const [saved, setSaved] = useState(false);
   const [pending, setPending] = useState(false);
+  const [deleteId, setDeleteId] = useState<string | null>(null);
+  const [deleting, setDeleting] = useState(false);
+  const [deleteError, setDeleteError] = useState<string | null>(null);
 
   function open(lead: Lead) {
     setOpenId(lead.id);
@@ -68,8 +73,32 @@ export function AdminLeadsList({ leads }: { leads: Lead[] }) {
     }
   }
 
+  async function remove() {
+    if (!deleteId) return;
+    setDeleting(true);
+    setDeleteError(null);
+    try {
+      const response = await fetch(`/api/admin/leads/${deleteId}`, { method: "DELETE" });
+      const payload = (await response.json().catch(() => null)) as { error?: string } | null;
+      if (!response.ok) {
+        setDeleteError(payload?.error ?? "Could not delete this enquiry.");
+        return;
+      }
+      if (openId === deleteId) close();
+      setDeleteId(null);
+      router.refresh();
+    } catch {
+      setDeleteError("Could not reach the server. Check your connection and try again.");
+    } finally {
+      setDeleting(false);
+    }
+  }
+
+  const deletingLead = leads.find((lead) => lead.id === deleteId) ?? null;
+
   return (
-    <ul className="flex flex-col gap-4">
+    <>
+      <ul className="flex flex-col gap-4">
       {leads.map((lead) => {
         const expanded = openId === lead.id;
         return (
@@ -87,7 +116,21 @@ export function AdminLeadsList({ leads }: { leads: Lead[] }) {
                   {lead.email}
                 </a>
               </div>
-              <AdminBadge tone={BADGE_TONE[lead.status]}>{lead.status}</AdminBadge>
+              <div className="flex items-center gap-2">
+                <AdminBadge tone={BADGE_TONE[lead.status]}>{lead.status}</AdminBadge>
+                <button
+                  type="button"
+                  title="Delete this enquiry"
+                  aria-label={`Delete enquiry from ${lead.name}`}
+                  onClick={() => {
+                    setDeleteError(null);
+                    setDeleteId(lead.id);
+                  }}
+                  className="inline-flex size-11 items-center justify-center rounded-lg border border-hope-midnight/20 text-hope-midnight transition-colors hover:border-hope-ember hover:bg-hope-ember/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-hope-ember"
+                >
+                  <Trash2 className="size-4" strokeWidth={1.75} aria-hidden="true" />
+                </button>
+              </div>
             </div>
 
             <p className="text-sm font-semibold text-hope-midnight">{lead.subject}</p>
@@ -170,6 +213,31 @@ export function AdminLeadsList({ leads }: { leads: Lead[] }) {
           </li>
         );
       })}
-    </ul>
+      </ul>
+
+      {deleteError ? (
+        <div className="mt-4">
+          <AdminAlert tone="error">{deleteError}</AdminAlert>
+        </div>
+      ) : null}
+
+      <AdminConfirmDialog
+        open={deleteId !== null}
+        title="Delete this enquiry?"
+        description={
+          deletingLead
+            ? `The enquiry from ${deletingLead.name} (${deletingLead.email}) will be removed permanently. This cannot be undone.`
+            : "This enquiry will be removed permanently. This cannot be undone."
+        }
+        confirmLabel="Delete enquiry"
+        busy={deleting}
+        onConfirm={remove}
+        onCancel={() => {
+          if (deleting) return;
+          setDeleteId(null);
+          setDeleteError(null);
+        }}
+      />
+    </>
   );
 }

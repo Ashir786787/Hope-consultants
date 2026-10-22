@@ -2,6 +2,7 @@ import { randomUUID } from "node:crypto";
 
 import {
   mongoCount,
+  mongoDeleteOne,
   mongoEnsureIndex,
   mongoFind,
   mongoFindOne,
@@ -89,6 +90,11 @@ export async function updateLead(
   patch: Partial<Pick<Lead, "status" | "notes">>
 ): Promise<void> {
   await mongoUpdateOne(COLLECTION, { id }, { $set: patch });
+}
+
+export async function deleteLead(id: string): Promise<boolean> {
+  const deletedCount = await mongoDeleteOne(COLLECTION, { id });
+  return deletedCount > 0;
 }
 
 export interface LeadDay {

@@ -63,11 +63,13 @@ export async function sendAdminActivatedEmail(input: {
   ownerEmails: string[];
   ip: string | null;
 }): Promise<void> {
-  for (const ownerEmail of input.ownerEmails) {
-    await sendAdminMail({
-      to: ownerEmail,
-      subject: `New admin registered on ${MAIL_BRAND}`,
-      text: buildOwnerNoticeText(input.admin, input.ip),
-    });
-  }
+  await Promise.all(
+    input.ownerEmails.map((ownerEmail) =>
+      sendAdminMail({
+        to: ownerEmail,
+        subject: `New admin registered on ${MAIL_BRAND}`,
+        text: buildOwnerNoticeText(input.admin, input.ip),
+      })
+    )
+  );
 }

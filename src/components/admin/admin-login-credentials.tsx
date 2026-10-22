@@ -11,6 +11,7 @@ import { fetchWithTimeout, requestErrorMessage } from "@/lib/admin/client-fetch"
 import { LoginAlert, LoginButton, LoginField } from "./admin-login-card";
 
 const MIN_PASSWORD_LENGTH = 8;
+const LOGIN_TIMEOUT_MS = 45_000;
 
 const credentialsSchema = z.object({
   email: z.string().trim().email("That email address does not look right."),
@@ -24,7 +25,7 @@ type CredentialsValues = z.infer<typeof credentialsSchema>;
 export function AdminLoginCredentials({
   onNeedsCode,
 }: {
-  onNeedsCode: (email: string) => void;
+  onNeedsCode: (email: string, retryAfter: number, alreadySent: boolean) => void;
 }) {
   const router = useRouter();
   const [formError, setFormError] = useState<string | null>(null);
@@ -45,18 +46,28 @@ export function AdminLoginCredentials({
     setFormError(null);
     setPending(true);
     try {
-      const response = await fetchWithTimeout("/api/admin/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(values),
-      });
+      const response = await fetchWithTimeout(
+        "/api/admin/login",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(values),
+        },
+        LOGIN_TIMEOUT_MS
+      );
       const payload = (await response.json().catch(() => null)) as {
         error?: string;
         otpRequired?: boolean;
+        retryAfter?: number;
+        alreadySent?: boolean;
       } | null;
 
-      if (response.ok && payload?.otpRequired) {
-        onNeedsCode(values.email);
+      if (payload?.otpRequired) {
+        onNeedsCode(
+          values.email,
+          payload.retryAfter ?? 60,
+          payload.alreadySent === true
+        );
         return;
       }
       if (!response.ok) {

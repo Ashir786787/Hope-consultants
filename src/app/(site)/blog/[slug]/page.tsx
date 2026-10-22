@@ -7,9 +7,17 @@ import { Button } from "@/components/ui/button";
 import { Magnetic } from "@/components/motion/magnetic";
 import { PlaneMotif } from "@/components/motion/plane-motif";
 import { getCollection } from "@/lib/store";
+import { RichText } from "@/lib/blog/rich-text";
 import type { BlogPost } from "@/lib/data/blog";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 3600;
+
+export async function generateStaticParams(): Promise<{ slug: string }[]> {
+  const posts = await getCollection<BlogPost[]>("blog");
+  return posts
+    .filter((post) => post.published)
+    .map((post) => ({ slug: post.slug }));
+}
 
 function formatDate(value: string): string {
   return new Date(value).toLocaleDateString("en-GB", {
@@ -43,9 +51,8 @@ export default async function BlogPostPage({
   const post = posts.find((item) => item.slug === slug && item.published);
   if (!post) notFound();
 
-  const paragraphs = post.content.split(/\n\s*\n/).filter(Boolean);
-
   return (
+
     <main id="main-content" className="w-full">
       <section className="relative isolate overflow-hidden border-b border-[rgb(255_255_255/0.10)] bg-hope-midnight">
         <div
@@ -83,16 +90,7 @@ export default async function BlogPostPage({
       </section>
 
       <article className="mx-auto w-full max-w-3xl px-4 py-16 sm:px-6">
-        <div className="flex flex-col gap-6">
-          {paragraphs.map((paragraph, index) => (
-            <p
-              key={`${index}-${paragraph.slice(0, 24)}`}
-              className="whitespace-pre-line text-base leading-8 text-muted-foreground"
-            >
-              {paragraph}
-            </p>
-          ))}
-        </div>
+        <RichText content={post.content} className="flex flex-col gap-6" />
 
         <Separator className="mt-12" />
 

@@ -12,6 +12,7 @@ import {
 } from "@/lib/admin/admin-user";
 import {
   createChallenge,
+  deleteChallenge,
   findChallenge,
   generateOtpCode,
   hashOtpCode,
@@ -24,7 +25,7 @@ import {
 import { startSession } from "@/lib/admin/session";
 import { clientIp } from "@/lib/request-meta";
 import { sendOtpEmail } from "@/lib/email/send-otp";
-import { isMailConfigured } from "@/lib/email/transporter";
+import { isMailConfigured, MailDeliveryError } from "@/lib/email/transporter";
 
 const GENERIC_FAILURE = "Invalid email or password";
 const DECOY_PASSWORD_HASH = "$2b$12$Hu91QJp1o4SwRmrBfdu7LuwJd9LWYiUTK5.Uzrr7QoKKum/VjmxEe";
@@ -104,13 +105,11 @@ export async function POST(request: Request) {
   if (hasActiveCode && existing) {
     const cooldown = resendCooldownSeconds(existing);
     if (cooldown > 0) {
-      return NextResponse.json(
-        {
-          error: `A code was already sent to the panel owner. Wait ${cooldown} seconds before requesting another.`,
-          retryAfter: cooldown,
-        },
-        { status: 429 }
-      );
+      return NextResponse.json({
+        otpRequired: true,
+        retryAfter: cooldown,
+        alreadySent: true,
+      });
     }
   }
 
@@ -137,9 +136,13 @@ export async function POST(request: Request) {
       requesterEmail: admin.email,
       requesterIp: ip,
     });
-  } catch {
+  } catch (error) {
+    await deleteChallenge(admin.id, "first_login");
     return NextResponse.json(
-      { error: "We could not reach the panel owner with your code. Please try again." },
+      {
+        error: "We could not reach the panel owner with your code. Please try again.",
+        reason: error instanceof MailDeliveryError ? error.reason : "unknown",
+      },
       { status: 502 }
     );
   }

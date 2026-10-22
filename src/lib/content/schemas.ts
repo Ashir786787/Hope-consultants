@@ -1,6 +1,7 @@
 export type FieldKind =
   | "text"
   | "textarea"
+  | "richtext"
   | "number"
   | "boolean"
   | "select"
@@ -132,7 +133,7 @@ export const SCHEMAS: readonly CollectionSchema[] = [
       { key: "title", label: "Title", kind: "text", required: true },
       { key: "slug", label: "Slug", kind: "text", help: "Auto-filled from the title." },
       { key: "excerpt", label: "Excerpt (shown on the blog list)", kind: "textarea" },
-      { key: "content", label: "Content", kind: "textarea", required: true, help: "Paragraphs separated by a blank line." },
+      { key: "content", label: "Content", kind: "richtext", required: true, help: "Use the toolbar to format text. Headings, bold, italic, underline, lists and quotes are supported." },
       { key: "coverImage", label: "Cover image", kind: "image", help: "Max ~1.5 MB, JPG/PNG/WebP. Upload a file or paste an image link — links are downloaded and stored automatically." },
       { key: "author", label: "Author", kind: "text" },
       { key: "publishedAt", label: "Publish date", kind: "date" },
@@ -150,7 +151,6 @@ export const SCHEMAS: readonly CollectionSchema[] = [
       { key: "phone", label: "Phone (displayed)", kind: "text", group: "Contact details" },
       { key: "phoneHref", label: "Phone (for tel: links)", kind: "text", group: "Contact details" },
       { key: "whatsapp", label: "WhatsApp number", kind: "text", group: "Contact details" },
-      { key: "tiktok", label: "TikTok profile URL", kind: "text", group: "Social media", help: "The footer TikTok button links here once a URL is saved." },
     ],
   },
   {
@@ -206,8 +206,8 @@ export function defaultValue(field: FieldDef): unknown {
     case "boolean":
       return false;
     case "liststrings":
-      return "";
     case "json":
+    case "richtext":
       return "";
     case "select":
       return field.options?.[0] ?? "";
@@ -258,7 +258,7 @@ export function flattenRecord(
       flat[field.key] = Array.isArray(raw) ? raw.join("\n") : "";
       continue;
     }
-    if (field.kind === "json") {
+    if (field.kind === "json" || field.kind === "richtext") {
       flat[field.key] =
         typeof raw === "string"
           ? raw

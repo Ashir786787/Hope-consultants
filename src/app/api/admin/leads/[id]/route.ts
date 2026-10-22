@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 
-import { findLeadById, updateLead } from "@/lib/admin/lead";
+import { deleteLead, findLeadById, updateLead } from "@/lib/admin/lead";
 import { hasSection } from "@/lib/admin/permissions";
 import { requireAdminForApi } from "@/lib/admin/require-admin";
 import { LEAD_STATUSES } from "@/lib/admin/types";
@@ -45,5 +45,33 @@ export async function PATCH(
   }
 
   await updateLead(id, parsed.data);
+  return NextResponse.json({ ok: true });
+}
+
+export async function DELETE(
+  _request: Request,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  const admin = await requireAdminForApi();
+  if (!admin) {
+    return NextResponse.json({ error: "Not signed in." }, { status: 401 });
+  }
+  if (!hasSection(admin, "leads")) {
+    return NextResponse.json(
+      { error: "You do not have access to this section." },
+      { status: 403 }
+    );
+  }
+
+  const { id } = await params;
+  const lead = await findLeadById(id);
+  if (!lead) {
+    return NextResponse.json({ error: "That enquiry no longer exists." }, { status: 404 });
+  }
+
+  const deleted = await deleteLead(id);
+  if (!deleted) {
+    return NextResponse.json({ error: "That enquiry no longer exists." }, { status: 404 });
+  }
   return NextResponse.json({ ok: true });
 }

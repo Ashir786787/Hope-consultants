@@ -2,6 +2,7 @@
 
 import { ChevronDown } from "lucide-react";
 
+import { AdminRichTextField } from "@/components/admin/admin-rich-text-field";
 import { adminControlClass } from "@/components/admin/admin-ui";
 import { lineCount } from "@/lib/admin/content-form";
 import type { FieldDef } from "@/lib/content/schemas";
@@ -32,6 +33,17 @@ export function AdminFieldInput({
   const text = typeof value === "string" ? value : "";
 
   switch (field.kind) {
+    case "richtext": {
+      return (
+        <AdminRichTextField
+          id={id}
+          value={value}
+          error={error}
+          describedBy={describedBy}
+          onChange={onChange}
+        />
+      );
+    }
     case "textarea":
     case "liststrings":
     case "json": {
@@ -110,13 +122,13 @@ export function fieldFootnote(field: FieldDef, value: unknown): string | null {
     const count = lineCount(value);
     return `${count} ${count === 1 ? "entry" : "entries"}`;
   }
-  if (field.kind === "text" || field.kind === "textarea") {
+  if (field.kind === "text" || field.kind === "textarea" || field.kind === "richtext") {
     const text = typeof value === "string" ? value : "";
     if (!text) return null;
     const words = text.trim().split(/\s+/).filter(Boolean).length;
-    return field.kind === "textarea"
-      ? `${words} words · ${text.length} characters`
-      : `${text.length} characters`;
+    return field.kind === "text"
+      ? `${text.length} characters`
+      : `${words} words · ${text.length} characters`;
   }
   return null;
 }

@@ -21,15 +21,44 @@ const nextConfig: NextConfig = {
     "/*": ["./data/**"],
   },
   async headers() {
+    const immutable = [
+      {
+        key: "Cache-Control",
+        value: "public, max-age=31536000, immutable",
+      },
+    ];
     return [
       {
         source: "/hero/:path*",
-        headers: [
-          {
-            key: "Cache-Control",
-            value: "public, max-age=31536000, immutable",
-          },
-        ],
+        headers: immutable,
+      },
+      {
+        source: "/university-images/:path*",
+        headers: immutable,
+      },
+      {
+        source: "/brand/:path*",
+        headers: immutable,
+      },
+      {
+        source: "/countries/:path*",
+        headers: immutable,
+      },
+      {
+        source: "/scholarships/:path*",
+        headers: immutable,
+      },
+      {
+        source: "/services/:path*",
+        headers: immutable,
+      },
+      {
+        source: "/team/:path*",
+        headers: immutable,
+      },
+      {
+        source: "/parents/:path*",
+        headers: immutable,
       },
     ];
   },

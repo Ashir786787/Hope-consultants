@@ -97,6 +97,13 @@ export async function findChallenge(
   return mongoFindOne<OtpChallenge>(COLLECTION, { adminUserId, purpose });
 }
 
+export async function deleteChallenge(
+  adminUserId: string,
+  purpose: OtpPurpose
+): Promise<void> {
+  await mongoDeleteOne(COLLECTION, { adminUserId, purpose });
+}
+
 export async function registerFailedAttempt(challenge: OtpChallenge): Promise<number> {
   const attempts = challenge.attempts + 1;
   await mongoUpdateOne(

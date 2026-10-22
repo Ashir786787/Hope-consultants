@@ -18,7 +18,12 @@ type CountryPageProps = {
   params: Promise<{ slug: CountrySlug }>;
 };
 
-export const dynamic = "force-dynamic";
+export const revalidate = 3600;
+
+export async function generateStaticParams(): Promise<{ slug: CountrySlug }[]> {
+  const countries = await getCollection<CountryDestination[]>("countries");
+  return countries.map((country) => ({ slug: country.slug }));
+}
 
 export async function generateMetadata({ params }: CountryPageProps): Promise<Metadata> {
   const { slug } = await params;

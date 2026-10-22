@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 import { listOwnerEmails } from "@/lib/admin/admin-user";
 import {
   createChallenge,
+  deleteChallenge,
   findChallenge,
   generateOtpCode,
   hashOtpCode,
@@ -15,7 +16,7 @@ import {
 import { requireAdminForApi } from "@/lib/admin/require-admin";
 import { clientIp } from "@/lib/request-meta";
 import { sendOtpEmail } from "@/lib/email/send-otp";
-import { isMailConfigured } from "@/lib/email/transporter";
+import { isMailConfigured, MailDeliveryError } from "@/lib/email/transporter";
 
 export async function POST(request: Request) {
   const admin = await requireAdminForApi();
@@ -66,9 +67,13 @@ export async function POST(request: Request) {
       requesterEmail: admin.email,
       requesterIp: ip,
     });
-  } catch {
+  } catch (error) {
+    await deleteChallenge(admin.id, "password_change");
     return NextResponse.json(
-      { error: "We could not reach the panel owner with your code. Please try again." },
+      {
+        error: "We could not reach the panel owner with your code. Please try again.",
+        reason: error instanceof MailDeliveryError ? error.reason : "unknown",
+      },
       { status: 502 }
     );
   }

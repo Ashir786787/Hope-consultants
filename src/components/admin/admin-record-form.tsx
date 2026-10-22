@@ -15,7 +15,7 @@ import {
 import type { FieldMap } from "@/lib/admin/content-form";
 import type { CollectionSchema, FieldDef } from "@/lib/content/schemas";
 
-const WIDE = new Set<FieldDef["kind"]>(["textarea", "liststrings", "json", "image"]);
+const WIDE = new Set<FieldDef["kind"]>(["textarea", "richtext", "liststrings", "json", "image"]);
 
 export function AdminRecordForm({
   schema,
