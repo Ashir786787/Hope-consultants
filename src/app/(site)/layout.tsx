@@ -6,6 +6,7 @@ import { SmoothScroll } from "@/components/motion/smooth-scroll";
 import { ScrollProgress } from "@/components/scroll-progress";
 import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/footer";
+import { WhatsAppFloat } from "@/components/whatsapp-float";
 
 export const revalidate = 3600;
 
@@ -42,6 +43,7 @@ export default function SiteLayout({ children }: { children: ReactNode }) {
         <Footer />
       </SmoothScroll>
       <Cursor />
+      <WhatsAppFloat />
     </>
   );
 }

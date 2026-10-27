@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Logo } from "@/components/ui/logo";
 import { PlaneMotif } from "@/components/motion/plane-motif";
 import { FacebookIcon, InstagramIcon, TikTokIcon } from "@/components/ui/social-icons";
+import { YoutubeIcon } from "@/components/youtube-icon";
 import { getSite } from "@/lib/site";
 
 const EXPLORE_LINKS = [
@@ -121,7 +122,7 @@ export async function Footer() {
         </div>
         <div className="mt-14 flex flex-col gap-4 border-t border-hope-white/10 pt-6 sm:flex-row sm:items-center sm:justify-between">
           <p className="text-sm leading-6 text-hope-white/70">
-            © {new Date().getFullYear()} Hope Consultants. Study abroad guidance for Pakistani
+            Ac {new Date().getFullYear()} Hope Consultants. Study abroad guidance for Pakistani
             students.
           </p>
           <nav aria-label="Social media">
@@ -146,6 +147,17 @@ export async function Footer() {
                   className="flex size-11 items-center justify-center rounded-full border border-hope-white/15 text-hope-white/70 transition-colors hover:border-hope-ember/50 hover:text-hope-ember"
                 >
                   <FacebookIcon className="size-5" />
+                </a>
+              </li>
+              <li>
+                <a
+                  href="https://www.youtube.com/@HopeConsultants.official"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="YouTube"
+                  className="flex size-11 items-center justify-center rounded-full border border-hope-white/15 text-hope-white/70 transition-colors hover:border-hope-ember/50 hover:text-hope-ember"
+                >
+                  <YoutubeIcon className="size-5" />
                 </a>
               </li>
               {tiktok ? (

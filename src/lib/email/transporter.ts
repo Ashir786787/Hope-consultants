@@ -158,6 +158,7 @@ export async function sendAdminMail(input: {
   to: string;
   subject: string;
   text: string;
+  html?: string;
 }): Promise<void> {
   const candidates = mailCandidates();
   if (candidates.length === 0) {
@@ -186,6 +187,7 @@ export async function sendAdminMail(input: {
         from: `${MAIL_BRAND} <${config.user}>`,
         subject: input.subject,
         text: input.text,
+        ...(input.html ? { html: input.html } : {}),
       });
       cache.preferredKey = configKey(config);
       return;

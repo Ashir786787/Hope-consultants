@@ -136,16 +136,24 @@ export function AdminLoginCredentials({
       />
       {formError ? <LoginAlert message={formError} /> : null}
       <LoginButton type="submit" disabled={pending}>
-        {pending ? "Signing in…" : "Sign in"}
+        {pending ? "Signing in..." : "Sign in"}
       </LoginButton>
-      <p
-        aria-live="polite"
-        className="text-center text-xs text-[var(--admin-login-muted)]"
-      >
-        {pending
-          ? "Working. If this is your first sign-in we are emailing a one-time code to the panel owner, which can take up to 10 seconds."
-          : "First time signing in? Choose your password here. We will email a one-time code to the panel owner, who will give it to you."}
-      </p>
+      <div className="flex flex-col items-center gap-2">
+        <a
+          href="/admin/signup"
+          className="min-h-11 rounded-lg px-2 text-sm font-medium text-[var(--admin-login-muted)] underline-offset-4 transition-colors hover:text-[var(--admin-login-heading)] hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--admin-login-accent)]"
+        >
+          New admin? Sign up here
+        </a>
+        <p
+          aria-live="polite"
+          className="text-center text-xs text-[var(--admin-login-muted)]"
+        >
+          {pending
+            ? "Working. If this is your first sign-in we are emailing a one-time code to the panel owner, which can take up to 10 seconds."
+            : "First time signing in? Choose your password here. We will email a one-time code to the panel owner, who will give it to you."}
+        </p>
+      </div>
     </form>
   );
 }
