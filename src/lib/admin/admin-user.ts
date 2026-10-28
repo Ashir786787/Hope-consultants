@@ -60,29 +60,40 @@ export async function countAdmins(): Promise<number> {
   return mongoCount(COLLECTION, {});
 }
 
+import type { AdminPanelSection } from "@/lib/admin/types";
+
 export async function createAdmin(input: {
   name: string;
   email: string;
   role: string;
+  passwordHash?: string | null;
+  isActive?: boolean;
+  hasCompletedFirstLogin?: boolean;
+  isAccessRequest?: boolean;
+  firstLoginVerifiedAt?: string | null;
+  purgeAt?: Date | null;
+  permissions?: AdminPanelSection[] | null;
+  contentCollections?: string[] | null;
 }): Promise<AdminUser> {
   await ensureAdminUserIndexes();
+  const now = new Date().toISOString();
   const admin: AdminUser = {
     id: randomUUID(),
     name: input.name.trim(),
     email: normalizeEmail(input.email),
-    passwordHash: null,
+    passwordHash: input.passwordHash ?? null,
     role: input.role,
     isOwner: false,
-    hasCompletedFirstLogin: false,
-    isActive: true,
-    isAccessRequest: false,
-    permissions: null,
-    contentCollections: null,
-    createdAt: new Date().toISOString(),
+    hasCompletedFirstLogin: input.hasCompletedFirstLogin ?? false,
+    isActive: input.isActive ?? true,
+    isAccessRequest: input.isAccessRequest ?? false,
+    permissions: input.permissions ?? null,
+    contentCollections: input.contentCollections ?? null,
+    createdAt: now,
     lastLoginAt: null,
-    firstLoginVerifiedAt: null,
+    firstLoginVerifiedAt: input.firstLoginVerifiedAt ?? null,
     sessionsValidAfter: null,
-    purgeAt: null,
+    purgeAt: input.purgeAt ?? null,
   };
   await mongoInsertOne(COLLECTION, { ...admin });
   return admin;

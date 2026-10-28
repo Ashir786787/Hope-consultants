@@ -1,3 +1,4 @@
+import { hash } from "bcryptjs";
 import { NextResponse } from "next/server";
 import { z } from "zod";
 
@@ -14,11 +15,19 @@ import { requireAdminForApi } from "@/lib/admin/require-admin";
 import { sendAdminInvitationEmail } from "@/lib/email/send-admin-registered";
 import { isMailConfigured } from "@/lib/email/transporter";
 
+import { ADMIN_PANEL_SECTIONS } from "@/lib/admin/types";
+
 const createSchema = z.object({
   name: z.string().trim().min(1, "Enter their name.").max(80, "That name is too long."),
   email: z.string().trim().email("That email address does not look right."),
   role: z.string().trim().min(1, "Enter a role.").max(40, "That role is too long."),
+  password: z.string().min(8, "Use at least 8 characters.").optional().or(z.literal("")),
+  setPassword: z.boolean().optional(),
+  permissions: z.array(z.enum(ADMIN_PANEL_SECTIONS)).optional().nullable(),
+  contentCollections: z.array(z.string()).optional().nullable(),
 });
+
+const PASSWORD_BCRYPT_ROUNDS = 12;
 
 export async function GET() {
   const admin = await requireAdminForApi();
@@ -58,12 +67,30 @@ export async function POST(request: Request) {
     );
   }
 
-  const { name, email, role } = parsed.data;
+  const { name, email, role, password, setPassword, permissions, contentCollections } = parsed.data;
   if (await emailIsRegistered(email)) {
     return NextResponse.json(
       { error: "An admin with that email address already exists." },
       { status: 409 }
     );
+  }
+
+  if (setPassword && password && password.length >= 8) {
+    const passwordHash = await hash(password, PASSWORD_BCRYPT_ROUNDS);
+    const created = await createAdmin({
+      name,
+      email,
+      role,
+      passwordHash,
+      isActive: true,
+      hasCompletedFirstLogin: true,
+      isAccessRequest: false,
+      firstLoginVerifiedAt: new Date().toISOString(),
+      purgeAt: null,
+      permissions: permissions ?? null,
+      contentCollections: contentCollections ?? null,
+    });
+    return NextResponse.json({ admin: toAdminSummary(created) }, { status: 201 });
   }
 
   if (!isMailConfigured()) {
@@ -73,7 +100,13 @@ export async function POST(request: Request) {
     );
   }
 
-  const created = await createAdmin({ name, email, role });
+  const created = await createAdmin({
+    name,
+    email,
+    role,
+    permissions: permissions ?? null,
+    contentCollections: contentCollections ?? null,
+  });
 
   try {
     await sendAdminInvitationEmail(created);
