@@ -7,6 +7,8 @@ loadEnvConfig(process.cwd());
 
 const FORM_DEFINITION_KEY = "form-definition:documents";
 const SECTION_KEY = "application-details";
+const FULL_NAME_KEY = "fullName";
+const EMAIL_KEY = "email";
 
 const EMAIL_FIELD = {
   key: "email",
@@ -50,14 +52,25 @@ async function main() {
     }
 
     const fields = Array.isArray(section.fields) ? section.fields : [];
-    if (fields.some((field) => field?.key === "email")) {
-      report("email field", "already present — nothing to do");
+    const emailFields = fields.filter((field) => field?.key === EMAIL_KEY);
+    const emailField = emailFields[0] ?? EMAIL_FIELD;
+    const rest = fields.filter((field) => field?.key !== EMAIL_KEY);
+    const fullNameRestIndex = rest.findIndex((field) => field?.key === FULL_NAME_KEY);
+    const insertAt = fullNameRestIndex === -1 ? rest.length : fullNameRestIndex + 1;
+    const nextFields = [...rest.slice(0, insertAt), emailField, ...rest.slice(insertAt)];
+
+    const nextKeys = nextFields.map((field) => field?.key).join(",");
+    const currentKeys = fields.map((field) => field?.key).join(",");
+
+    if (nextKeys === currentKeys && emailFields.length === 1) {
+      report("email field", `already present right after ${FULL_NAME_KEY} — nothing to do`);
       return;
     }
 
-    section.fields = [...fields, EMAIL_FIELD];
+    section.fields = nextFields;
     await content.updateOne({ key: FORM_DEFINITION_KEY }, { $set: { data } });
-    report("email field added to application-details", "yes");
+    report("email field placed after " + FULL_NAME_KEY, "yes");
+    report("new field order", nextKeys);
   } finally {
     await client.close();
   }
