@@ -4,7 +4,7 @@ import { z } from "zod";
 import { createLead } from "@/lib/admin/lead";
 import { sendContactConfirmation } from "@/lib/email/send-confirmation";
 import { refererPath } from "@/lib/request-meta";
-import { isMailConfigured, sendContactMail } from "@/lib/mail";
+import { isMailConfigured, sendAdminMail } from "@/lib/email/transporter";
 
 const contactSchema = z.object({
   name: z.string().trim().min(2, "Please tell us your name."),
@@ -13,7 +13,6 @@ const contactSchema = z.object({
   message: z.string().trim().min(10, "Please add a little more detail."),
 });
 
-const FROM_FALLBACK = "no-reply@hopeconsultants.example";
 const SUBJECT_PREFIX = "[Hope Consultants]";
 
 export async function POST(request: Request) {
@@ -35,9 +34,8 @@ export async function POST(request: Request) {
   const text = `Name: ${name}\nEmail: ${email}\n\n${message}`;
 
   try {
-    await sendContactMail({
-      to: process.env.CONTACT_TO ?? "",
-      from: process.env.CONTACT_FROM ?? process.env.SMTP_USER ?? FROM_FALLBACK,
+    await sendAdminMail({
+      to: process.env.CONTACT_NOTIFY_TO ?? process.env.CONTACT_TO ?? "",
       replyTo: email,
       subject: `${SUBJECT_PREFIX} ${subject}`,
       text,

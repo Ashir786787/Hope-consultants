@@ -1,5 +1,6 @@
 import type { DraftAnswers } from "@/lib/forms/answers";
 import type { FormDefinition, FormField, FormFieldCondition, FormSection } from "@/lib/forms/types";
+import { phoneFieldError } from "@/lib/forms/phone";
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const CNIC_PATTERN = /^\d{5}-\d{7}-\d$/;
@@ -96,6 +97,10 @@ export function validateField(
   }
   if (field.kind === "tel" && field.minDigits && text.replace(/\D/g, "").length < field.minDigits) {
     return field.invalidMessage ?? "Enter a valid phone number.";
+  }
+  if (field.kind === "phone") {
+    const phoneError = phoneFieldError(text, field.label);
+    if (phoneError) return phoneError;
   }
   if (
     (field.kind === "select" || field.kind === "radio") &&

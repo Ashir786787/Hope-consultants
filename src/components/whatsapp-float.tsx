@@ -1,7 +1,11 @@
-const WHATSAPP_NUMBER = "923219633414";
+import { getSite } from "@/lib/site";
 
-export function WhatsAppFloat() {
-  const href = `https://wa.me/${WHATSAPP_NUMBER}`;
+export async function WhatsAppFloat() {
+  const { whatsapp } = await getSite();
+  const digits = whatsapp.replace(/\D/g, "");
+  if (!digits) return null;
+
+  const href = `https://wa.me/${digits}`;
 
   return (
     <a

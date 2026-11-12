@@ -139,6 +139,7 @@ export function AdminEditor({
           onQueryChange={editor.setQuery}
           onEdit={editor.startEdit}
           onMove={async (index, direction) => notify(await editor.move(index, direction))}
+          onToggleHidden={async (index) => notify(await editor.toggleHidden(index))}
           onDelete={(index) => editor.setDialog({ kind: "delete", index })}
           onCreate={editor.startNew}
           saving={saving}

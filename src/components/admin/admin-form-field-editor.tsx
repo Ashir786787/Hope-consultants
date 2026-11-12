@@ -9,6 +9,7 @@ const KIND_OPTIONS: { value: FormFieldKind; label: string }[] = [
   { value: "textarea", label: "Long text" },
   { value: "email", label: "Email" },
   { value: "tel", label: "Phone" },
+  { value: "phone", label: "Phone with country code" },
   { value: "date", label: "Date" },
   { value: "select", label: "Dropdown" },
   { value: "radio", label: "Single choice" },

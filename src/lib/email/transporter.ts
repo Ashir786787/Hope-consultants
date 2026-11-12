@@ -72,6 +72,20 @@ function smtpConfig(): MailConfig | null {
   return { host, port, secure, user, pass };
 }
 
+function studentMailConfig(): MailConfig | null {
+  const user = process.env.ONBOARDING_SMTP_USER ?? "";
+  const pass = process.env.ONBOARDING_SMTP_PASS ?? "";
+  const host = process.env.ONBOARDING_SMTP_HOST ?? "";
+  if (user.trim().length === 0 || pass.trim().length === 0 || host.trim().length === 0) {
+    return null;
+  }
+  const parsed = Number.parseInt(process.env.ONBOARDING_SMTP_PORT ?? "465", 10);
+  const port = Number.isFinite(parsed) && parsed > 0 ? parsed : 465;
+  const flag = (process.env.ONBOARDING_SMTP_SECURE ?? "").trim().toLowerCase();
+  const secure = flag === "true" ? true : flag === "false" ? false : port === 465;
+  return { host, port, secure, user, pass };
+}
+
 export function mailCandidates(): MailConfig[] {
   const candidates: MailConfig[] = [];
   const smtp = smtpConfig();
@@ -92,6 +106,10 @@ export function mailCandidates(): MailConfig[] {
 
 export function isMailConfigured(): boolean {
   return mailCandidates().length > 0;
+}
+
+export function isStudentMailConfigured(): boolean {
+  return studentMailConfig() !== null;
 }
 
 function configKey(config: MailConfig): string {
@@ -159,6 +177,7 @@ export async function sendAdminMail(input: {
   subject: string;
   text: string;
   html?: string;
+  replyTo?: string;
 }): Promise<void> {
   const candidates = mailCandidates();
   if (candidates.length === 0) {
@@ -188,6 +207,7 @@ export async function sendAdminMail(input: {
         subject: input.subject,
         text: input.text,
         ...(input.html ? { html: input.html } : {}),
+        ...(input.replyTo ? { replyTo: input.replyTo } : {}),
       });
       cache.preferredKey = configKey(config);
       return;
@@ -199,4 +219,32 @@ export async function sendAdminMail(input: {
   }
 
   throw new MailDeliveryError(reason, detail);
+}
+
+export async function sendStudentMail(input: {
+  to: string;
+  subject: string;
+  text: string;
+  html?: string;
+}): Promise<void> {
+  const config = studentMailConfig();
+  if (!config) {
+    throw new MailDeliveryError(
+      "not_configured",
+      "Student email is not configured: set ONBOARDING_SMTP_HOST, ONBOARDING_SMTP_USER and ONBOARDING_SMTP_PASS."
+    );
+  }
+
+  try {
+    await transportFor(config).sendMail({
+      to: input.to,
+      from: `${MAIL_BRAND} <${config.user}>`,
+      subject: input.subject,
+      text: input.text,
+      ...(input.html ? { html: input.html } : {}),
+    });
+  } catch (error) {
+    const classified = classifyMailError(error);
+    throw new MailDeliveryError(classified.reason, classified.detail);
+  }
 }

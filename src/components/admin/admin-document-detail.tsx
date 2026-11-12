@@ -11,9 +11,9 @@ import { FORM_SUBMISSION_STATUSES } from "@/lib/forms/types";
 
 const BADGE_TONE: Record<FormSubmissionStatus, "owner" | "active" | "inactive" | "pending"> = {
   New: "owner",
-  Contacted: "active",
-  Converted: "pending",
-  Lost: "inactive",
+  Checked: "active",
+  Downloaded: "pending",
+  "Information Missing": "inactive",
 };
 
 function downloadHref(id: string): string {

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import type { ReactNode } from "react";
 
 import { Logo } from "@/components/ui/logo";
+import { WhatsAppFloat } from "@/components/whatsapp-float";
 
 export const metadata: Metadata = {
   title: "Student Onboarding Form",
@@ -26,6 +27,7 @@ export default function OnboardingLayout({ children }: { children: ReactNode }) 
           HOPE CONSULTANTS
         </div>
       </footer>
+      <WhatsAppFloat />
     </div>
   );
 }

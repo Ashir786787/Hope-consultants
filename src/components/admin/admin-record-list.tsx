@@ -2,9 +2,9 @@
 
 import { useMemo } from "react";
 import type { RefObject } from "react";
-import { ArrowDown, ArrowUp, Pencil, Plus, Search, Trash2 } from "lucide-react";
+import { ArrowDown, ArrowUp, Eye, EyeOff, Pencil, Plus, Search, Trash2 } from "lucide-react";
 
-import { AdminButton } from "@/components/admin/admin-ui";
+import { AdminBadge, AdminButton } from "@/components/admin/admin-ui";
 import {
   recordMeta,
   recordSearchText,
@@ -20,6 +20,7 @@ export function AdminRecordList({
   onQueryChange,
   onEdit,
   onMove,
+  onToggleHidden,
   onDelete,
   onCreate,
   saving,
@@ -31,6 +32,7 @@ export function AdminRecordList({
   onQueryChange: (value: string) => void;
   onEdit: (index: number) => void;
   onMove: (index: number, direction: -1 | 1) => void;
+  onToggleHidden: (index: number) => void;
   onDelete: (index: number) => void;
   onCreate: () => void;
   saving: boolean;
@@ -42,6 +44,10 @@ export function AdminRecordList({
       .map((record, index) => ({ record, index }))
       .filter(({ record }) => !needle || recordSearchText(schema, record).includes(needle));
   }, [records, query, schema]);
+
+  const canToggleHidden =
+    !schema.singleton &&
+    schema.fields.some((field) => field.key === "hidden" && field.kind === "boolean");
 
   const iconButton =
     "grid size-11 shrink-0 place-items-center rounded-lg border border-hope-midnight/15 text-hope-midnight transition-colors hover:border-hope-ember/60 hover:bg-hope-ember/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-hope-ember disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:border-hope-midnight/15 disabled:hover:bg-transparent";
@@ -132,12 +138,21 @@ export function AdminRecordList({
                 >
                   {index + 1}
                 </span>
-                <div className="min-w-0 flex-1">
-                  <p className="truncate text-sm font-semibold text-hope-midnight">
-                    {title}
-                  </p>
-                  {meta ? (
-                    <p className="truncate text-xs text-hope-fog">{meta}</p>
+                <div className="flex min-w-0 flex-1 items-center gap-2">
+                  <div
+                    className={`min-w-0 flex-1 ${
+                      record.hidden === true ? "opacity-60" : ""
+                    }`}
+                  >
+                    <p className="truncate text-sm font-semibold text-hope-midnight">
+                      {title}
+                    </p>
+                    {meta ? (
+                      <p className="truncate text-xs text-hope-fog">{meta}</p>
+                    ) : null}
+                  </div>
+                  {canToggleHidden && record.hidden === true ? (
+                    <AdminBadge tone="inactive">Hidden</AdminBadge>
                   ) : null}
                 </div>
                 <div className="flex shrink-0 items-center gap-1">
@@ -161,6 +176,26 @@ export function AdminRecordList({
                       >
                         <ArrowDown className="size-4" strokeWidth={1.75} aria-hidden="true" />
                       </button>
+                      {canToggleHidden ? (
+                        <button
+                          type="button"
+                          onClick={() => onToggleHidden(index)}
+                          disabled={saving}
+                          aria-pressed={record.hidden === true}
+                          aria-label={
+                            record.hidden === true
+                              ? `Show ${title} on the site`
+                              : `Hide ${title} from the site`
+                          }
+                          className={iconButton}
+                        >
+                          {record.hidden === true ? (
+                            <EyeOff className="size-4" strokeWidth={1.75} aria-hidden="true" />
+                          ) : (
+                            <Eye className="size-4" strokeWidth={1.75} aria-hidden="true" />
+                          )}
+                        </button>
+                      ) : null}
                       <button
                         type="button"
                         onClick={() => onDelete(index)}

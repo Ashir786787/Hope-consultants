@@ -441,3 +441,24 @@ html.lenis body {
     display: none;
   }
 }
+
+@media print {
+  body:has(.evaluator-page) > *:not(main) {
+    display: none !important;
+  }
+
+  body:has(.evaluator-page) .evaluator-no-print {
+    display: none !important;
+  }
+
+  .evaluator-page {
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+
+  .evaluator-page .hope-card,
+  .evaluator-page dl > div {
+    box-shadow: none !important;
+    break-inside: avoid;
+  }
+}

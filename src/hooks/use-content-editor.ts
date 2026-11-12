@@ -286,6 +286,28 @@ export function useContentEditor(initialCollection: string, allowedKeys?: string
     return persist(next, "Order updated.");
   }
 
+  async function toggleHidden(index: number): Promise<ContentResult> {
+    if (!records || schema.singleton) {
+      return { ok: false, message: "This record cannot be hidden." };
+    }
+    const supportsHidden = schema.fields.some(
+      (field) => field.key === "hidden" && field.kind === "boolean",
+    );
+    if (!supportsHidden) {
+      return { ok: false, message: "This collection cannot hide records." };
+    }
+    const next = records.slice();
+    const hidden = !(next[index].hidden === true);
+    next[index] = { ...next[index], hidden };
+    const name = schema.singular.toLowerCase();
+    return persist(
+      next,
+      hidden
+        ? `${name} hidden from the site.`
+        : `${name} visible on the site.`,
+    );
+  }
+
   async function remove(index: number): Promise<ContentResult> {
     if (!records || schema.singleton) {
       return { ok: false, message: "This record cannot be deleted." };
@@ -325,6 +347,7 @@ export function useContentEditor(initialCollection: string, allowedKeys?: string
     readImage,
     save,
     move,
+    toggleHidden,
     remove,
   };
 }

@@ -1,14 +1,19 @@
-function star(cx: number, cy: number, r: number): string {
+function star(cx: number, cy: number, r: number, rotation = 0): string {
   const points: string[] = [];
   for (let i = 0; i < 10; i += 1) {
     const radius = i % 2 === 0 ? r : r * 0.382;
-    const angle = (Math.PI / 5) * i - Math.PI / 2;
+    const angle = (Math.PI / 5) * i - Math.PI / 2 + rotation;
     points.push(`${(cx + radius * Math.cos(angle)).toFixed(2)},${(cy + radius * Math.sin(angle)).toFixed(2)}`);
   }
   return points.join(" ");
 }
 
 const BORDERS = "#1A1A1A";
+
+const CRESCENT_PATH =
+  "M11.38 10.139A4 4 0 1 1 11.38 5.861A3.2 3.2 0 1 0 11.38 10.139Z";
+
+const CRESCENT_STAR_POINTS = star(13.13, 8, 2, -Math.PI / 2);
 
 const IT = (
   <>
@@ -45,9 +50,8 @@ const FI = (
 const TR = (
   <>
     <rect width="24" height="16" fill="#E30A17" />
-    <circle cx="8" cy="8" r="3.6" fill="#FFFFFF" />
-    <circle cx="9.9" cy="8" r="3" fill="#E30A17" />
-    <polygon points={star(12.4, 8, 1.5)} fill="#FFFFFF" />
+    <path d={CRESCENT_PATH} fill="#FFFFFF" />
+    <polygon points={CRESCENT_STAR_POINTS} fill="#FFFFFF" />
   </>
 );
 
@@ -95,9 +99,10 @@ const LT = (
 const CY = (
   <>
     <rect width="24" height="16" fill="#FFFFFF" />
-    <rect width="10" height="8" fill="#D57800" />
-    <rect y="9.4" width="24" height="1.1" fill="#4E8B31" />
-    <ellipse cx="12" cy="12.6" rx="3.4" ry="1.3" fill="#4E8B31" />
+    <rect y="1.6" width="24" height="1.6" fill="#E30A17" />
+    <rect y="12.8" width="24" height="1.6" fill="#E30A17" />
+    <path d={CRESCENT_PATH} fill="#E30A17" />
+    <polygon points={CRESCENT_STAR_POINTS} fill="#E30A17" />
   </>
 );
 

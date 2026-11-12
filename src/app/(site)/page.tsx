@@ -51,15 +51,11 @@ const FOR_PARENTS = {
 
 const COMING_SOON = {
   eyebrow: "Coming soon",
-  title: "Two things we're building next.",
+  title: "One thing we're building next.",
   items: [
     {
       name: "Language Classes & Courses",
       description: "In-house language preparation for IELTS and the languages your destination actually needs.",
-    },
-    {
-      name: "Student Profile Assessment Tool",
-      description: "A quick, honest read on where your grades, budget and goals realistically point.",
     },
   ],
   cta: "Notify Me When It Launches",
@@ -178,7 +174,6 @@ export default async function Home() {
           countries={sortedCountries}
           services={services}
           processSteps={processSteps}
-          whatsapp={site.whatsapp ?? ""}
         />
 
         <div className="relative z-10">
@@ -260,7 +255,7 @@ export default async function Home() {
               lede=""
             />
           </Reveal>
-          <div className="grid gap-5 sm:grid-cols-2">
+          <div className="mx-auto grid w-full max-w-xl gap-5">
             {COMING_SOON.items.map((item, index) => (
               <Reveal key={item.name} delay={index * 0.05} className="h-full">
                 <article className="hope-card hope-card--light flex h-full flex-col gap-3 p-6">

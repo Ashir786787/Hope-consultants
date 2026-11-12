@@ -1,6 +1,6 @@
 export type FormKey = "onboarding" | "documents";
 
-export const FORM_SUBMISSION_STATUSES = ["New", "Contacted", "Converted", "Lost"] as const;
+export const FORM_SUBMISSION_STATUSES = ["New", "Checked", "Downloaded", "Information Missing"] as const;
 
 export type FormSubmissionStatus = (typeof FORM_SUBMISSION_STATUSES)[number];
 
@@ -16,6 +16,7 @@ export type FormFieldKind =
   | "textarea"
   | "email"
   | "tel"
+  | "phone"
   | "date"
   | "select"
   | "radio"

@@ -5,7 +5,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
 import { OnboardingField } from "@/components/onboarding/onboarding-field";
 
-const CONTROL =
+export const CONTROL =
   "min-h-11 w-full rounded-lg border border-hope-midnight/20 bg-hope-white px-3 py-2 text-base md:text-base text-hope-midnight placeholder:text-hope-fog focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-hope-ember aria-invalid:border-hope-ember";
 
 export function TextField({

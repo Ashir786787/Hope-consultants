@@ -117,30 +117,32 @@ export default async function AboutPage() {
               Real people, real accountability
             </h2>
           </Reveal>
-          <div className="grid w-full grid-cols-1 gap-6 lg:grid-cols-3">
-            {(members ?? []).map((member, index) => {
-              const image = member.image ?? "";
-              const photo = image.startsWith("data:") ? image : resolveTeamImage(image);
-              return (
-                <Reveal key={member.name} delay={index * 0.05} className="h-full">
-                  <article className="hope-card hope-card--light group flex h-full flex-col">
-                    {photo ? <TeamPhoto src={photo} alt={member.name} /> : null}
-                    <div className="flex flex-col gap-4 p-6">
-                      <div className="flex flex-col gap-1">
-                        <h3 className="font-display text-xl font-semibold text-hope-midnight">
-                          {member.name}
-                        </h3>
-                        <p className="text-sm font-medium text-hope-fog">{member.role}</p>
+          <div className="flex w-full flex-wrap items-stretch justify-center gap-6">
+            {(members ?? [])
+              .filter((member) => member.hidden !== true)
+              .map((member, index) => {
+                const image = member.image ?? "";
+                const photo = image.startsWith("data:") ? image : resolveTeamImage(image);
+                return (
+                  <Reveal key={member.name} delay={index * 0.05} className="h-full w-full sm:w-80">
+                    <article className="hope-card hope-card--light group flex h-full flex-col">
+                      {photo ? <TeamPhoto src={photo} alt={member.name} /> : null}
+                      <div className="flex flex-col gap-4 p-6">
+                        <div className="flex flex-col gap-1">
+                          <h3 className="font-display text-xl font-semibold text-hope-midnight">
+                            {member.name}
+                          </h3>
+                          <p className="text-sm font-medium text-hope-fog">{member.role}</p>
+                        </div>
+                        <blockquote className="border-l-2 border-hope-ember pl-4 text-sm leading-7 text-hope-midnight/90">
+                          &ldquo;{member.quote}&rdquo;
+                        </blockquote>
+                        <p className="text-sm leading-7 text-hope-fog">{member.bioShort}</p>
                       </div>
-                      <blockquote className="border-l-2 border-hope-ember pl-4 text-sm leading-7 text-hope-midnight/90">
-                        &ldquo;{member.quote}&rdquo;
-                      </blockquote>
-                      <p className="text-sm leading-7 text-hope-fog">{member.bioShort}</p>
-                    </div>
-                  </article>
-                </Reveal>
-              );
-            })}
+                    </article>
+                  </Reveal>
+                );
+              })}
           </div>
         </div>
 

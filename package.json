@@ -9,7 +9,10 @@
     "lint": "eslint",
     "seed:admin": "node scripts/seed-admin.mjs",
     "reset:admin-password": "node scripts/reset-admin-password.mjs",
-    "migrate:admin-owner": "node scripts/migrate-admin-owner.mjs"
+    "migrate:admin-owner": "node scripts/migrate-admin-owner.mjs",
+    "migrate:document-statuses": "node scripts/migrate-document-statuses.mjs",
+    "migrate:documents-form-email": "node scripts/migrate-documents-form-email.mjs",
+    "migrate:onboarding-phone-field": "node scripts/migrate-onboarding-phone-field.mjs"
   },
   "dependencies": {
     "@base-ui/react": "^1.8.0",

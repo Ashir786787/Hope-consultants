@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 
-import { isMailConfigured, sendContactMail } from "@/lib/mail";
+import { isMailConfigured, sendAdminMail } from "@/lib/email/transporter";
+import { sendDocumentsConfirmation } from "@/lib/email/send-confirmation";
 import {
   createDocumentSubmission,
   ensureDocumentIndexes,
@@ -14,8 +15,6 @@ import type { DraftAnswers } from "@/lib/forms/answers";
 
 const SUBMIT_LIMIT = 6;
 const SUBMIT_WINDOW_MS = 60 * 60 * 1000;
-
-const FROM_FALLBACK = "no-reply@hopeconsultants.example";
 
 function isPlainObject(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
@@ -87,13 +86,20 @@ export async function POST(request: Request) {
   const detailsKey = definition.sections[0].key;
   const documentsKey = definition.sections[1]?.key ?? definition.sections[0].key;
 
+  const details = answers[detailsKey] ?? {};
+  const applicantEmail = typeof details.email === "string" ? details.email : "";
+
   if (isMailConfigured()) {
-    sendContactMail({
+    sendAdminMail({
       to: process.env.CONTACT_TO ?? "",
-      from: process.env.CONTACT_FROM ?? process.env.SMTP_USER ?? FROM_FALLBACK,
+      replyTo: applicantEmail || undefined,
       subject: "[Hope Consultants] New document submission",
       text: summaryText(answers, detailsKey, documentsKey),
     }).catch(() => null);
+  }
+
+  if (applicantEmail) {
+    sendDocumentsConfirmation(applicantEmail).catch(() => null);
   }
 
   return NextResponse.json(

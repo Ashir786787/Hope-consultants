@@ -1,4 +1,10 @@
-import { isMailConfigured, MAIL_BRAND, sendAdminMail } from "@/lib/email/transporter";
+import {
+  isMailConfigured,
+  isStudentMailConfigured,
+  MAIL_BRAND,
+  sendAdminMail,
+  sendStudentMail,
+} from "@/lib/email/transporter";
 import { CONFIRMATION_COPY } from "@/lib/onboarding/sections";
 
 const CONTACT_CONFIRMATION_TEXT = [
@@ -7,7 +13,7 @@ const CONTACT_CONFIRMATION_TEXT = [
   CONFIRMATION_COPY.signature,
 ].join("\n");
 
-function onboardingConfirmationText(): string {
+function confirmationText(): string {
   return [
     CONFIRMATION_COPY.heading,
     "",
@@ -25,11 +31,20 @@ function onboardingConfirmationText(): string {
 }
 
 export async function sendOnboardingConfirmation(to: string): Promise<void> {
-  if (!isMailConfigured()) return;
-  await sendAdminMail({
+  if (!isStudentMailConfigured()) return;
+  await sendStudentMail({
     to,
     subject: `${MAIL_BRAND} — we have received your form`,
-    text: onboardingConfirmationText(),
+    text: confirmationText(),
+  });
+}
+
+export async function sendDocumentsConfirmation(to: string): Promise<void> {
+  if (!isStudentMailConfigured()) return;
+  await sendStudentMail({
+    to,
+    subject: `${MAIL_BRAND} — we have received your documents`,
+    text: confirmationText(),
   });
 }
 

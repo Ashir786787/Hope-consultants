@@ -5,7 +5,9 @@ import { Pencil, Search } from "lucide-react";
 import { AdminButton } from "@/components/admin/admin-ui";
 import { AdminCopyLink } from "@/components/admin/admin-copy-link";
 import { AdminOnboardingList } from "@/components/admin/admin-onboarding-list";
+import { AdminStatusFilter } from "@/components/admin/admin-status-filter";
 import { listSubmissions } from "@/lib/onboarding/submission";
+import { ONBOARDING_STATUSES, type OnboardingStatus } from "@/lib/onboarding/types";
 import { hasSection } from "@/lib/admin/permissions";
 import { requireSection } from "@/lib/admin/require-admin";
 
@@ -32,7 +34,11 @@ export default async function AdminOnboardingPage({
   const canEditForm = hasSection(admin, "forms");
 
   const query = (firstValue((await searchParams).q) ?? "").trim();
-  const submissions = await listSubmissions(query);
+  const rawStatus = firstValue((await searchParams).status) ?? "";
+  const status = (ONBOARDING_STATUSES as readonly string[]).includes(rawStatus)
+    ? (rawStatus as OnboardingStatus)
+    : null;
+  const submissions = await listSubmissions(query, status);
 
   return (
     <>
@@ -76,11 +82,16 @@ export default async function AdminOnboardingPage({
               className="min-h-11 w-full rounded-xl border border-hope-midnight/20 bg-hope-white pr-3 pl-9 text-sm text-hope-midnight transition-colors placeholder:text-hope-fog focus-visible:border-hope-ember focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-hope-ember"
             />
           </div>
+          <AdminStatusFilter
+            id="onboarding-status"
+            statuses={ONBOARDING_STATUSES}
+            value={status ?? ""}
+          />
           <div className="flex items-center gap-2">
             <AdminButton type="submit" variant="primary" className="w-full sm:w-auto">
               Search
             </AdminButton>
-            {query ? (
+            {query || status ? (
               <Link
                 href="/admin/onboarding"
                 className="inline-flex min-h-11 items-center px-2 text-sm font-semibold text-hope-midnight underline decoration-hope-ember decoration-2 underline-offset-4 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-hope-ember"
@@ -92,17 +103,21 @@ export default async function AdminOnboardingPage({
         </form>
       </section>
 
-      {query ? (
+      {query || status ? (
         <p aria-live="polite" className="text-sm text-hope-fog">
-          {submissions.length} {submissions.length === 1 ? "result" : "results"} for “{query}”.
+          {submissions.length} {submissions.length === 1 ? "result" : "results"}
+          {query ? <> for “{query}”</> : null}
+          {status ? <> with status {status}</> : null}.
         </p>
       ) : null}
 
       {submissions.length === 0 ? (
         <p className="rounded-2xl border border-dashed border-hope-midnight/20 px-6 py-16 text-center text-hope-fog">
-          {query
+          {query && !status
             ? `No forms match “${query}”. Try a different name or case number.`
-            : "No completed forms yet. They appear here as soon as a student submits the form."}
+            : query || status
+              ? "No forms match your filters. Try a different name, case number or status."
+              : "No completed forms yet. They appear here as soon as a student submits the form."}
         </p>
       ) : (
         <AdminOnboardingList submissions={submissions} />

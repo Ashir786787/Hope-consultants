@@ -185,6 +185,7 @@ export const SCHEMAS: readonly CollectionSchema[] = [
       { key: "quote", label: "Quote", kind: "textarea", group: "Bio" },
       { key: "bioShort", label: "Short bio", kind: "textarea", group: "Bio" },
       { key: "bioLong", label: "Long bio", kind: "textarea", group: "Bio", help: "The fuller profile shown in the team list." },
+      { key: "hidden", label: "Hidden from the site", kind: "boolean", group: "Identity", help: "Keeps the member saved here but off the About page." },
     ],
   },
 ];

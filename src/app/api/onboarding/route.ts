@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 
-import { isMailConfigured, sendContactMail } from "@/lib/mail";
+import { isMailConfigured, sendAdminMail } from "@/lib/email/transporter";
 import { sendOnboardingConfirmation } from "@/lib/email/send-confirmation";
 import {
   createDraftToken,
@@ -16,8 +16,6 @@ import type { DraftAnswers } from "@/lib/forms/answers";
 
 const SUBMIT_LIMIT = 6;
 const SUBMIT_WINDOW_MS = 60 * 60 * 1000;
-
-const FROM_FALLBACK = "no-reply@hopeconsultants.example";
 
 function isPlainObject(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
@@ -92,9 +90,8 @@ export async function POST(request: Request) {
   }
 
   if (isMailConfigured()) {
-    sendContactMail({
+    sendAdminMail({
       to: process.env.CONTACT_TO ?? "",
-      from: process.env.CONTACT_FROM ?? process.env.SMTP_USER ?? FROM_FALLBACK,
       replyTo: applicantEmail || undefined,
       subject: "[Hope Consultants] New student onboarding form",
       text: summaryText(answers),

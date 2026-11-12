@@ -66,4 +66,5 @@ export interface TeamMember {
   bioShort: string;
   bioLong: string;
   image?: string;
+  hidden?: boolean;
 }

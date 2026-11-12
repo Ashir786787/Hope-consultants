@@ -1,6 +1,7 @@
 import { z } from "zod";
 
 import { countries } from "@/lib/data/countries";
+import { phoneFieldError } from "@/lib/forms/phone";
 import type { OnboardingSectionKey } from "@/lib/onboarding/sections";
 
 const requiredText = (label: string) =>
@@ -66,10 +67,12 @@ export const personalSchema = z.object({
   nationality: requiredText("Nationality"),
   passportNumber: requiredText("Passport or CNIC number")
     .refine(isAcceptableIdNumber, { error: ID_NUMBER_ERROR }),
-  contactNumber: requiredText("WhatsApp number").refine(
-    (value) => value.replace(/\D/g, "").length >= 7,
-    { error: "Enter a WhatsApp number with at least 7 digits." }
-  ),
+  contactNumber: requiredText("WhatsApp number").superRefine((value, ctx) => {
+    const message = phoneFieldError(value, "WhatsApp number");
+    if (message) {
+      ctx.addIssue({ code: "custom", message });
+    }
+  }),
   email: z
     .string()
     .trim()

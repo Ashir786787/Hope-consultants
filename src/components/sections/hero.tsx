@@ -13,17 +13,16 @@ const HERO = {
   headline: "From your first question to your first day abroad, we're with you.",
   sub: "Admissions, scholarships, visas, and arrival guidance for students from Pakistan, all in one place, with honest advice and affordable support.",
   primaryCta: "Book a Free Consultation",
-  secondaryCta: "Chat on WhatsApp",
+  secondaryCta: "Assessment Tool",
 } as const;
 
 export type HeroProps = {
   countries: CountryDestination[];
   services: Service[];
   processSteps: ProcessStep[];
-  whatsapp: string;
 };
 
-export function Hero({ countries, services, processSteps, whatsapp }: HeroProps) {
+export function Hero({ countries, services, processSteps }: HeroProps) {
   const chips = countries.slice(0, 6);
 
   return (
@@ -56,21 +55,17 @@ export function Hero({ countries, services, processSteps, whatsapp }: HeroProps)
                 {HERO.primaryCta}
               </Button>
             </Magnetic>
-            {whatsapp ? (
-              <Magnetic>
-                <Button
-                  nativeButton={false}
-                  render={
-                    <a href={`https://wa.me/${whatsapp}`} target="_blank" rel="noreferrer" />
-                  }
-                  size="lg"
-                  variant="outline"
-                  className="border-white/40 text-white hover:border-white hover:bg-white/10 hover:text-white"
-                >
-                  {HERO.secondaryCta}
-                </Button>
-              </Magnetic>
-            ) : null}
+            <Magnetic>
+              <Button
+                nativeButton={false}
+                render={<a href="/tools/student-profile-evaluator" />}
+                size="lg"
+                variant="outline"
+                className="border-white/40 bg-transparent text-white hover:border-white hover:bg-white/10 hover:text-white"
+              >
+                {HERO.secondaryCta}
+              </Button>
+            </Magnetic>
           </div>
           <dl className="mt-4 grid w-full max-w-xl grid-cols-2 gap-6 border-t border-white/10 pt-8 sm:grid-cols-4">
             <div>

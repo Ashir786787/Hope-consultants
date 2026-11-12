@@ -12,6 +12,7 @@ import {
   OnboardingRadioField,
 } from "@/components/onboarding/onboarding-choice-fields";
 import { FormFileField } from "@/components/forms/form-file-field";
+import { FormPhoneField } from "@/components/forms/form-phone-field";
 import type { FieldValue } from "@/lib/forms/answers";
 import type { FormField, FormFileRef } from "@/lib/forms/types";
 
@@ -100,6 +101,20 @@ export function FormFieldView({
           label={field.label}
           type="tel"
           inputMode="tel"
+          value={textValue}
+          onChange={(next) => setValue(field.key, next)}
+          error={error}
+          hint={field.hint}
+          required={required}
+          placeholder={field.placeholder}
+          maxLength={field.maxLength}
+        />
+      );
+    case "phone":
+      return (
+        <FormPhoneField
+          id={field.key}
+          label={field.label}
           value={textValue}
           onChange={(next) => setValue(field.key, next)}
           error={error}

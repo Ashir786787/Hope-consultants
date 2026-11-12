@@ -134,16 +134,23 @@ export async function createSubmission(input: {
   await deleteDraft(input.draftToken);
 }
 
-export async function listSubmissions(query?: string): Promise<OnboardingSummary[]> {
+export async function listSubmissions(
+  query?: string,
+  status?: OnboardingStatus | null
+): Promise<OnboardingSummary[]> {
   const trimmed = query?.trim() ?? "";
-  const filter = trimmed
+  const text = trimmed
     ? {
         $or: [
           { "personal.fullName": { $regex: escapeRegExp(trimmed), $options: "i" } },
           { caseNumber: { $regex: escapeRegExp(trimmed), $options: "i" } },
         ],
       }
-    : {};
+    : null;
+  const filter =
+    text && status
+      ? { $and: [text, { status }] }
+      : text ?? (status ? { status } : {});
   const rows = await mongoFind<LooseSubmission>(SUBMISSIONS, filter, {
     sort: { submittedAt: -1 },
   });

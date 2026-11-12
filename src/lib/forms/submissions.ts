@@ -108,16 +108,23 @@ function escapeRegExp(value: string): string {
   return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
 
-export async function listDocumentSubmissions(query?: string): Promise<DocumentSummary[]> {
+export async function listDocumentSubmissions(
+  query?: string,
+  status?: FormSubmissionStatus | null
+): Promise<DocumentSummary[]> {
   const trimmed = query?.trim() ?? "";
-  const filter = trimmed
+  const text = trimmed
     ? {
         $or: [
           { fullName: { $regex: escapeRegExp(trimmed), $options: "i" } },
           { studentId: { $regex: escapeRegExp(trimmed), $options: "i" } },
         ],
       }
-    : {};
+    : null;
+  const filter =
+    text && status
+      ? { $and: [text, { status }] }
+      : text ?? (status ? { status } : {});
   const rows = await mongoFind<DocumentSubmission>(DOCUMENT_SUBMISSIONS, filter, {
     sort: { submittedAt: -1 },
   });
@@ -138,9 +145,9 @@ export async function countDocumentByStatus(): Promise<Record<FormSubmissionStat
   );
   const counts: Record<FormSubmissionStatus, number> = {
     New: 0,
-    Contacted: 0,
-    Converted: 0,
-    Lost: 0,
+    Checked: 0,
+    Downloaded: 0,
+    "Information Missing": 0,
   };
   for (const row of rows) {
     if (row.status in counts) counts[row.status] += 1;

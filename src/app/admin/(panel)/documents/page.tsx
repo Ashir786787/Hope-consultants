@@ -5,7 +5,9 @@ import { Pencil, Search } from "lucide-react";
 import { AdminButton } from "@/components/admin/admin-ui";
 import { AdminCopyLink } from "@/components/admin/admin-copy-link";
 import { AdminDocumentList } from "@/components/admin/admin-document-list";
+import { AdminStatusFilter } from "@/components/admin/admin-status-filter";
 import { listDocumentSubmissions } from "@/lib/forms/submissions";
+import { FORM_SUBMISSION_STATUSES, type FormSubmissionStatus } from "@/lib/forms/types";
 import { hasSection } from "@/lib/admin/permissions";
 import { requireSection } from "@/lib/admin/require-admin";
 
@@ -32,7 +34,11 @@ export default async function AdminDocumentsPage({
   const canEditForm = hasSection(admin, "forms");
 
   const query = (firstValue((await searchParams).q) ?? "").trim();
-  const submissions = await listDocumentSubmissions(query);
+  const rawStatus = firstValue((await searchParams).status) ?? "";
+  const status = (FORM_SUBMISSION_STATUSES as readonly string[]).includes(rawStatus)
+    ? (rawStatus as FormSubmissionStatus)
+    : null;
+  const submissions = await listDocumentSubmissions(query, status);
 
   return (
     <>
@@ -76,11 +82,16 @@ export default async function AdminDocumentsPage({
               className="min-h-11 w-full rounded-xl border border-hope-midnight/20 bg-hope-white pr-3 pl-9 text-sm text-hope-midnight transition-colors placeholder:text-hope-fog focus-visible:border-hope-ember focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-hope-ember"
             />
           </div>
+          <AdminStatusFilter
+            id="documents-status"
+            statuses={FORM_SUBMISSION_STATUSES}
+            value={status ?? ""}
+          />
           <div className="flex items-center gap-2">
             <AdminButton type="submit" variant="primary" className="w-full sm:w-auto">
               Search
             </AdminButton>
-            {query ? (
+            {query || status ? (
               <Link
                 href="/admin/documents"
                 className="inline-flex min-h-11 items-center px-2 text-sm font-semibold text-hope-midnight underline decoration-hope-ember decoration-2 underline-offset-4 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-hope-ember"
@@ -92,17 +103,21 @@ export default async function AdminDocumentsPage({
         </form>
       </section>
 
-      {query ? (
+      {query || status ? (
         <p aria-live="polite" className="text-sm text-hope-fog">
-          {submissions.length} {submissions.length === 1 ? "result" : "results"} for “{query}”.
+          {submissions.length} {submissions.length === 1 ? "result" : "results"}
+          {query ? <> for “{query}”</> : null}
+          {status ? <> with status {status}</> : null}.
         </p>
       ) : null}
 
       {submissions.length === 0 ? (
         <p className="rounded-2xl border border-dashed border-hope-midnight/20 px-6 py-16 text-center text-hope-fog">
-          {query
+          {query && !status
             ? `No submissions match “${query}”. Try a different name or student ID.`
-            : "No submissions yet. They appear here as soon as a student submits the form."}
+            : query || status
+              ? "No submissions match your filters. Try a different name, student ID or status."
+              : "No submissions yet. They appear here as soon as a student submits the form."}
         </p>
       ) : (
         <AdminDocumentList submissions={submissions} />
