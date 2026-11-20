@@ -134,23 +134,66 @@ export async function createSubmission(input: {
   await deleteDraft(input.draftToken);
 }
 
+const SEARCH_PATHS = [
+  "personal.fullName",
+  "personal.parentName",
+  "personal.dateOfBirth",
+  "personal.gender",
+  "personal.nationality",
+  "personal.passportNumber",
+  "personal.contactNumber",
+  "personal.email",
+  "personal.currentCity",
+  "personal.domicile",
+  "caseNumber",
+  "status",
+  "education.highestQualification",
+  "education.degreeTitle",
+  "education.fieldOfStudy",
+  "education.institutionName",
+  "education.yearOfPassing",
+  "education.grade",
+  "education.englishTest",
+  "education.englishTestOther",
+  "education.englishTestScore",
+  "preferences.desiredLevel",
+  "preferences.preferredField",
+  "preferences.interestedCountries",
+  "preferences.studyBudget",
+  "preferences.lookingForScholarships",
+  "financial.financialSponsor",
+  "financial.sponsorOther",
+  "financial.sponsorOccupation",
+  "financial.householdIncome",
+  "financial.travelHistory",
+  "career.motivation",
+  "career.partTimeWork",
+  "career.longTermPlan",
+  "career.contactSource",
+  "career.contactUsername",
+] as const;
+
 export async function listSubmissions(
   query?: string,
-  status?: OnboardingStatus | null
+  status?: OnboardingStatus | null,
+  level?: string | null
 ): Promise<OnboardingSummary[]> {
   const trimmed = query?.trim() ?? "";
-  const text = trimmed
-    ? {
-        $or: [
-          { "personal.fullName": { $regex: escapeRegExp(trimmed), $options: "i" } },
-          { caseNumber: { $regex: escapeRegExp(trimmed), $options: "i" } },
-        ],
-      }
-    : null;
+  const clauses: Record<string, unknown>[] = [];
+
+  if (trimmed) {
+    const pattern = escapeRegExp(trimmed);
+    clauses.push({
+      $or: SEARCH_PATHS.map((path) => ({
+        [path]: { $regex: pattern, $options: "i" },
+      })),
+    });
+  }
+  if (status) clauses.push({ status });
+  if (level) clauses.push({ "preferences.desiredLevel": level });
+
   const filter =
-    text && status
-      ? { $and: [text, { status }] }
-      : text ?? (status ? { status } : {});
+    clauses.length === 0 ? {} : clauses.length === 1 ? clauses[0] : { $and: clauses };
   const rows = await mongoFind<LooseSubmission>(SUBMISSIONS, filter, {
     sort: { submittedAt: -1 },
   });

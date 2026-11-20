@@ -6,6 +6,7 @@ import { AdminButton } from "@/components/admin/admin-ui";
 import { AdminCopyLink } from "@/components/admin/admin-copy-link";
 import { AdminOnboardingList } from "@/components/admin/admin-onboarding-list";
 import { AdminStatusFilter } from "@/components/admin/admin-status-filter";
+import { getFormDefinition } from "@/lib/forms/store";
 import { listSubmissions } from "@/lib/onboarding/submission";
 import { ONBOARDING_STATUSES, type OnboardingStatus } from "@/lib/onboarding/types";
 import { hasSection } from "@/lib/admin/permissions";
@@ -33,12 +34,22 @@ export default async function AdminOnboardingPage({
   const admin = await requireSection("onboarding");
   const canEditForm = hasSection(admin, "forms");
 
-  const query = (firstValue((await searchParams).q) ?? "").trim();
-  const rawStatus = firstValue((await searchParams).status) ?? "";
+  const params = await searchParams;
+  const query = (firstValue(params.q) ?? "").trim();
+  const rawStatus = firstValue(params.status) ?? "";
   const status = (ONBOARDING_STATUSES as readonly string[]).includes(rawStatus)
     ? (rawStatus as OnboardingStatus)
     : null;
-  const submissions = await listSubmissions(query, status);
+
+  const definition = await getFormDefinition("onboarding");
+  const levelOptions = definition.sections
+    .flatMap((section) => section.fields)
+    .find((field) => field.key === "desiredLevel")
+    ?.options?.filter((option): option is string => typeof option === "string" && option !== "") ?? [];
+  const rawLevel = firstValue(params.level) ?? "";
+  const level = levelOptions.includes(rawLevel) ? rawLevel : null;
+
+  const submissions = await listSubmissions(query, status, level);
 
   return (
     <>
@@ -63,8 +74,8 @@ export default async function AdminOnboardingPage({
 
       <section className="flex flex-col gap-5 rounded-2xl border border-hope-midnight/10 bg-hope-white p-6">
         <AdminCopyLink url={PUBLIC_FORM_URL} />
-        <form action="/admin/onboarding" method="get" role="search" className="flex flex-col gap-3 sm:flex-row sm:items-center">
-          <div className="relative flex-1">
+        <form action="/admin/onboarding" method="get" role="search" className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
+          <div className="relative min-w-0 flex-1 sm:min-w-64">
             <label htmlFor="onboarding-search" className="sr-only">
               Search by student name or case number
             </label>
@@ -87,11 +98,19 @@ export default async function AdminOnboardingPage({
             statuses={ONBOARDING_STATUSES}
             value={status ?? ""}
           />
+          <AdminStatusFilter
+            id="onboarding-level"
+            name="level"
+            statuses={levelOptions}
+            value={level ?? ""}
+            allLabel="All levels"
+            label="Filter by study level"
+          />
           <div className="flex items-center gap-2">
             <AdminButton type="submit" variant="primary" className="w-full sm:w-auto">
               Search
             </AdminButton>
-            {query || status ? (
+            {query || status || level ? (
               <Link
                 href="/admin/onboarding"
                 className="inline-flex min-h-11 items-center px-2 text-sm font-semibold text-hope-midnight underline decoration-hope-ember decoration-2 underline-offset-4 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-hope-ember"
@@ -103,20 +122,21 @@ export default async function AdminOnboardingPage({
         </form>
       </section>
 
-      {query || status ? (
+      {query || status || level ? (
         <p aria-live="polite" className="text-sm text-hope-fog">
           {submissions.length} {submissions.length === 1 ? "result" : "results"}
           {query ? <> for “{query}”</> : null}
-          {status ? <> with status {status}</> : null}.
+          {status ? <> with status {status}</> : null}
+          {level ? <>{status ? " and" : " with"} level {level}</> : null}.
         </p>
       ) : null}
 
       {submissions.length === 0 ? (
         <p className="rounded-2xl border border-dashed border-hope-midnight/20 px-6 py-16 text-center text-hope-fog">
-          {query && !status
+          {query && !status && !level
             ? `No forms match “${query}”. Try a different name or case number.`
-            : query || status
-              ? "No forms match your filters. Try a different name, case number or status."
+            : query || status || level
+              ? "No forms match your filters. Try a different name, case number, status or study level."
               : "No completed forms yet. They appear here as soon as a student submits the form."}
         </p>
       ) : (
